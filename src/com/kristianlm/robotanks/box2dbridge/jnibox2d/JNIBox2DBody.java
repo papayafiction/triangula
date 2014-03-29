@@ -103,6 +103,16 @@ public class JNIBox2DBody implements IBody {
 		return s;
 	}
 
+
+    public IShape createTriangle(float size, float x, float y, float density, float angle) {
+        int shapeID = nCreateBox(bodyID, size, size, x, y, density, angle);
+
+        // System.out.println("Created shape ID " + shapeID);
+
+        IShape s = new JNIBox2DShape(shapeID, this);
+        return s;
+    }
+
 	@Override
 	public void applyForce(Vec2 force, Vec2 point) {
 		nApplyForce(bodyID, force.x, force.y, point.x, point.y);

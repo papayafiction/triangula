@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShapeRectangle;
+import com.lmdig.android.tutorial.oglbox2dbasics.geometry.*;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -41,9 +41,6 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 import com.kristianlm.robotanks.box2dbridge.jbox2d.JBox2DWorld;
 import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DWorld;
 import com.lmdig.android.tutorial.oglbox2dbasics.MainActivity;
-import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GLRectangle;
-import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShape;
-
 
 
 public class GameImpl implements GameInterface {
@@ -80,7 +77,7 @@ public class GameImpl implements GameInterface {
         for(float i = -2.5f;i<2.5f;i+=1f) {
             for(float j = -2.5f;j<2.5f;j+=1f) {
                 GameShape gs;
-                gs = new GameShapeRectangle(new GLRectangle(0.1f, 0.1f));
+                gs = new GameShapeTriangle(new GLTriangle(0.2f));
                 gs.setColor(new Random().nextFloat(),new Random().nextFloat(),new Random().nextFloat(),1);
                 IBody b1 = gs.attachToNewBody(world, null, density);
                 b1.setPosition(new Vec2(i, j));
@@ -103,6 +100,11 @@ public class GameImpl implements GameInterface {
         gs.setColor(1,1,0,1);
 		gs.attachToBody(ground, new Vec2(0, -4), density);
 		gsl.add(gs);
+
+        gs = new GameShapeTriangle(new GLTriangle(1));
+        gs.setColor(1,1,0,0.1f);
+        gs.attachToBody(ground, new Vec2(0, 0), density);
+        gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(50, .1f));
         gs.setColor(1,0,0,1);

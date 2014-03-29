@@ -34,6 +34,8 @@ import android.util.Log;
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
 
+import java.util.List;
+
 public class JBox2DBody implements IBody {
 
 	Body body;
@@ -63,6 +65,19 @@ public class JBox2DBody implements IBody {
 		return new JBox2DShape(this, shape);
 
 	}
+
+    public IShape createTriangle(float size, float x, float y, float density, float angle) {
+
+        PolygonDef pd = new PolygonDef();
+        float hsize = size * 1f;
+        pd.addVertex(new Vec2(0,-hsize));
+        pd.addVertex(new Vec2(hsize,hsize));
+        pd.addVertex(new Vec2(-hsize,hsize));
+        pd.density = density;
+
+        Shape shape = body.createShape(pd);
+        return new JBox2DShape(this, shape);
+    }
 
 	@Override
 	public void refilter(int categoryBits, int maskBits, int groupIndex) {
