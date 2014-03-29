@@ -1,0 +1,20 @@
+
+(c) 2010 Lein-Mathisen Digital 
+
+
+OpenGL and Box2D setup for Android. Demo application.
+
+To use elcipse, import existing workspace and point to 
+this folder. ".project" and ".classpath" should be present
+for ecplise.
+
+To use ant, do
+
+	android update project -p . -n "ogl-box2d-basics" -t android-4
+
+Which generates build.xml and local.properties. Then execute
+
+	ant release
+
+
+

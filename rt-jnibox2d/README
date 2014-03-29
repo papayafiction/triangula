@@ -1,0 +1,13 @@
+
+(c)2010 Lein-Mathisen Digital
+
+This module creates libjnibox2d.so, which is Erin Catto's Box2D with JNI interface for Java-applications to use.
+
+
+To build, download the Android NDK and do
+
+cd <project-path> #e.g. /home/user/workspace/android-opengl-box2d-basics/
+$NDK_ROOT/build-ndb
+
+
+
