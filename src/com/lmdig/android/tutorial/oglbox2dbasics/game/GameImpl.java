@@ -26,7 +26,9 @@ import static android.opengl.GLES10.glColor4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShapeRectangle;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -75,17 +77,17 @@ public class GameImpl implements GameInterface {
 				gravity,
 				true);
 
-        for(float i = -2.5f;i<2.5f;i+=0.2f) {
-            for(float j = -2.5f;j<2.5f;j+=0.2f) {
+        for(float i = -2.5f;i<2.5f;i+=1f) {
+            for(float j = -2.5f;j<2.5f;j+=1f) {
                 GameShape gs;
-                gs = GameShape.create(new GLRectangle(0.1f, 0.1f));
+                gs = new GameShapeRectangle(new GLRectangle(0.1f, 0.1f));
+                gs.setColor(new Random().nextFloat(),new Random().nextFloat(),new Random().nextFloat(),1);
                 IBody b1 = gs.attachToNewBody(world, null, density);
                 b1.setPosition(new Vec2(i, j));
                 gsl.add(gs);
             }
         }
 
-		
 		makeFence();
 	}
 	
@@ -98,22 +100,27 @@ public class GameImpl implements GameInterface {
 		float density = 0;
 		GameShape gs;
 		gs = GameShape.create(new GLRectangle(50, .1f));
+        gs.setColor(1,1,0,1);
 		gs.attachToBody(ground, new Vec2(0, -4), density);
 		gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(50, .1f));
+        gs.setColor(1,0,0,1);
 		gs.attachToBody(ground, new Vec2(0, 4), density);
 		gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(.1f, 50f));
+        gs.setColor(0,0,1,1);
 		gs.attachToBody(ground, new Vec2(3, 0), density);
 		gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(.1f, 50f));
+        gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-3, 0), density);
 		gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(.1f, .1f));
+        gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-.5f, -.5f), density);
 		gsl.add(gs);
 		
@@ -131,8 +138,6 @@ public class GameImpl implements GameInterface {
 	@Override
 	public void drawFrame() {
 
-		glColor4f(1, 1, 1, 1);
-		
 		for(GameShape gs : gsl) {
 			gs.draw();
 		}

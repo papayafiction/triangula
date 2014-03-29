@@ -21,11 +21,14 @@
 
 package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 
+import com.lmdig.android.tutorial.oglbox2dbasics.game.GameInterface;
 import org.jbox2d.common.Vec2;
 
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
 import com.kristianlm.robotanks.box2dbridge.IWorld;
+
+import static android.opengl.GLES10.glColor4f;
 
 abstract public class GameShape {
 
@@ -33,6 +36,11 @@ abstract public class GameShape {
     IShape shape;
     Vec2 shapePosition;
     GLInterface glShape;
+
+    float red = 0;
+    float blue = 0;
+    float green = 1;
+    float alpha = 1;
 
 	public static GameShape create(GLRectangle rect) {
 		return new GameShapeRectangle(rect);
@@ -46,8 +54,23 @@ abstract public class GameShape {
         body = null;
     }
 
+    public void setColor(float red, float green, float blue, float alpha) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.alpha = alpha;
+    }
+
+    public void setColor(float red, float green, float blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+    }
+
 
     public void draw() {
+
+        glColor4f(red, green, blue, alpha);
         Vec2 p = body.getWorldCenter().add(shapePosition);
 
         glShape.draw(p.x, p.y, body.getAngle());
@@ -59,7 +82,4 @@ abstract public class GameShape {
         shape = null;
         body = null;
     }
-	
-	
-
 }
