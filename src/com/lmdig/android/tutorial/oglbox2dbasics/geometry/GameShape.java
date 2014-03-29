@@ -28,16 +28,37 @@ import com.kristianlm.robotanks.box2dbridge.IShape;
 import com.kristianlm.robotanks.box2dbridge.IWorld;
 
 abstract public class GameShape {
-	
+
+    IBody body;
+    IShape shape;
+    Vec2 shapePosition;
+    GLInterface glShape;
+
 	public static GameShape create(GLRectangle rect) {
 		return new GameShapeRectangle(rect);
 	}
 	
-	abstract public void draw();
 	abstract public IShape attachToBody(IBody body, Vec2 position, float density);
 	abstract public IBody attachToNewBody(IWorld world, Vec2 position, float density);
-	abstract public void detachFromBody(IBody body);
-	abstract public void detachBody(IWorld world);
+
+    public void detachBody(IWorld world) {
+        world.destroyBody(body);
+        body = null;
+    }
+
+
+    public void draw() {
+        Vec2 p = body.getWorldCenter().add(shapePosition);
+
+        glShape.draw(p.x, p.y, body.getAngle());
+    }
+
+
+    public void detachFromBody(IBody body) {
+        body.destroyShape(shape);
+        shape = null;
+        body = null;
+    }
 	
 	
 

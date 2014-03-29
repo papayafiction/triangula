@@ -49,7 +49,7 @@ public class GameImpl implements GameInterface {
 	
 	private static final float TIME_STEP = 1f / 40f;
 	private static final int   ITERATIONS = 1;
-	
+
 	
 	IWorld world = Box2DFactory.newWorld();
 
@@ -74,18 +74,17 @@ public class GameImpl implements GameInterface {
 				aabb,
 				gravity,
 				true);
-		
-		GameShape gs;
-		
-		gs = GameShape.create(new GLRectangle(2, 0.5f));
-		IBody b1 = gs.attachToNewBody(world, null, density);
-		b1.setPosition(new Vec2(0, 2));
-		gsl.add(gs);
-		
-		gs = GameShape.create(new GLRectangle(1, 0.5f));
-		IBody b2 = gs.attachToNewBody(world, null, density);
-		b2.setPosition(new Vec2(0,-1));
-		gsl.add(gs);
+
+        for(float i = -2.5f;i<2.5f;i+=0.2f) {
+            for(float j = -2.5f;j<2.5f;j+=0.2f) {
+                GameShape gs;
+                gs = GameShape.create(new GLRectangle(0.1f, 0.1f));
+                IBody b1 = gs.attachToNewBody(world, null, density);
+                b1.setPosition(new Vec2(i, j));
+                gsl.add(gs);
+            }
+        }
+
 		
 		makeFence();
 	}

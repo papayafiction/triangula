@@ -30,7 +30,7 @@ import android.util.FloatMath;
 import com.lmdig.android.tutorial.oglbox2dbasics.tools.BufferTool;
 import com.lmdig.android.tutorial.oglbox2dbasics.tools.GLBufferTool;
 
-public class GLRectangle extends Rectangle {
+public class GLRectangle extends Rectangle implements GLInterface {
 	
 	FloatBuffer fbVertices;
 	
@@ -47,7 +47,6 @@ public class GLRectangle extends Rectangle {
 		glDrawArrays(GL_TRIANGLE_STRIP, 
 				0, 
 				4);
-
 	}
 	public void draw(float x, float y, float angle) {
 		glPushMatrix();

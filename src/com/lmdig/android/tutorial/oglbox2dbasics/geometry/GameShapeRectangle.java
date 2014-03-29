@@ -19,8 +19,6 @@
  *
  */
 
-
-
 package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 
 import org.jbox2d.common.Vec2;
@@ -34,15 +32,8 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 
 public class GameShapeRectangle extends GameShape {
 	
-	
-	GLRectangle rect;
-	IBody body;
-	IShape shape;
-	Vec2 shapePosition;
-	
-	
 	public GameShapeRectangle(GLRectangle r) {
-		rect = r;
+		glShape = r;
 	}
 	
 	
@@ -86,39 +77,15 @@ public class GameShapeRectangle extends GameShape {
 		
 		this.body = body;
 		shape = body.createBox(
-					rect.getHalfWidth(), 
-					rect.getHalfHeight(), 
+                    ((GLRectangle)glShape).getHalfWidth(),
+                    ((GLRectangle)glShape).getHalfHeight(),
 					position.x, 
 					position.y, 
 					density, 
 					0
 				);
-		
 
 		body.setMassFromShapes();
 		return shape;
-	}
-	
-	
-	@Override
-	public void detachBody(IWorld world) {
-		world.destroyBody(body);
-		body = null;
-	}
-	
-	
-	@Override
-	public void draw() {
-		Vec2 p = body.getWorldCenter().add(shapePosition);
-		
-		rect.draw(p.x, p.y, body.getAngle());
-	}
-
-
-	@Override
-	public void detachFromBody(IBody body) {
-		body.destroyShape(shape);
-		shape = null;
-		body = null;
 	}
 }

@@ -38,8 +38,6 @@ public class Rectangle {
 		onUpdateSize();
 	}
 
-	
-	
 	public float getWidth() {
 		return width;
 	}
@@ -70,5 +68,4 @@ public class Rectangle {
 		hheight = height * 0.5f;
 		hwidth = width * 0.5f;
 	}
-
 }
