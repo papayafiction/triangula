@@ -18,7 +18,11 @@ public class Starter extends BaseLevel implements Level {
         this.ground = world.getGroundBody();
         this.world = world;
         this.gsl = gsl;
-        Map level = parseLevel();
-        makeTriangles((List)level.get("triangles"));
+
+        super.make(world,gsl);
+
+        Map levelJson = parseLevel();
+
+        makeTriangles((List)levelJson.get("triangles"));
     }
 }
