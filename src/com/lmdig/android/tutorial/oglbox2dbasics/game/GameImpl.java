@@ -29,6 +29,7 @@ import java.util.Random;
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.*;
 import com.lmdig.android.tutorial.oglbox2dbasics.levels.Level;
 import com.lmdig.android.tutorial.oglbox2dbasics.levels.Starter;
+import com.lmdig.android.tutorial.oglbox2dbasics.particles.Particle;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -46,8 +47,8 @@ import com.lmdig.android.tutorial.oglbox2dbasics.MainActivity;
 public class GameImpl implements GameInterface {
 
 	
-	private static final float TIME_STEP = 1f / 40f;
-	private static final int   ITERATIONS = 1;
+	private static final float TIME_STEP = 1f / 60f;
+	private static final int   ITERATIONS = 5;
 
     private Level level;
 
@@ -55,7 +56,8 @@ public class GameImpl implements GameInterface {
 	IWorld world = Box2DFactory.newWorld();
 
 	List<GameShape> gsl = new ArrayList<GameShape>();
-	
+	List<Particle> pl = new ArrayList<Particle>();
+
 	public void init() {
 
         level = new Starter();
@@ -125,8 +127,13 @@ public class GameImpl implements GameInterface {
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-3, 0), density);
 		gsl.add(gs);
-		
-		
+
+        for(int i = 1;i<5;++i) {
+            for(int j = 1;j<5;++j) {
+                pl.add(new Particle(i,j));
+            }
+        }
+
 	}
 
 	public void destroy() {
@@ -143,6 +150,10 @@ public class GameImpl implements GameInterface {
 		for(GameShape gs : gsl) {
 			gs.draw();
 		}
+
+        for(Particle particle: pl) {
+            particle.draw();
+        }
 	}
 	
 	long nanoTime;
