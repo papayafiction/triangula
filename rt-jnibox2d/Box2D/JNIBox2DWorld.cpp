@@ -39,7 +39,7 @@ b2Body* bodyList[MAX_BODIES];
 
 //----------
 
-JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nTestLib
+JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nTestLib
   (JNIEnv *, jobject, jint k)  {
 
 	return k * 2;
@@ -52,7 +52,7 @@ JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    n_createWorld
  * Signature: (FFFFFFZ)I
  */
-JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateWorld
+JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateWorld
   (JNIEnv * env, jobject caller, jfloat x1, jfloat y1, jfloat x2, jfloat y2, jfloat gx, jfloat gy, jboolean canSleep) {
 
 
@@ -83,7 +83,7 @@ JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nStep
  * Signature: (FI)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nStep
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nStep
   (JNIEnv *, jobject, jfloat dt, jint iterations) {
 	world->Step(dt, iterations, iterations);
 }
@@ -93,7 +93,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nDestroy
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nDestroy
   (JNIEnv * env, jobject) {
 
 	DeleteAllGlobalRefs(env);
@@ -111,7 +111,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nCreateBody
  * Signature: (FF)I
  */
-JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateBody
+JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateBody
   (JNIEnv *, jobject, jfloat x, jfloat y) {
 
 	b2BodyDef bd;
@@ -136,7 +136,7 @@ JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nCreateStaticBody
  * Signature: (FF)I
  */
-JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateStaticBody
+JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateStaticBody
   (JNIEnv *, jobject, jfloat x, jfloat y) {
 
 	b2BodyDef bd;
@@ -162,7 +162,7 @@ JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nDestroyBody
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nDestroyBody
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nDestroyBody
   (JNIEnv * env, jobject caller, jint bodyID) {
 
 	if(bodyID < 0 || bodyID >= MAX_BODIES) {
@@ -235,7 +235,7 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
  * Method:    nUpdateAllPositions
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdateAllPositions
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdateAllPositions
   (JNIEnv * env, jobject) {
 
 	// Callback for all JNIBox2DBodies
@@ -259,7 +259,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
 * Method:    nSetGravity
 * Signature: (FF)V
 */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nSetGravity
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nSetGravity
 (JNIEnv *, jobject, jfloat gravity_x, jfloat gravity_y) {
     b2Vec2 gravity;
     gravity.Set(gravity_x,gravity_y);

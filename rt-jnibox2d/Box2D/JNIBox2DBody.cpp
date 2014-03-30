@@ -25,7 +25,7 @@
  * Method:    updateData
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nUpdateData
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nUpdateData
   (JNIEnv * env, jobject caller, jint id) {
 
 
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  *
  *
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nCreateBox
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateBox
   (JNIEnv *, jobject, jint ID, jfloat width, jfloat height, jfloat x, jfloat y, jfloat density, jfloat angle) {
 
 	if(bodyList[ID] == 0)
@@ -85,7 +85,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Signature: (IFFFFF)V
  *
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nCreateTriangle
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateTriangle
   (JNIEnv *, jobject, jint ID, jfloat size, jfloat x, jfloat y, jfloat density, jfloat angle) {
 
 	if(bodyList[ID] == 0)
@@ -109,7 +109,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nAssociateJNIObject
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nAssociateJNIObject
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nAssociateJNIObject
   (JNIEnv * env, jobject caller, jint id) {
 
 	if(id < 0 || id >= MAX_BODIES)
@@ -129,7 +129,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nApplyForce
  * Signature: (IFFFF)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nApplyForce
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyForce
   (JNIEnv * env, jobject caller, jint ID, jfloat fx, jfloat fy, jfloat wx, jfloat wy) {
 
 	if(ID < 0 || ID >= MAX_BODIES) {
@@ -153,7 +153,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nApplyTorque
  * Signature: (IF)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nApplyTorque
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyTorque
   (JNIEnv * env, jobject, jint ID, jfloat torque) {
 
 	if(ID < 0 || ID >= MAX_BODIES) {
@@ -177,7 +177,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nSetDamping
  * Signature: (IFF)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nSetDamping
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetDamping
   (JNIEnv * env, jobject, jint ID, jfloat liDa, jfloat anDa) {
 	if(ID < 0 || ID >= MAX_BODIES) {
 		throwExc(env, "ID #%d out of bounds");
@@ -197,7 +197,7 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
  * Method:    nSetPosition
  * Signature: (FF)V
  */
-JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nSetPosition
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetPosition
   (JNIEnv *, jobject, jint id, jfloat x, jfloat y) {
 
 	if(bodyList[id] == 0)
