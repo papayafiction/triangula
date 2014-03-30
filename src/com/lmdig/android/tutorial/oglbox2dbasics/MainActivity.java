@@ -33,6 +33,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -112,5 +113,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 		y = -event.values[1];
 		z = -event.values[2];
 	}
+
+    // Get touch event positions
+    public static int touch_x, touch_y;
+    public static boolean touched = false;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        touch_x = (int)event.getX();
+        touch_y = (int)event.getY();
+        touched = true;
+        return false;
+    }
     
 }

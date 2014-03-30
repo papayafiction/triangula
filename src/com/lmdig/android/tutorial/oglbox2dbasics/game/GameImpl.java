@@ -54,6 +54,8 @@ public class GameImpl implements GameInterface {
 
     private Level level;
 
+    private static IBody bdy;
+
 	
 	IWorld world = Box2DFactory.newWorld();
 
@@ -91,6 +93,14 @@ public class GameImpl implements GameInterface {
                 gsl.add(gs);
             }
         }
+
+        GameShape mydreieck;
+        mydreieck = new GameShapeTriangle(new GLTriangle(0.8f));
+        mydreieck.setColor(255.0f,76.0f,22.0f);
+        bdy = mydreieck.attachToNewBody(world, null, density);
+        bdy.setPosition(new Vec2(1.0f, 1.0f));
+        gsl.add(mydreieck);
+
 
 		makeFence();
         makeLevel();
@@ -182,12 +192,24 @@ public class GameImpl implements GameInterface {
 			JBox2DWorld jw = ((JBox2DWorld)world);
 			World w = jw.getWorld();
 			w.setGravity(new Vec2(MainActivity.x, MainActivity.y));
-		} else if  (world instanceof JNIBox2DWorld) {
+		} else if (world instanceof JNIBox2DWorld) {
             ((JNIBox2DWorld) world).setGravity(MainActivity.x, MainActivity.y);
         }
+
+        if(MainActivity.touched){
+            MainActivity.touched = false;
+            //Calculate the target vector
+            Vec2 currPlayerPosition = bdy.getWorldCenter();
+            float targetX = (currPlayerPosition.x-MainActivity.touch_x)/50.0f;
+            float targetY = (currPlayerPosition.y-MainActivity.touch_y)/50.0f;
+
+            bdy.applyForce(new Vec2(MainActivity.touch_x,MainActivity.touch_y),new Vec2(targetX,targetX));
+        }
+		
+
 		world.step(TIME_STEP, ITERATIONS);
 		world.sync();
 	}
-	
+
 
 }
