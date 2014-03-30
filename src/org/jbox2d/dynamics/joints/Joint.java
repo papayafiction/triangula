@@ -27,7 +27,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.TimeStep;
 
-import com.kristianlm.robotanks.box2dbridge.IJoint;
+import de.sopamo.box2dbridge.IJoint;
 
 
 //Updated to rev 56->97->144 of b2Joint.cpp/.h

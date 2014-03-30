@@ -41,8 +41,6 @@ import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.jbox2d.pooling.TLAABB;
 
-import com.kristianlm.robotanks.box2dbridge.IShape;
-
 
 //Updated through rev. 56->139 of b2Shape.cpp/.h
 

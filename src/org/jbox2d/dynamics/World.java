@@ -63,8 +63,6 @@ import org.jbox2d.pooling.TLTimeStep;
 import org.jbox2d.pooling.stacks.IslandStack;
 import org.jbox2d.pooling.stacks.TimeStepStack;
 
-import com.kristianlm.robotanks.box2dbridge.IWorld;
-
 
 //Updated to rev 56->118->142->150 of b2World.cpp/.h
 

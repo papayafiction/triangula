@@ -26,11 +26,9 @@ package org.jbox2d.dynamics;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jbox2d.collision.FilterData;
 import org.jbox2d.collision.MassData;
 import org.jbox2d.collision.shapes.EdgeChainDef;
 import org.jbox2d.collision.shapes.EdgeShape;
-import org.jbox2d.collision.shapes.PolygonDef;
 import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.collision.shapes.ShapeDef;
 import org.jbox2d.collision.shapes.ShapeType;
@@ -44,9 +42,6 @@ import org.jbox2d.dynamics.controllers.ControllerEdge;
 import org.jbox2d.dynamics.joints.JointEdge;
 import org.jbox2d.pooling.TLVec2;
 import org.jbox2d.pooling.TLXForm;
-
-import com.kristianlm.robotanks.box2dbridge.IBody;
-import com.kristianlm.robotanks.box2dbridge.IShape;
 
 // Updated to rev. 54->118->142 of b2Body.cpp/.h
 // Rewritten completely for rev. 118 (too many changes, needed reorganization for maintainability)
