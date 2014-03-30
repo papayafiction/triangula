@@ -24,6 +24,9 @@ package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
 import com.kristianlm.robotanks.box2dbridge.IWorld;
+import com.kristianlm.robotanks.box2dbridge.jbox2d.JBox2DWorld;
+import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DBody;
+import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DWorld;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 
@@ -44,7 +47,9 @@ public class GameShapeTriangle extends GameShape {
 		def.angularDamping = 0.5f;
 		def.linearDamping = 0.5f;
 		def.allowSleep = false;
-		body = world.createBody(def);
+		body = (world instanceof JNIBox2DWorld)?
+                ((JNIBox2DWorld) world).createBody(def, density):
+                world.createBody(def);
 		
 		attachToBody(body, position, density);
 		

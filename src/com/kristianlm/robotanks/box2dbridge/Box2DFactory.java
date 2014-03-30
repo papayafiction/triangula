@@ -44,6 +44,7 @@ public class Box2DFactory {
 			world = new JNIBox2DWorld();
 			return world;
 		}
+
 		else {
 			Log.i("pg", "Using JBox2D as physics engine.");
 			return new JBox2DWorld();

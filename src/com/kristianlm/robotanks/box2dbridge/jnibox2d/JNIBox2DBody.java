@@ -46,9 +46,6 @@ public class JNIBox2DBody implements IBody {
 
 	public JNIBox2DBody(int id) {
 		this.bodyID = id;
-
-		System.out.println("associated " + this + " with " + id);
-		// let libbox2d know which java object stores the lib's body object
 		nAssociateJNIObject(id);
 	}
 
@@ -95,21 +92,20 @@ public class JNIBox2DBody implements IBody {
 	public IShape createBox(float width, float height, float x, float y,
 			float density, float angle) {
 
-		int shapeID = nCreateBox(bodyID, width, height, x, y, density, angle);
+		nCreateBox(bodyID, width, height, x, y, density, angle);
 
 		// System.out.println("Created shape ID " + shapeID);
 
-		IShape s = new JNIBox2DShape(shapeID, this);
+		IShape s = new JNIBox2DShape(0, this);
 		return s;
 	}
 
-
     public IShape createTriangle(float size, float x, float y, float density, float angle) {
-        int shapeID = nCreateBox(bodyID, size, size, x, y, density, angle);
+        nCreateTriangle(bodyID, size, x, y, density, angle);
 
         // System.out.println("Created shape ID " + shapeID);
 
-        IShape s = new JNIBox2DShape(shapeID, this);
+        IShape s = new JNIBox2DShape(0, this);
         return s;
     }
 
@@ -197,45 +193,35 @@ public class JNIBox2DBody implements IBody {
 	}
 
 	@Override
-	public void setMassFromShapes() {
-		nSetMassFromShapes(bodyID);
+	public void setMassFromShapes(){
 	}
 
 	@Override
 	public FilterData getFilterData() {
-		FilterData fd = new FilterData();
-		nGetFilterData(bodyID, fd);
-		return fd;
+		return null;
 	}
 
 	public void refilter(int categoryBits, int maskBits, int groupIndex) {
-		nRefilter(bodyID, categoryBits, maskBits, groupIndex);
 	}
 
 	public void refilter() {
-		nRefilter(bodyID, 0x01, 0xFF, 0);
+
 	}
 
 	@Override
 	public void destroyShape(IShape shape) {
-		if (!(shape instanceof JNIBox2DShape))
-			return;
 
-		JNIBox2DShape s = (JNIBox2DShape) shape;
-		nDestroyShape(bodyID, s.shapeID);
 
 	}
 
 	static {
-		System.loadLibrary("box2d");
+		System.loadLibrary("Box2D");
 	}
 
-	native void nUpdateData(int ID);
-
-	native int nCreateBox(int ID, float width, float height, float x, float y,
+	native void nCreateBox(int ID, float width, float height, float x, float y,
 			float density, float angle);
 
-	native int nCreateShape(int ID, float density, float[] ordered_vlist);
+    native void nCreateTriangle(int ID, float size, float x, float y, float density, float angle);
 
 	native void nApplyForce(int ID, float fx, float fy, float px, float py);
 
@@ -247,18 +233,8 @@ public class JNIBox2DBody implements IBody {
 	 */
 	native public void nAssociateJNIObject(int ID);
 
-	native public void nSetMassFromShapes(int ID);
-
 	native public void nSetDamping(int ID, float linearDamping,
 			float angularDamping);
-
-	native private void nRefilter(int ID, int categoryBits, int maskBits,
-			int groupIndex);
-
-	native private void nGetFilterData(int bodyID, FilterData fd);
-
-	native private void nDestroyShape(int bodyID, int shapeID);
-	
 	native private void nSetPosition(int bodyID, float posx, float posy);
 
 }

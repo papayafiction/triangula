@@ -36,7 +36,6 @@ public class JNIBox2DShape implements IShape {
 		this.body = body;
 		shapeID = ID;
 
-		nAssociateShape(shapeID);
 	}
 
 	/*
@@ -55,7 +54,5 @@ public class JNIBox2DShape implements IShape {
 	public Object getUserData() {
 		return userData;
 	}
-
-	native void nAssociateShape(int id);
 
 }

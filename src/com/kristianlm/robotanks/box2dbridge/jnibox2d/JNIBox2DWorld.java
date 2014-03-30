@@ -23,6 +23,7 @@
 
 package com.kristianlm.robotanks.box2dbridge.jnibox2d;
 
+import android.util.Log;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.Segment;
 import org.jbox2d.common.RaycastResult;
@@ -36,9 +37,9 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 
 public class JNIBox2DWorld implements IWorld {
 
+
 	JNIBox2DBody groundBody;
-	
-	
+
 	public boolean testJNI() throws UnsatisfiedLinkError {
 		// this is our plan:
 		// make a test call to native library. it may throw unsatisfiedlink exception,
@@ -72,12 +73,21 @@ public class JNIBox2DWorld implements IWorld {
 		return 0;
 	}
 
+    public IBody createBody(BodyDef def, float density) {
+        if(density != 0) return createBody(def);
+
+        int id = nCreateStaticBody(def.position.x,def.position.y);
+        JNIBox2DBody jb = new JNIBox2DBody(id);
+        jb.setUserData(def.userData);
+
+        return jb;
+    }
+
 	@Override
 	public IBody createBody(BodyDef def) {
 
 		int id = nCreateBody(def.position.x, def.position.y);
 		JNIBox2DBody jb = new JNIBox2DBody(id);
-
 		jb.setUserData(def.userData);
 
 		return jb;
@@ -94,38 +104,12 @@ public class JNIBox2DWorld implements IWorld {
 
 		JNIBox2DShape[] shapeList = new JNIBox2DShape[maxCount];
 		
-		nShapeQuery(aabb.lowerBound.x, aabb.lowerBound.y,
-				aabb.upperBound.x, aabb.upperBound.y, maxCount, shapeList);
-
 		/*
 		 * IShape [] is = new JNIBox2DShape [bodies] ; for(int i = 0 ; i <
 		 * bodies ; i++) { is[i] = new JNIBox2DShape(bodyList[i]); }
 		 */
 		// System.out.println("Found " + bodies + " bodies in query.");
 		return shapeList;
-	}
-
-	public IJoint createRevoluteJoint(IBody body1, IBody body2, float anchorX, float anchorY) {
-		JNIBox2DBody b1 = null, b2 = null;
-
-		if (body1 instanceof JNIBox2DBody)
-			b1 = (JNIBox2DBody) body1;
-		else
-			return null;
-
-		if (body2 instanceof JNIBox2DBody)
-			b2 = (JNIBox2DBody) body2;
-		else
-			return null;
-
-		int jID = nCreateRevoluteJoint(b1.bodyID, b2.bodyID, anchorX, anchorY);
-		
-		if(jID < 0) {
-			System.out.println("native could not create joint");
-			return null;
-		}
-		
-		return new JNIBox2DJoint(jID);
 	}
 
 	@Override
@@ -136,9 +120,6 @@ public class JNIBox2DWorld implements IWorld {
 			return;
 		}
 
-		JNIBox2DJoint jj = (JNIBox2DJoint) j;
-
-		nDestroyJoint(jj.jointID);
 
 	}
 
@@ -146,11 +127,7 @@ public class JNIBox2DWorld implements IWorld {
 	public IShape raycastOne(Segment s, RaycastResult rr, boolean solidShapes,
 			Object userData) {
 
-		JNIBox2DShape shape = nRaycastOne(s.p1.x, s.p1.y, s.p2.x, s.p2.y, rr,
-				solidShapes, userData);
-
-		return shape;
-		// return null;
+		return null;
 	}
 
 	@Override
@@ -169,11 +146,17 @@ public class JNIBox2DWorld implements IWorld {
 	public void destroy() {
 		nDestroy();
 	}
-	
-	@Override
+
+    @Override
+    public IJoint createRevoluteJoint(IBody body1, IBody body2, float anchorX, float anchorY) {
+        return null;
+    }
+
+    @Override
 	public void sync() {
-		nUpdateAllPositions();		
+        nUpdateAllPositions();
 	}
+
 	// implemented in C/C++
 	// automatically dynamically linked at run-time
 	// JVM looks for .so/.dll files in java.library.path
@@ -184,38 +167,37 @@ public class JNIBox2DWorld implements IWorld {
 	public static boolean isJniOK() { return jniOk; }
 	static {
 		try  {
-			System.loadLibrary("box2d");
+			System.loadLibrary("Box2D");
 			jniOk = true;
 		} catch (java.lang.UnsatisfiedLinkError e) {
 			jniOk = false;
 		}
 	}
 
+    public void setGravity(float x,float y) {
+        nSetGravity(x,y);
+    }
+
+    @Override
+    public void step(float dt, int iterations) {
+        nStep(dt,iterations);
+    }
+
 	native private int nTestLib(int k);
 
 	native public int nCreateWorld(float x1, float y1, float x2, float y2,
 			float gravity_x, float gravity_y, boolean canSleep);
 
-	// fills shapeList with IDs of shapes
-	native private int nShapeQuery(float x1, float y1, float x2, float y2,
-			int maxCount, Object[] shapeList);
-
-	native public void step(float dt, int iterations);
+	native public void nStep(float dt, int iterations);
 
 	native public void nDestroy();
 
 	native public int nCreateBody(float x, float y);
 
+    native public int nCreateStaticBody(float x, float y);
+
 	native public void nDestroyBody(int bodyID);
 
-	native public int nCreateRevoluteJoint(int body1, int body2, float x,
-			float y);
-
-	native public void nDestroyJoint(int jointID);
-
-	native private JNIBox2DShape nRaycastOne(float p1x, float p1y, float p2x,
-			float p2y, RaycastResult rr, boolean solidShapes, Object userData);
-
-	native private void nUpdateAllPosditions();
+    native public void nSetGravity(float gravity_x, float gravity_y);
 
 }

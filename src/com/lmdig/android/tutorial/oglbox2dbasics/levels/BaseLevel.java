@@ -43,9 +43,9 @@ public class BaseLevel {
 
             GameShape gs;
             gs = new GameShapeTriangle(new GLTriangle(size));
-            gs.setColor(new Random().nextFloat(),new Random().nextFloat(),new Random().nextFloat(),1);
-            IBody b1 = gs.attachToNewBody(world, null, 0);
-            b1.setPosition(new Vec2(x, y));
+            gs.setColor(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1);
+            IBody body = gs.attachToNewBody(world, null, 0);
+            body.setPosition(new Vec2(x,y));
             gsl.add(gs);
         }
     }
