@@ -43,7 +43,7 @@ public class GLRectangle extends Rectangle implements GLInterface {
 	}
 	
 	public void draw() {
-		GLBufferTool.setGLVertexBuffer(2, fbVertices); 
+		GLBufferTool.setGLVertexBuffer(2, fbVertices);
 		glDrawArrays(GL_TRIANGLE_STRIP, 
 				0, 
 				4);
