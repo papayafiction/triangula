@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
     }
     

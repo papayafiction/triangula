@@ -31,24 +31,24 @@ public class BaseLevel {
     protected void makeFence() {
         float density = 0;
         GameShape gs;
-        gs = GameShape.create(new GLRectangle(50, .1f));
+        gs = GameShape.create(new GLRectangle(18, .1f));
         gs.setColor(1,1,0,1);
-        gs.attachToBody(ground, new Vec2(0, -4), density);
+        gs.attachToBody(ground, new Vec2(0, -5f), density);
         gsl.add(gs);
 
-        gs = GameShape.create(new GLRectangle(50, .1f));
+        gs = GameShape.create(new GLRectangle(18, .1f));
         gs.setColor(1,0,0,1);
-        gs.attachToBody(ground, new Vec2(0, 4), density);
+        gs.attachToBody(ground, new Vec2(0, 5f), density);
         gsl.add(gs);
 
-        gs = GameShape.create(new GLRectangle(.1f, 50f));
+        gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
-        gs.attachToBody(ground, new Vec2(3, 0), density);
+        gs.attachToBody(ground, new Vec2(9f, 0), density);
         gsl.add(gs);
 
-        gs = GameShape.create(new GLRectangle(.1f, 50f));
+        gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,1,0,1);
-        gs.attachToBody(ground, new Vec2(-3, 0), density);
+        gs.attachToBody(ground, new Vec2(-9f, 0), density);
         gsl.add(gs);
     }
 

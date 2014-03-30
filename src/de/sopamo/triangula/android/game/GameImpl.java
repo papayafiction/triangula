@@ -74,7 +74,7 @@ public class GameImpl implements GameInterface {
 
         // Create player
         GameShape myTriangle;
-        myTriangle = new GameShapeTriangle(new GLTriangle(0.8f));
+        myTriangle = new GameShapeTriangle(new GLTriangle(0.2f));
         myTriangle.setColor(255.0f,76.0f,22.0f);
         bdy = myTriangle.attachToNewBody(world, null, density);
         bdy.setPosition(new Vec2(1.0f, 1.0f));
@@ -133,19 +133,20 @@ public class GameImpl implements GameInterface {
 		if(world instanceof JBox2DWorld) {
 			JBox2DWorld jw = ((JBox2DWorld)world);
 			World w = jw.getWorld();
-			w.setGravity(new Vec2(MainActivity.x, MainActivity.y));
+			//w.setGravity(new Vec2(MainActivity.x, MainActivity.y));
 		} else if (world instanceof JNIBox2DWorld) {
-            ((JNIBox2DWorld) world).setGravity(MainActivity.x, MainActivity.y);
+            //((JNIBox2DWorld) world).setGravity(MainActivity.x, MainActivity.y);
         }
 
         if(MainActivity.touched){
             MainActivity.touched = false;
             //Calculate the target vector
             Vec2 currPlayerPosition = bdy.getWorldCenter();
-            float targetX = (currPlayerPosition.x-MainActivity.touch_x)/50.0f;
-            float targetY = (currPlayerPosition.y-MainActivity.touch_y)/50.0f;
-
-            bdy.applyForce(new Vec2(MainActivity.touch_x,MainActivity.touch_y),new Vec2(targetX,targetY));
+            float targetX = currPlayerPosition.x;
+            float targetY = currPlayerPosition.y;
+            Log.e("foo",""+currPlayerPosition.x);
+            Log.e("foo",""+MainActivity.touch_x);
+            bdy.applyForce(new Vec2(targetX,targetY+10),new Vec2(targetX,targetY));
         }
 		
 		world.step(TIME_STEP, ITERATIONS);
