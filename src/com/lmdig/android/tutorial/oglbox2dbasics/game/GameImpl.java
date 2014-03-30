@@ -22,12 +22,12 @@
 
 package com.lmdig.android.tutorial.oglbox2dbasics.game;
 
-import static android.opengl.GLES10.glColor4f;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DBody;
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShapeRectangle;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
@@ -60,7 +60,7 @@ public class GameImpl implements GameInterface {
 	public void init() {
 
 		// density of dynamic bodies
-		float density = 1;
+		float density = 0;
 		
 		// create world's bounding box. 
 		// if objects exceed these borders, they will no longer be
@@ -77,8 +77,8 @@ public class GameImpl implements GameInterface {
 				gravity,
 				true);
 
-        for(float i = -2.5f;i<2.5f;i+=1f) {
-            for(float j = -2.5f;j<2.5f;j+=1f) {
+        for(float i = -2.5f;i<2.5f;i+=0.5f) {
+            for(float j = -2.5f;j<2.5f;j+=0.5f) {
                 GameShape gs;
                 gs = new GameShapeRectangle(new GLRectangle(0.1f, 0.1f));
                 gs.setColor(new Random().nextFloat(),new Random().nextFloat(),new Random().nextFloat(),1);
@@ -103,7 +103,7 @@ public class GameImpl implements GameInterface {
         gs.setColor(1,1,0,1);
 		gs.attachToBody(ground, new Vec2(0, -4), density);
 		gsl.add(gs);
-		
+
 		gs = GameShape.create(new GLRectangle(50, .1f));
         gs.setColor(1,0,0,1);
 		gs.attachToBody(ground, new Vec2(0, 4), density);
@@ -118,13 +118,11 @@ public class GameImpl implements GameInterface {
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-3, 0), density);
 		gsl.add(gs);
-		
+
 		gs = GameShape.create(new GLRectangle(.1f, .1f));
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-.5f, -.5f), density);
 		gsl.add(gs);
-		
-		
 	}
 
 	public void destroy() {
@@ -172,8 +170,9 @@ public class GameImpl implements GameInterface {
 			JBox2DWorld jw = ((JBox2DWorld)world);
 			World w = jw.getWorld();
 			w.setGravity(new Vec2(MainActivity.x, MainActivity.y));
-		}
-		
+		} else if  (world instanceof JNIBox2DWorld) {
+            ((JNIBox2DWorld) world).setGravity(MainActivity.x, MainActivity.y);
+        }
 		world.step(TIME_STEP, ITERATIONS);
 		world.sync();
 	}

@@ -34,156 +34,171 @@ import android.util.Log;
 import com.kristianlm.robotanks.box2dbridge.IBody;
 import com.kristianlm.robotanks.box2dbridge.IShape;
 
+import java.util.List;
+
 public class JBox2DBody implements IBody {
 
-	Body body;
+    Body body;
 
-	public JBox2DBody(Body b) {
-		body = b;
-	}
+    public JBox2DBody(Body b) {
+        body = b;
+    }
 
-	@Override
-	public float getInertiaInv() {
-		return body.m_invI;
-	}
+    @Override
+    public float getInertiaInv() {
+        return body.m_invI;
+    }
 
-	@Override
-	public IShape createBox(float halfWidth, float halfHeight, float x,
-			float y, float density, float angle) {
+    @Override
+    public IShape createBox(float halfWidth, float halfHeight, float x,
+                            float y, float density, float angle) {
 
-		PolygonDef pd = new PolygonDef();
-		pd.density = density;
+        PolygonDef pd = new PolygonDef();
+        pd.density = density;
 
-		Vec2 center = new Vec2(x, y);
-		pd.setAsBox(halfWidth, halfHeight, center, angle);
+        Vec2 center = new Vec2(x, y);
+        pd.setAsBox(halfWidth, halfHeight, center, angle);
 
-		// System.out.println("created shape with density " + pd.density);
+        // System.out.println("created shape with density " + pd.density);
 
-		Shape shape = body.createShape(pd);
-		return new JBox2DShape(this, shape);
+        Shape shape = body.createShape(pd);
+        return new JBox2DShape(this, shape);
 
-	}
+    }
 
-	@Override
-	public void refilter(int categoryBits, int maskBits, int groupIndex) {
+    public IShape createTriangle(float size, float x, float y, float density, float angle) {
 
-		FilterData fd = new FilterData();
-		fd.categoryBits = categoryBits;
-		fd.maskBits = maskBits;
-		fd.groupIndex = groupIndex;
+        PolygonDef pd = new PolygonDef();
+        float hsize = size * 1f;
+        pd.addVertex(new Vec2(0,-hsize));
+        pd.addVertex(new Vec2(hsize,hsize));
+        pd.addVertex(new Vec2(-hsize,hsize));
+        pd.density = density;
 
-		Shape shapeList = body.getShapeList();
-		if(shapeList != null)
-			shapeList.setFilterData(fd);
+        Shape shape = body.createShape(pd);
+        return new JBox2DShape(this, shape);
+    }
 
-		body.getWorld().refilter(body.getShapeList());
-	}
+    @Override
+    public void refilter(int categoryBits, int maskBits, int groupIndex) {
 
-	@Override
-	public FilterData getFilterData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        FilterData fd = new FilterData();
+        fd.categoryBits = categoryBits;
+        fd.maskBits = maskBits;
+        fd.groupIndex = groupIndex;
 
-	@Override
-	public void refilter() {
-		FilterData fd = new FilterData();
+        Shape shapeList = body.getShapeList();
+        if(shapeList != null)
+            shapeList.setFilterData(fd);
 
-		fd.categoryBits = 0x01;
-		fd.maskBits = 0xFF;
-		fd.groupIndex = 0;
-		body.getShapeList().setFilterData(fd);
+        body.getWorld().refilter(body.getShapeList());
+    }
 
-		body.getWorld().refilter(body.getShapeList());
+    @Override
+    public FilterData getFilterData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	}
+    @Override
+    public void refilter() {
+        FilterData fd = new FilterData();
 
-	@Override
-	public void applyForce(Vec2 force, Vec2 point) {
-		body.applyForce(force, point);
-	}
+        fd.categoryBits = 0x01;
+        fd.maskBits = 0xFF;
+        fd.groupIndex = 0;
+        body.getShapeList().setFilterData(fd);
 
-	@Override
-	public void applyTorque(float t) {
-		body.applyTorque(t);
+        body.getWorld().refilter(body.getShapeList());
 
-	}
+    }
 
-	@Override
-	public float getAngle() {
-		return body.getAngle();
-	}
+    @Override
+    public void applyForce(Vec2 force, Vec2 point) {
+        body.applyForce(force, point);
+    }
 
-	@Override
-	public float getAngularVelocity() {
-		return body.getAngularVelocity();
-	}
+    @Override
+    public void applyTorque(float t) {
+        body.applyTorque(t);
 
-	@Override
-	public Vec2 getLinearVelocity() {
-		return body.getLinearVelocity();
-	}
+    }
 
-	@Override
-	public Object getUserData() {
-		return body.getUserData();
-	}
+    @Override
+    public float getAngle() {
+        return body.getAngle();
+    }
 
-	@Override
-	public Vec2 getWorldCenter() {
-		return body.getWorldCenter();
-	}
+    @Override
+    public float getAngularVelocity() {
+        return body.getAngularVelocity();
+    }
 
-	@Override
-	public Vec2 getWorldDirection(Vec2 p) {
-		return body.getWorldDirection(p);
-	}
+    @Override
+    public Vec2 getLinearVelocity() {
+        return body.getLinearVelocity();
+    }
 
-	@Override
-	public void getWorldLocationToOut(Vec2 p, Vec2 q) {
-		body.getWorldLocationToOut(p, q);
-	}
+    @Override
+    public Object getUserData() {
+        return body.getUserData();
+    }
 
-	@Override
-	public boolean isSleeping() {
-		return body.isSleeping();
-	}
+    @Override
+    public Vec2 getWorldCenter() {
+        return body.getWorldCenter();
+    }
 
-	@Override
-	public void setAngularDamping(float d) {
-		body.setAngularDamping(d);
+    @Override
+    public Vec2 getWorldDirection(Vec2 p) {
+        return body.getWorldDirection(p);
+    }
 
-	}
+    @Override
+    public void getWorldLocationToOut(Vec2 p, Vec2 q) {
+        body.getWorldLocationToOut(p, q);
+    }
 
-	@Override
-	public void setLinearDamping(float d) {
-		body.setLinearDamping(d);
-	}
+    @Override
+    public boolean isSleeping() {
+        return body.isSleeping();
+    }
 
-	@Override
-	public void setMassFromShapes() {
-		body.setMassFromShapes();
-		Log.e("pg", "SET MASS FROM SHAPES");
-		Thread.dumpStack();
+    @Override
+    public void setAngularDamping(float d) {
+        body.setAngularDamping(d);
 
-	}
+    }
 
-	@Override
-	public void destroyShape(IShape shape) {
-		if (!(shape instanceof JBox2DShape))
-			return;
+    @Override
+    public void setLinearDamping(float d) {
+        body.setLinearDamping(d);
+    }
 
-		JBox2DShape s = (JBox2DShape) shape;
-		body.destroyShape(s.shape);
-	}
+    @Override
+    public void setMassFromShapes() {
+        body.setMassFromShapes();
+        Log.e("pg", "SET MASS FROM SHAPES");
+        Thread.dumpStack();
 
-	@Override
-	public void setPosition(Vec2 pos) {
-		body.setXForm(pos, body.getAngle());
-		
-	}
+    }
 
-	public Body getBody() {
-		return body;
-	}
+    @Override
+    public void destroyShape(IShape shape) {
+        if (!(shape instanceof JBox2DShape))
+            return;
+
+        JBox2DShape s = (JBox2DShape) shape;
+        body.destroyShape(s.shape);
+    }
+
+    @Override
+    public void setPosition(Vec2 pos) {
+        body.setXForm(pos, body.getAngle());
+
+    }
+
+    public Body getBody() {
+        return body;
+    }
 }
