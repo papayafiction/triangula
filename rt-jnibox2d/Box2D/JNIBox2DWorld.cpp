@@ -7,7 +7,7 @@
  *
  */
 
-#include "Headers/gen/com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld.h"
+#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld.h"
 #include "JNIBox2DWorld.h"
 #include "Box2D.h"
 #include "JNIRefs.h"
@@ -16,7 +16,7 @@
 //#include <iostream>
 //using namespace std;
 
-// we may be missing something here ... but JNIEXPORT is empty so this is so much more convenient!
+// we may be missing com/kristianlm/robotankssomething here ... but JNIEXPORT is empty so this is so much more convenient!
 #undef JNIEXPORT
 #define JNIEXPORT extern "C"
 
@@ -48,7 +48,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nTestLi
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    n_createWorld
  * Signature: (FFFFFFZ)I
  */
@@ -79,7 +79,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nStep
  * Signature: (FI)V
  */
@@ -89,7 +89,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nStep
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nDestroy
  * Signature: ()V
  */
@@ -107,7 +107,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nDestro
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nCreateBody
  * Signature: (FF)I
  */
@@ -132,7 +132,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nCreateStaticBody
  * Signature: (FF)I
  */
@@ -158,7 +158,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 
 
 /*
- * Class:     com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nDestroyBody
  * Signature: (I)V
  */
@@ -197,9 +197,9 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 
 
 	if(jniBodyClass == 0) {
-		jniBodyClass = env->FindClass("com/kristianlm/robotanks/box2dbridge/jnibox2d/JNIBox2DBody");//env->GetObjectClass(caller);
+		jniBodyClass = env->FindClass("de/sopamo/box2dbridge/jnibox2d/JNIBox2DBody");//env->GetObjectClass(caller);
 		if(jniBodyClass == 0) {
-			throwExc(env, "com/kristianlm/robotanks/box2dbridge/jnibox2d/JNIBox2DBody not found");
+			throwExc(env, "de/sopamo/box2dbridge/jnibox2d/JNIBox2DBody not found");
 			return;
 		}
 
@@ -231,7 +231,7 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 }
 
 /*
- * Class:     com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nUpdateAllPositions
  * Signature: ()V
  */
@@ -255,7 +255,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdate
 }
 
 /*
-* Class:     com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld
+* Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
 * Method:    nSetGravity
 * Signature: (FF)V
 */

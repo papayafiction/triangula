@@ -5,7 +5,7 @@
  *      Author: klm
  */
 
-#include "Headers/gen/com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody.h"
+#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody.h"
 
 #include "Box2D.h"
 #include "JNIBox2DWorld.h"
@@ -21,7 +21,7 @@
 
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    updateData
  * Signature: (I)V
  */
@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nUpdateD
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nCreateBox
  * Signature: (FFFFFIII)V
  *
@@ -80,7 +80,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateB
 
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nCreateTriangle
  * Signature: (IFFFFF)V
  *
@@ -105,7 +105,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nAssociateJNIObject
  * Signature: (I)V
  */
@@ -125,7 +125,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nAssocia
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nApplyForce
  * Signature: (IFFFF)V
  */
@@ -149,7 +149,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyFo
 }
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nApplyTorque
  * Signature: (IF)V
  */
@@ -173,7 +173,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyTo
 
 
 /*
- * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nSetDamping
  * Signature: (IFF)V
  */
@@ -193,7 +193,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetDamp
 
 
 /*
- * Class:     com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody
+ * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nSetPosition
  * Signature: (FF)V
  */
