@@ -73,6 +73,16 @@ public class JNIBox2DWorld implements IWorld {
 		return 0;
 	}
 
+    public IBody createBody(BodyDef def, float density) {
+        if(density != 0) return createBody(def);
+
+        int id = nCreateStaticBody(def.position.x,def.position.y);
+        JNIBox2DBody jb = new JNIBox2DBody(id);
+        jb.setUserData(def.userData);
+
+        return jb;
+    }
+
 	@Override
 	public IBody createBody(BodyDef def) {
 
@@ -183,6 +193,8 @@ public class JNIBox2DWorld implements IWorld {
 	native public void nDestroy();
 
 	native public int nCreateBody(float x, float y);
+
+    native public int nCreateStaticBody(float x, float y);
 
 	native public void nDestroyBody(int bodyID);
 

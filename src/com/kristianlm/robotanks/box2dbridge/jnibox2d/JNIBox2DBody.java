@@ -20,7 +20,6 @@
  */
 package com.kristianlm.robotanks.box2dbridge.jnibox2d;
 
-import android.util.Log;
 import org.jbox2d.collision.FilterData;
 import org.jbox2d.common.Vec2;
 
@@ -71,7 +70,6 @@ public class JNIBox2DBody implements IBody {
 	public void callbackSetData(float x, float y, float vx, float vy,
 			float angle, float avel, float inertiaInv) {
 		position.x = x;
-
 		position.y = y;
 
 		velocity.x = vx;
@@ -91,6 +89,27 @@ public class JNIBox2DBody implements IBody {
 	}
 
 	@Override
+	public IShape createBox(float width, float height, float x, float y,
+			float density, float angle) {
+
+		nCreateBox(bodyID, width, height, x, y, density, angle);
+
+		// System.out.println("Created shape ID " + shapeID);
+
+		IShape s = new JNIBox2DShape(0, this);
+		return s;
+	}
+
+    public IShape createTriangle(float size, float x, float y, float density, float angle) {
+        nCreateTriangle(bodyID, size, x, y, density, angle);
+
+        // System.out.println("Created shape ID " + shapeID);
+
+        IShape s = new JNIBox2DShape(0, this);
+        return s;
+    }
+
+	@Override
 	public void applyForce(Vec2 force, Vec2 point) {
 		nApplyForce(bodyID, force.x, force.y, point.x, point.y);
 	}
@@ -106,18 +125,7 @@ public class JNIBox2DBody implements IBody {
 		return angle;
 	}
 
-    @Override
-    public IShape createBox(float halfWidth, float halfHeight, float x, float y, float density, float angle) {
-        nCreateBox(bodyID, halfWidth, halfHeight, x, y, density, angle,false);
-        return new JNIBox2DShape(0,this);
-    }
-
-    @Override
-    public IShape createTriangle(float size, float x, float y, float density, float angle) {
-        return null;
-    }
-
-    @Override
+	@Override
 	public float getAngularVelocity() {
 		// updateData();
 		return angularVelocity;
@@ -211,7 +219,9 @@ public class JNIBox2DBody implements IBody {
 	}
 
 	native void nCreateBox(int ID, float width, float height, float x, float y,
-			float density, float angle, boolean stat);
+			float density, float angle);
+
+    native void nCreateTriangle(int ID, float size, float x, float y, float density, float angle);
 
 	native void nApplyForce(int ID, float fx, float fy, float px, float py);
 

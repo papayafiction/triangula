@@ -21,34 +21,28 @@
 
 
 
-package com.kristianlm.robotanks.box2dbridge;
+package com.lmdig.android.tutorial.oglbox2dbasics.geometry;
 
-import android.util.Log;
+public class Triangle {
 
-import com.kristianlm.robotanks.box2dbridge.jbox2d.JBox2DWorld;
-import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DWorld;
+    private float size;
 
-public class Box2DFactory {
+	public Triangle() {
 
-	private static final boolean USE_JNI = true;
-
-	public static IWorld newWorld() {
-		IWorld world = null;
-		
-
-		// check fail flag
-		if(USE_JNI && JNIBox2DWorld.isJniOK()) {
-			Log.i("pg", "Using JNIBox2D as physics engine.");
-			// ensure static classloader is run
-			// (will catch the unsat link error and set fail flag.)
-			world = new JNIBox2DWorld();
-			return world;
-		}
-
-		else {
-			Log.i("pg", "Using JBox2D as physics engine.");
-			return new JBox2DWorld();
-		}
+	}
+	public Triangle(float size) {
+        this.size = size;
+		onUpdateSize();
 	}
 
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
+    }
+
+    protected void onUpdateSize() {
+	}
 }

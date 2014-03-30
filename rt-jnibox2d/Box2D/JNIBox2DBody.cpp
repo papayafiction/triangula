@@ -71,8 +71,34 @@ JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
         b2Vec2 center;
         center.Set(x,y);
 
-	    b2PolygonShape ps;
+	b2PolygonShape ps;
         ps.SetAsBox(width,height,center,angle);
+        
+        bodyList[ID]->CreateFixture(&ps,density);
+
+}
+
+
+/*
+ * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DBody
+ * Method:    nCreateTriangle
+ * Signature: (IFFFFF)V
+ *
+ */
+JNIEXPORT void JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody_nCreateTriangle
+  (JNIEnv *, jobject, jint ID, jfloat size, jfloat x, jfloat y, jfloat density, jfloat angle) {
+
+	if(bodyList[ID] == 0)
+		return;
+
+        b2Vec2 vertices[3];
+
+        vertices[0].Set(0,-size);
+        vertices[1].Set(size,size);
+        vertices[2].Set(-size,size);
+        
+        b2PolygonShape ps;
+        ps.Set(vertices,3);
         
         bodyList[ID]->CreateFixture(&ps,density);
 

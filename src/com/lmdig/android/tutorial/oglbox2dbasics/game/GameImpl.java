@@ -29,6 +29,9 @@ import java.util.Random;
 
 import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DBody;
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShapeRectangle;
+import com.lmdig.android.tutorial.oglbox2dbasics.geometry.*;
+import com.lmdig.android.tutorial.oglbox2dbasics.levels.Level;
+import com.lmdig.android.tutorial.oglbox2dbasics.levels.Starter;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -41,9 +44,6 @@ import com.kristianlm.robotanks.box2dbridge.IWorld;
 import com.kristianlm.robotanks.box2dbridge.jbox2d.JBox2DWorld;
 import com.kristianlm.robotanks.box2dbridge.jnibox2d.JNIBox2DWorld;
 import com.lmdig.android.tutorial.oglbox2dbasics.MainActivity;
-import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GLRectangle;
-import com.lmdig.android.tutorial.oglbox2dbasics.geometry.GameShape;
-
 
 
 public class GameImpl implements GameInterface {
@@ -52,6 +52,8 @@ public class GameImpl implements GameInterface {
 	private static final float TIME_STEP = 1f / 40f;
 	private static final int   ITERATIONS = 1;
 
+    private Level level;
+
 	
 	IWorld world = Box2DFactory.newWorld();
 
@@ -59,8 +61,10 @@ public class GameImpl implements GameInterface {
 	
 	public void init() {
 
+        level = new Starter();
+
 		// density of dynamic bodies
-		float density = 0;
+		float density = 1;
 		
 		// create world's bounding box. 
 		// if objects exceed these borders, they will no longer be
@@ -80,7 +84,7 @@ public class GameImpl implements GameInterface {
         for(float i = -2.5f;i<2.5f;i+=0.5f) {
             for(float j = -2.5f;j<2.5f;j+=0.5f) {
                 GameShape gs;
-                gs = new GameShapeRectangle(new GLRectangle(0.1f, 0.1f));
+                gs = new GameShapeTriangle(new GLTriangle(0.2f));
                 gs.setColor(new Random().nextFloat(),new Random().nextFloat(),new Random().nextFloat(),1);
                 IBody b1 = gs.attachToNewBody(world, null, density);
                 b1.setPosition(new Vec2(i, j));
@@ -89,7 +93,13 @@ public class GameImpl implements GameInterface {
         }
 
 		makeFence();
+        makeLevel();
 	}
+
+    private void makeLevel() {
+        IBody ground = world.getGroundBody();
+        level.make(world,gsl);
+    }
 	
 	private void makeFence() {
 		IBody ground = world.getGroundBody();
@@ -103,7 +113,7 @@ public class GameImpl implements GameInterface {
         gs.setColor(1,1,0,1);
 		gs.attachToBody(ground, new Vec2(0, -4), density);
 		gsl.add(gs);
-
+		
 		gs = GameShape.create(new GLRectangle(50, .1f));
         gs.setColor(1,0,0,1);
 		gs.attachToBody(ground, new Vec2(0, 4), density);
@@ -118,11 +128,13 @@ public class GameImpl implements GameInterface {
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-3, 0), density);
 		gsl.add(gs);
-
+		
 		gs = GameShape.create(new GLRectangle(.1f, .1f));
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-.5f, -.5f), density);
 		gsl.add(gs);
+		
+		
 	}
 
 	public void destroy() {

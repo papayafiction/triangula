@@ -115,9 +115,33 @@ JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox
   (JNIEnv *, jobject, jfloat x, jfloat y) {
 
 	b2BodyDef bd;
+        bd.type = b2_dynamicBody;
 	bd.position.Set(x, y);
-	bd.type = b2_dynamicBody;
+	// look for free spot and insert.
+	for(int i = 0 ; i < MAX_BODIES ; i++) {
+		if(bodyList[i] == 0) {
+			bodyList[i] = world->CreateBody(&bd);
+			return i;
+		}
+	}
 
+	printf("no free body-slot!");
+
+	return 0;
+
+}
+
+/*
+ * Class:     com_kristianlm_superelevation_box2dbridge_jnibox2d_JNIBox2DWorld
+ * Method:    nCreateStaticBody
+ * Signature: (FF)I
+ */
+JNIEXPORT jint JNICALL Java_com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateStaticBody
+  (JNIEnv *, jobject, jfloat x, jfloat y) {
+
+	b2BodyDef bd;
+        bd.type = b2_staticBody;
+	bd.position.Set(x, y);
 	// look for free spot and insert.
 	for(int i = 0 ; i < MAX_BODIES ; i++) {
 		if(bodyList[i] == 0) {
