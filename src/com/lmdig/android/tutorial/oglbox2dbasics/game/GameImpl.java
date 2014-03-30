@@ -22,13 +22,13 @@
 
 package com.lmdig.android.tutorial.oglbox2dbasics.game;
 
-import static android.opengl.GLES10.glColor4f;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.lmdig.android.tutorial.oglbox2dbasics.geometry.*;
+import com.lmdig.android.tutorial.oglbox2dbasics.levels.Level;
+import com.lmdig.android.tutorial.oglbox2dbasics.levels.Starter;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -49,12 +49,16 @@ public class GameImpl implements GameInterface {
 	private static final float TIME_STEP = 1f / 40f;
 	private static final int   ITERATIONS = 1;
 
+    private Level level;
+
 	
 	IWorld world = Box2DFactory.newWorld();
 
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	
 	public void init() {
+
+        level = new Starter();
 
 		// density of dynamic bodies
 		float density = 1;
@@ -86,7 +90,13 @@ public class GameImpl implements GameInterface {
         }
 
 		makeFence();
+        makeLevel();
 	}
+
+    private void makeLevel() {
+        IBody ground = world.getGroundBody();
+        level.make(world,gsl);
+    }
 	
 	private void makeFence() {
 		IBody ground = world.getGroundBody();
@@ -100,11 +110,6 @@ public class GameImpl implements GameInterface {
         gs.setColor(1,1,0,1);
 		gs.attachToBody(ground, new Vec2(0, -4), density);
 		gsl.add(gs);
-
-        gs = new GameShapeTriangle(new GLTriangle(1));
-        gs.setColor(1,1,0,0.1f);
-        gs.attachToBody(ground, new Vec2(0, 0), density);
-        gsl.add(gs);
 		
 		gs = GameShape.create(new GLRectangle(50, .1f));
         gs.setColor(1,0,0,1);
@@ -119,11 +124,6 @@ public class GameImpl implements GameInterface {
 		gs = GameShape.create(new GLRectangle(.1f, 50f));
         gs.setColor(0,1,0,1);
 		gs.attachToBody(ground, new Vec2(-3, 0), density);
-		gsl.add(gs);
-		
-		gs = GameShape.create(new GLRectangle(.1f, .1f));
-        gs.setColor(0,1,0,1);
-		gs.attachToBody(ground, new Vec2(-.5f, -.5f), density);
 		gsl.add(gs);
 		
 		
