@@ -144,9 +144,9 @@ public class GameImpl implements GameInterface {
             Vec2 currPlayerPosition = bdy.getWorldCenter();
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
-            Log.e("foo",""+currPlayerPosition.x);
-            Log.e("foo",""+MainActivity.touch_x);
-            bdy.applyForce(new Vec2(targetX,targetY+10),new Vec2(targetX,targetY));
+            bdy.setAngularDamping(2);
+            bdy.setLinearDamping(3);
+            bdy.applyForce(new Vec2(targetX-0.6f,targetY+15),new Vec2(targetX,targetY));
         }
 		
 		world.step(TIME_STEP, ITERATIONS);

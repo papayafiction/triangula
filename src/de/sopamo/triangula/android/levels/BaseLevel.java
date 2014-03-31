@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.levels;
 
+import android.util.Log;
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
@@ -31,19 +32,19 @@ public class BaseLevel {
     protected void makeFence() {
         float density = 0;
         GameShape gs;
-        gs = GameShape.create(new GLRectangle(18, .1f));
+        gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
         gs.attachToBody(ground, new Vec2(0, -5f), density);
         gsl.add(gs);
 
-        gs = GameShape.create(new GLRectangle(18, .1f));
+        gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,0,0,1);
         gs.attachToBody(ground, new Vec2(0, 5f), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
-        gs.attachToBody(ground, new Vec2(9f, 0), density);
+        gs.attachToBody(ground, new Vec2(100f, 0), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
@@ -51,6 +52,7 @@ public class BaseLevel {
         gs.attachToBody(ground, new Vec2(-9f, 0), density);
         gsl.add(gs);
     }
+
 
     public Map parseLevel() {
         JsonParserFactory factory = JsonParserFactory.getInstance();
@@ -63,9 +65,14 @@ public class BaseLevel {
         for(int i = 0;i < triangles.size();++i) {
             Map triangle = (Map)triangles.get(i);
 
-            float size = Float.parseFloat(triangle.get("size").toString()) * 0.01f;
-            float x = Float.parseFloat(triangle.get("x").toString()) * 0.01f;
-            float y = Float.parseFloat(triangle.get("y").toString()) * 0.01f;
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the triangle whereas our triangles here are twice as large as size.
+            float size = Float.parseFloat(triangle.get("size").toString()) * 0.02f / 2;
+            float x = Float.parseFloat(triangle.get("x").toString()) * 0.02f-9+size;
+            float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
+
+            Log.e("x: ",""+x);
+            Log.e("y: ",""+y);
 
             GameShape gs;
             gs = new GameShapeTriangle(new GLTriangle(size));

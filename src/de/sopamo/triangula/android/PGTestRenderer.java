@@ -39,6 +39,7 @@ public class PGTestRenderer implements Renderer {
 	private static int mHeight;
 	private static int mHalfWidth;
 	private static int mHalfHeight;
+    private float viewportX = 0;
 	
 	public PGTestRenderer() {
 		game = new GameImpl();
@@ -85,7 +86,6 @@ public class PGTestRenderer implements Renderer {
 	 */
 	@Override
 	public void onDrawFrame(GL10 gl) {
-
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
 		gl.glClearColor(0.1f, 0.1f, 0.0f, 1f);
@@ -93,8 +93,8 @@ public class PGTestRenderer implements Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0, 0, -5);
-		
+		gl.glTranslatef(viewportX, 0, -5);
+        viewportX-=0.008f;
 		game.gameLoop();
 		
 		game.drawFrame();
