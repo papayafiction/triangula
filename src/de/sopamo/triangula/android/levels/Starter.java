@@ -9,7 +9,7 @@ import java.util.Map;
 public class Starter extends BaseLevel implements Level {
 
     public String getLevelString() {
-        return "{\"version\":1,\"name\":\"test\",\"created_at\":\"2014/03/31 12:18:02\",\"triangles\":[{\"x\":0,\"y\":0,\"size\":100},{\"x\":101,\"y\":0,\"size\":498},{\"x\":0,\"y\":399,\"size\":100},{\"x\":0,\"y\":299,\"size\":100},{\"x\":0,\"y\":199,\"size\":100},{\"x\":0,\"y\":100,\"size\":100}],\"colors\":[\"00748E\",\"E3DFBB\",\"F4BA4D\",\"E3753C\",\"DA3B3A\"]}";
+        return "{\"version\":1,\"name\":\"foo\",\"created_at\":\"2014/03/31 12:29:41\",\"triangles\":[{\"x\":1,\"y\":370,\"size\":166},{\"x\":135,\"y\":386,\"size\":128},{\"x\":278,\"y\":107,\"size\":100},{\"x\":203,\"y\":117,\"size\":82},{\"x\":0,\"y\":85,\"size\":100},{\"x\":60,\"y\":71,\"size\":100},{\"x\":95,\"y\":126,\"size\":100},{\"x\":139,\"y\":162,\"size\":129},{\"x\":248,\"y\":317,\"size\":155},{\"x\":229,\"y\":404,\"size\":100},{\"x\":319,\"y\":397,\"size\":114},{\"x\":391,\"y\":362,\"size\":118},{\"x\":500,\"y\":148,\"size\":119},{\"x\":438,\"y\":168,\"size\":89},{\"x\":388,\"y\":175,\"size\":118},{\"x\":341,\"y\":130,\"size\":89}],\"colors\":[\"00748E\",\"E3DFBB\",\"F4BA4D\",\"E3753C\",\"DA3B3A\"]}";
     }
 
     @Override
@@ -20,8 +20,8 @@ public class Starter extends BaseLevel implements Level {
 
         super.make(world,gsl);
 
-        Map levelJson = parseLevel();
+        parseLevel();
 
-        makeTriangles((List)levelJson.get("triangles"));
+        makeTriangles((List)jsonData.get("triangles"));
     }
 }

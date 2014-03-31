@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.levels;
 
+import android.graphics.Color;
 import android.util.Log;
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
@@ -9,8 +10,10 @@ import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
+import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
+import javax.microedition.khronos.opengles.GL10;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -20,13 +23,40 @@ public class BaseLevel {
     protected IBody ground;
     protected IWorld world;
     protected List<GameShape> gsl;
+    protected Map jsonData;
 
     public String getLevelString() {
         return "";
     }
 
+    public void setupBackground(GL10 gl) {
+        int color = Util.hex2Color((String)getColors().get(2));
+        float[] colors = Util.getColorParts(color);
+        gl.glClearColor(colors[0], colors[1], colors[2], 1);
+    }
+
     public void make(IWorld world,List<GameShape> gsl) {
         makeFence();
+    }
+
+    protected List getColors() {
+        return (List)jsonData.get("colors");
+    }
+
+    protected int getTriangleColor() {
+        int base;
+        if(Math.random() > .5f) {
+            base = Util.hex2Color((String)getColors().get(0));
+        } else {
+            base = Util.hex2Color((String)getColors().get(4));
+        }
+        float hsv[] = new float[3];
+        Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
+        hsv[1] += Math.random()*0.1-0.05;
+        hsv[2] += Math.random()*0.1-0.05;
+        int color = Color.HSVToColor(hsv);
+
+        return color;
     }
 
     protected void makeFence() {
@@ -54,11 +84,10 @@ public class BaseLevel {
     }
 
 
-    public Map parseLevel() {
+    public void parseLevel() {
         JsonParserFactory factory = JsonParserFactory.getInstance();
         JSONParser parser = factory.newJsonParser();
-        Map jsonData = parser.parseJson(getLevelString());
-        return jsonData;
+        jsonData = parser.parseJson(getLevelString());
     }
 
     public void makeTriangles(List triangles) {
@@ -67,16 +96,16 @@ public class BaseLevel {
 
             // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
             // the triangle whereas our triangles here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGTestRenderer. There we set the cameras z position to -5.
             float size = Float.parseFloat(triangle.get("size").toString()) * 0.02f / 2;
             float x = Float.parseFloat(triangle.get("x").toString()) * 0.02f-9+size;
             float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
 
-            Log.e("x: ",""+x);
-            Log.e("y: ",""+y);
-
             GameShape gs;
             gs = new GameShapeTriangle(new GLTriangle(size));
-            gs.setColor(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1);
+            int color = getTriangleColor();
+            float[] colors = Util.getColorParts(color);
+            gs.setColor(colors[0], colors[1], colors[2], 1);
             IBody body = gs.attachToNewBody(world, null, 0);
             body.setPosition(new Vec2(x,y));
             gsl.add(gs);

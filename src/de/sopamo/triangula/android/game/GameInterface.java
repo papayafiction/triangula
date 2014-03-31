@@ -22,12 +22,12 @@
 
 package de.sopamo.triangula.android.game;
 
+import de.sopamo.triangula.android.levels.Level;
+
 public interface GameInterface {
-	
-	
+	Level getLevel();
 	void gameLoop();
 	void drawFrame();
 	void init();
 	void destroy();
-
 }

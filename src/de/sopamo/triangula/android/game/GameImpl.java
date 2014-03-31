@@ -57,7 +57,11 @@ public class GameImpl implements GameInterface {
     float fps;
     int frames;
 
-	public void init() {
+    public Level getLevel() {
+        return level;
+    }
+
+    public void init() {
 		// density of dynamic bodies
 		float density = 1;
 		
@@ -74,10 +78,10 @@ public class GameImpl implements GameInterface {
 
         // Create player
         GameShape myTriangle;
-        myTriangle = new GameShapeTriangle(new GLTriangle(0.2f));
+        myTriangle = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
         myTriangle.setColor(255.0f,76.0f,22.0f);
         bdy = myTriangle.attachToNewBody(world, null, density);
-        bdy.setPosition(new Vec2(1.0f, 1.0f));
+        bdy.setPosition(new Vec2(-8, 0f));
         gsl.add(myTriangle);
 
         // Initalize and make level
@@ -144,9 +148,12 @@ public class GameImpl implements GameInterface {
             Vec2 currPlayerPosition = bdy.getWorldCenter();
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
+
+            Log.e("foox",targetX+"");
+            Log.e("fooy",targetY+"");
             bdy.setAngularDamping(2);
             bdy.setLinearDamping(3);
-            bdy.applyForce(new Vec2(targetX-0.6f,targetY+15),new Vec2(targetX,targetY));
+            bdy.applyForce(new Vec2(targetX - 2f, targetY + 10), new Vec2(targetX, targetY));
         }
 		
 		world.step(TIME_STEP, ITERATIONS);

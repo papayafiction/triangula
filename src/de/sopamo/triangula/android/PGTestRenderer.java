@@ -88,13 +88,13 @@ public class PGTestRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
-		gl.glClearColor(0.1f, 0.1f, 0.0f, 1f);
+        game.getLevel().setupBackground(gl);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glTranslatef(viewportX, 0, -5);
-        viewportX-=0.008f;
+        //viewportX-=0.008f;
 		game.gameLoop();
 		
 		game.drawFrame();
