@@ -26,17 +26,21 @@ package de.sopamo.triangula.android;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import de.sopamo.triangula.android.wifi.WifiConnection;
 
 public class MainActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
@@ -44,6 +48,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	TestGLSurfaceView mGlSurfaceView;
 	private static TextView status;
 	private static MainActivity instance;
+    private WifiConnection wifiConnection;
+    private WifiP2pManager wifiP2pManager;
+    private IntentFilter intentFilter;
+    private WifiP2pManager.Channel channel;
+    //TextView test;
 
 	public MainActivity() {
         instance = this;
@@ -67,6 +76,13 @@ public class MainActivity extends Activity implements SensorEventListener {
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        intentFilter = new IntentFilter();
+        wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        channel = wifiP2pManager.initialize(this, getMainLooper(), null);
+        wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
+        //setContentView(R.layout.main);
+        //test = (TextView) findViewById(R.id.tv_status);
 
     }
     
@@ -124,5 +140,26 @@ public class MainActivity extends Activity implements SensorEventListener {
         touched = true;
         return false;
     }
-    
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(wifiConnection, intentFilter);
+        wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+
+            public void onSuccess() {
+                //test.setText("WUHU!");
+            }
+
+            public void onFailure(int reason) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(wifiConnection);
+    }
 }
