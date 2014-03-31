@@ -150,11 +150,9 @@ public class GameImpl implements GameInterface {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            Log.e("foox",targetX+"");
-            Log.e("fooy",targetY+"");
             bdy.setAngularDamping(3);
             bdy.setLinearDamping(1);
-            bdy.applyForce(new Vec2(2, 5), new Vec2(targetX, targetY));
+            bdy.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
         }
 		
 		world.step(TIME_STEP, ITERATIONS);

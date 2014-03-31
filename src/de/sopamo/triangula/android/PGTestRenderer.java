@@ -31,6 +31,9 @@ import de.sopamo.triangula.android.game.GameInterface;
 
 import android.opengl.GLSurfaceView.Renderer;
 
+import static android.opengl.GLES10.*;
+import static android.opengl.GLES10.GL_BLEND;
+
 public class PGTestRenderer implements Renderer {
 
 	GameInterface game;
@@ -79,6 +82,24 @@ public class PGTestRenderer implements Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+
+        /* The following part enables lighting. This doesn't look good without 3d objects and / or without materials.
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+
+        float[] light_position0 = { 0f, 0f, 0f, 1.0f };
+
+        float[] light_ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
+        float[] light_diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float[] light_specular = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+        glLightfv(GL_LIGHT0,GL_POSITION,light_position0,0);
+        glLightfv(GL_LIGHT0,GL_AMBIENT,light_ambient,0);
+        glLightfv(GL_LIGHT0,GL_DIFFUSE,light_diffuse,0);
+        glLightfv(GL_LIGHT0,GL_SPECULAR,light_specular,0);
+        */
 	}
 	
 	/**
@@ -88,7 +109,7 @@ public class PGTestRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
-        game.getLevel().setupBackground(gl);
+        game.getLevel().drawBackground(gl);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -96,7 +117,8 @@ public class PGTestRenderer implements Renderer {
 		gl.glTranslatef(viewportX, 0, -5);
         //viewportX-=0.008f;
 		game.gameLoop();
-		
+
+        game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
 		
 	}

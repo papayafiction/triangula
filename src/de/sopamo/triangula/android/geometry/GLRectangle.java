@@ -26,6 +26,7 @@ package de.sopamo.triangula.android.geometry;
 import java.nio.FloatBuffer;
 import static android.opengl.GLES10.*;
 
+import android.util.Log;
 import de.sopamo.triangula.android.tools.BufferTool;
 import de.sopamo.triangula.android.tools.GLBufferTool;
 
@@ -49,7 +50,7 @@ public class GLRectangle extends Rectangle implements GLInterface {
 	}
 	public void draw(float x, float y, float angle) {
 		glPushMatrix();
-		
+
 		glTranslatef(x, y, 0);
 		glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
 		GLBufferTool.setGLVertexBuffer(2, fbVertices); 

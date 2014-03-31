@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import java.util.List;
 
 public interface Level {
-    public void setupBackground(GL10 gl);
+    public void drawBackground(GL10 gl);
+    public void drawBackgroundElements(GL10 gl);
     public void make(IWorld world,List<GameShape> gsl);
 }

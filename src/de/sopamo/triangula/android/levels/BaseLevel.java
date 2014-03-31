@@ -6,14 +6,14 @@ import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
-import de.sopamo.triangula.android.geometry.GLRectangle;
-import de.sopamo.triangula.android.geometry.GLTriangle;
-import de.sopamo.triangula.android.geometry.GameShape;
-import de.sopamo.triangula.android.geometry.GameShapeTriangle;
+import de.sopamo.triangula.android.geometry.*;
+import de.sopamo.triangula.android.levels.backgroundElements.*;
+import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
 import javax.microedition.khronos.opengles.GL10;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,19 +24,28 @@ public class BaseLevel {
     protected IWorld world;
     protected List<GameShape> gsl;
     protected Map jsonData;
+    protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
 
     public String getLevelString() {
         return "";
     }
 
-    public void setupBackground(GL10 gl) {
+    public void drawBackground(GL10 gl) {
         int color = Util.hex2Color((String)getColors().get(2));
         float[] colors = Util.getColorParts(color);
         gl.glClearColor(colors[0], colors[1], colors[2], 1);
     }
 
+    public void drawBackgroundElements(GL10 gl) {
+        for(BackgroundElement backgroundElement: backgroundElements) {
+            backgroundElement.draw();
+            backgroundElement.update();
+        }
+    }
+
     public void make(IWorld world,List<GameShape> gsl) {
         makeFence();
+        makeBackground();
     }
 
     protected List getColors() {
@@ -57,6 +66,12 @@ public class BaseLevel {
         int color = Color.HSVToColor(hsv);
 
         return color;
+    }
+
+    protected void makeBackground() {
+        Rectangle rect = new Rectangle(1,2,15f);
+        rect.setColor(1f,1f,0,0.3f);
+        backgroundElements.add(rect);
     }
 
     protected void makeFence() {
