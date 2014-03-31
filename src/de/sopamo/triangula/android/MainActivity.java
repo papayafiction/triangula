@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = wifiP2pManager.initialize(this, getMainLooper(), null);
         wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
-        setContentView(R.layout.main);
+        //setContentView(R.layout.main);
         //test = (TextView) findViewById(R.id.tv_status);
 
     }
