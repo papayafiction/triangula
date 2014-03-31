@@ -152,9 +152,9 @@ public class GameImpl implements GameInterface {
 
             Log.e("foox",targetX+"");
             Log.e("fooy",targetY+"");
-            bdy.setAngularDamping(5);
-            bdy.setLinearDamping(5);
-            bdy.applyForce(new Vec2(5, 10), new Vec2(targetX, targetY));
+            bdy.setAngularDamping(3);
+            bdy.setLinearDamping(1);
+            bdy.applyForce(new Vec2(2, 5), new Vec2(targetX, targetY));
         }
 		
 		world.step(TIME_STEP, ITERATIONS);
