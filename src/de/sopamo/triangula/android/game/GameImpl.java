@@ -44,6 +44,7 @@ public class GameImpl implements GameInterface {
 	private static final int   ITERATIONS = 5;
 
     private Level level;
+    private static GameImpl instance;
 
     private static IBody bdy;
 
@@ -57,8 +58,17 @@ public class GameImpl implements GameInterface {
     float fps;
     int frames;
 
+    public GameImpl() {
+        instance = this;
+
+    }
+
     public Level getLevel() {
         return level;
+    }
+
+    public static GameImpl getInstance() {
+        return instance;
     }
 
     public void init() {
@@ -109,7 +119,8 @@ public class GameImpl implements GameInterface {
 		}
 
         // Draw particles
-        for(Particle particle: pl) {
+        for(int i = 0;i < pl.size();++i) {
+            Particle particle = pl.get(i);
             particle.draw();
         }
 	}
@@ -158,4 +169,15 @@ public class GameImpl implements GameInterface {
 		world.step(TIME_STEP, ITERATIONS);
 		world.sync();
 	}
+
+    public void addParticle(Particle particle) {
+        if(this.pl.size() > 200) {
+            this.pl.remove(0);
+        }
+        this.pl.add(particle);
+    }
+
+    public void removeParticle(Particle particle) {
+        this.pl.remove(particle);
+    }
 }
