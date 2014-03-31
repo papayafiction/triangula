@@ -49,7 +49,7 @@ public class GameShapeTriangle extends GameShape {
                 ((JNIBox2DWorld) world).createBody(def, density):
                 world.createBody(def);
 		
-		attachToBody(body, position, density);
+		shape = attachToBody(body, position, density);
 		
 		body.refilter(0xFFFF, 0xFFFF, 0);
 

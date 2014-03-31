@@ -75,6 +75,9 @@ abstract public class GameShape {
         glShape.draw(p.x, p.y, body.getAngle());
     }
 
+    public IShape getShape() {
+        return shape;
+    }
 
     public void detachFromBody(IBody body) {
         body.destroyShape(shape);

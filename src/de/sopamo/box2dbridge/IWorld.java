@@ -51,7 +51,7 @@ public interface IWorld {
 
 	public IShape raycastOne(Segment s, RaycastResult rr, boolean solidShapes,
 			Object userData);
-	
+
 	/** SOme implementations of IWorld may not update body positions etc
 	 *  for performance reasons. eg. JNIBOx2d only updates java-variables for
 	 *  positions when bodies are queried.
