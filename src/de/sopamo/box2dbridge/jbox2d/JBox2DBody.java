@@ -77,6 +77,11 @@ public class JBox2DBody implements IBody {
     }
 
     @Override
+    public void setAngle(float angle) {
+        body.setXForm(body.getPosition(),angle);
+    }
+
+    @Override
     public void refilter(int categoryBits, int maskBits, int groupIndex) {
 
         FilterData fd = new FilterData();
@@ -180,8 +185,6 @@ public class JBox2DBody implements IBody {
     @Override
     public void setMassFromShapes() {
         body.setMassFromShapes();
-        Log.e("pg", "SET MASS FROM SHAPES");
-        Thread.dumpStack();
 
     }
 
@@ -192,6 +195,16 @@ public class JBox2DBody implements IBody {
 
         JBox2DShape s = (JBox2DShape) shape;
         body.destroyShape(s.shape);
+    }
+
+    @Override
+    public void setAngularVelocity(float velocity) {
+        body.setAngularVelocity(velocity);
+    }
+
+    @Override
+    public void setLinearVelocity(Vec2 velocity) {
+        body.setLinearVelocity(velocity);
     }
 
     @Override

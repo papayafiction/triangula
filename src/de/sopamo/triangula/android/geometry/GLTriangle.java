@@ -41,6 +41,10 @@ public class GLTriangle extends Triangle implements GLInterface {
 	public GLTriangle(float size) {
 		super(size);
 	}
+
+    public GLTriangle(float size, float angle) {
+        super(size,angle);
+    }
 	
 	public void draw() {
 		GLBufferTool.setGLVertexBuffer(2, fbVertices); 
@@ -52,7 +56,7 @@ public class GLTriangle extends Triangle implements GLInterface {
 		glPushMatrix();
 		
 		glTranslatef(x, y, 0);
-		glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
+		glRotatef((float)Math.toDegrees(this.angle), 0, 0, 1);
 		GLBufferTool.setGLVertexBuffer(2, fbVertices); 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 		

@@ -26,6 +26,7 @@ package de.sopamo.triangula.android.geometry;
 public class Triangle {
 
     private float size;
+    protected float angle;
 
 	public Triangle() {
 
@@ -35,12 +36,22 @@ public class Triangle {
 		onUpdateSize();
 	}
 
+    public Triangle(float size, float angle) {
+        this.size = size;
+        this.angle = angle;
+        onUpdateSize();
+    }
+
     public float getSize() {
         return size;
     }
 
     public void setSize(float size) {
         this.size = size;
+    }
+
+    public float getAngle() {
+        return angle;
     }
 
     protected void onUpdateSize() {

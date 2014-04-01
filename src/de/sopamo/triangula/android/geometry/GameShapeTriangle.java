@@ -45,6 +45,7 @@ public class GameShapeTriangle extends GameShape {
 		def.angularDamping = 0.5f;
 		def.linearDamping = 0.5f;
 		def.allowSleep = false;
+        def.angle = ((GLTriangle)glShape).getAngle();
 		body = (world instanceof JNIBox2DWorld)?
                 ((JNIBox2DWorld) world).createBody(def, density):
                 world.createBody(def);
@@ -79,7 +80,8 @@ public class GameShapeTriangle extends GameShape {
         shape = body.createTriangle((
                 (GLTriangle)glShape).getSize(),
                 position.x,position.y,
-                density,0);
+                density,
+                ((GLTriangle)glShape).getAngle());
 
 		body.setMassFromShapes();
 		return shape;

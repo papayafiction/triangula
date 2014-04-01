@@ -23,6 +23,9 @@ package de.sopamo.triangula.android.game;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.sopamo.triangula.android.game.models.Player;
+import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Starter;
@@ -48,13 +51,16 @@ public class GameImpl implements GameInterface {
 
     private static IBody bdy;
 
+
 	IWorld world = Box2DFactory.newWorld();
 
+    List<Rewindable> rewindables = new ArrayList<Rewindable>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
 
     // Debug stuff
     long nanoTime;
+    long lastClick = 0;
     float fps;
     int frames;
 
@@ -87,13 +93,8 @@ public class GameImpl implements GameInterface {
         world.create(aabb,gravity,true);
         world.setContactListener(new ContactListener());
         // Create player
-        GameShape myTriangle;
-        myTriangle = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
-        myTriangle.setColor(255.0f,76.0f,22.0f);
-        bdy = myTriangle.attachToNewBody(world, null, density);
-        bdy.setUserData("player");
-        bdy.setPosition(new Vec2(-8, 0f));
-        gsl.add(myTriangle);
+        Player player = new Player(this,new Vec2(-8,0));
+        bdy = player.getBody();
 
         // Initalize and make level
         level = new Starter();
@@ -145,17 +146,32 @@ public class GameImpl implements GameInterface {
 			MainActivity.setStatus(engine + ", fps: " + fps);
 		}
         /** ## END DEBUG ## **/
-		
-		if(world instanceof JBox2DWorld) {
-			JBox2DWorld jw = ((JBox2DWorld)world);
-			World w = jw.getWorld();
-			//w.setGravity(new Vec2(MainActivity.x, MainActivity.y));
-		} else if (world instanceof JNIBox2DWorld) {
-            //((JNIBox2DWorld) world).setGravity(MainActivity.x, MainActivity.y);
+
+        /** Save Rewindable Actions **/
+        for(int i=0;i<rewindables.size();i++) {
+            Rewindable rewindable = rewindables.get(i);
+            rewindable.run();
         }
+
+        /** DO SOME REWIND **/
+        if(MainActivity.y  > 5) {
+            for(int i=0;i<rewindables.size();i++) {
+                Rewindable rewindable = rewindables.get(i);
+                if(!rewindable.isRewinding()) rewindable.startRewind();
+            }
+        } else {
+            for(int i=0;i<rewindables.size();i++) {
+                Rewindable rewindable = rewindables.get(i);
+                if(rewindable.isRewinding()) rewindable.stopRewind();
+            }
+        }
+
 
         if(MainActivity.touched){
             MainActivity.touched = false;
+            /*
+
+            */
             //Calculate the target vector
             Vec2 currPlayerPosition = bdy.getWorldCenter();
             float targetX = currPlayerPosition.x;
@@ -164,10 +180,10 @@ public class GameImpl implements GameInterface {
             bdy.setAngularDamping(3);
             bdy.setLinearDamping(1);
             bdy.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
-        }
 
-		world.step(TIME_STEP, ITERATIONS);
-		world.sync();
+        }
+            world.step(TIME_STEP, ITERATIONS);
+            world.sync();
 	}
 
     public void addParticle(Particle particle) {
@@ -175,6 +191,19 @@ public class GameImpl implements GameInterface {
             this.pl.remove(0);
         }
         this.pl.add(particle);
+    }
+
+
+    public IWorld getWorld() {
+        return world;
+    }
+
+    public List<GameShape> getGsl() {
+        return gsl;
+    }
+
+    public List<Rewindable> getRewindables() {
+        return rewindables;
     }
 
     public void removeParticle(Particle particle) {

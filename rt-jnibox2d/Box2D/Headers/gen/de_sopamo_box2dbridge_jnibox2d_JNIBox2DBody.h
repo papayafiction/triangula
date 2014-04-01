@@ -71,6 +71,12 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetDamp
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetPosition
   (JNIEnv *, jobject, jint, jfloat, jfloat);
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngularVelocity
+  (JNIEnv *, jobject, jint, jfloat);
+
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetLinearVelocity
+  (JNIEnv *, jobject, jint, jfloat, jfloat);
+
 #ifdef __cplusplus
 }
 #endif
