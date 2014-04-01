@@ -62,4 +62,6 @@ public interface IWorld {
 	public void sync();
 
     public void setContactListener(ContactListener listener);
+
+    public void setGravity(Vec2 gravity);
 }

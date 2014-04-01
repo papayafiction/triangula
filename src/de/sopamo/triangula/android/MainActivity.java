@@ -139,12 +139,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     // Get touch event positions
     public static int touch_x, touch_y;
+    public static long lastClick = 0;
     public static boolean touched = false;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         touch_x = (int)event.getX();
         touch_y = (int)event.getY();
-        touched = true;
+        if(System.currentTimeMillis()-lastClick >= 100) {
+            touched= true;
+            lastClick = System.currentTimeMillis();
+        }
         return false;
     }
 
