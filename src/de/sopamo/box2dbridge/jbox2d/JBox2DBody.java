@@ -185,6 +185,7 @@ public class JBox2DBody implements IBody {
     @Override
     public void setMassFromShapes() {
         body.setMassFromShapes();
+
     }
 
     @Override
