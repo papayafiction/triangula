@@ -2,6 +2,8 @@ package de.sopamo.triangula.android.game.models;
 
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.game.InputHandler;
+import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.State;
 import de.sopamo.triangula.android.geometry.GLRectangle;
@@ -12,19 +14,21 @@ import org.jbox2d.common.Vec2;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-public class Player implements Rewindable {
+public class Player implements Rewindable,Entity {
     private GameImpl game;
     private Vec2 pst;
     private IBody body;
     private GameShape shape;
     private boolean rewind = false;
     private State currentState;
+    private InputHandler inputHandler;
     private Stack<State> states = new Stack<State>();
 
 
-    public Player(GameImpl game, Vec2 pst) {
+    public Player(GameImpl game, Vec2 pst,InputHandler handler) {
         this.game = game;
         this.pst = pst;
+        this.inputHandler = handler;
         shape = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
         shape.setColor(255,76,22);
         body = shape.attachToNewBody(game.getWorld(),null,1);
@@ -93,5 +97,18 @@ public class Player implements Rewindable {
 
     public IBody getBody() {
         return body;
+    }
+
+    @Override
+    public void update() {
+        if(inputHandler.isTouched()) {
+            Vec2 currPlayerPosition = body.getWorldCenter();
+            float targetX = currPlayerPosition.x;
+            float targetY = currPlayerPosition.y;
+
+            body.setAngularDamping(3);
+            body.setLinearDamping(1);
+            body.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
+        }
     }
 }
