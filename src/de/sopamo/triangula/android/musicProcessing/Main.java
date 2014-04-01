@@ -19,9 +19,7 @@ package de.sopamo.triangula.android.musicProcessing;
 import java.io.File;
 import java.util.logging.Logger;
 
-/**
- * @author Peter Backx
- */
+
 public class Main {
 
     static Logger log = Logger.getLogger("BeatIt");
@@ -34,6 +32,7 @@ public class Main {
         MusicPlayer musicPlayer = new MusicPlayer(file);
 
         musicPlayer.runMusicPlayer();
+
 
     }
 }

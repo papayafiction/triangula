@@ -1,16 +1,20 @@
 package de.sopamo.triangula.android.musicProcessing;
 
+import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import java.io.File;
 import java.io.FileInputStream;
 
-/**
- * Created by Fabi on 01.04.14.
- */
+
 public class MusicPlayer {
     private File file;
     private FileInputStream fis;
     private Player playMP3;
+    private double initialSystemTime;
+    private double beatTime;
+
+    //move all x frames
+    private int move ;
 
     public MusicPlayer(File file){
         this.file = file;
@@ -23,7 +27,19 @@ public class MusicPlayer {
             fis = new FileInputStream(file);
 
             playMP3 = new Player(fis);
-            playMP3.play();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        initialSystemTime = System.currentTimeMillis();
+                        playMP3.play();
+                    } catch (JavaLayerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
         }
         catch(Exception exc){
             exc.printStackTrace();
@@ -37,29 +53,34 @@ public class MusicPlayer {
     public void runMusicPlayer(){
         BeatAnalyzA beatAnalyzA = new BeatAnalyzA();
         beatAnalyzA.runFileProcessing(file);
-        //move all x frames
-        int move = beatAnalyzA.getMovement();
+        beatTime = beatAnalyzA.getMovementTime();
 
+        System.out.println("Move all " + beatTime + " seconds");
 
-        System.out.println("Move all " + move + " frames");
-        //while song is not completed check if Frame is onset
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                play();
+            }
+        }).start();
+    }
 
-        play();
-        while(true){
-            System.out.println("current frameposition " + playMP3.getPosition());
+    public double getInitialSystemTime(){
+        return initialSystemTime;
+    }
+
+    public double getBeatTime(){
+        return beatTime;
+    }
+
+    public boolean isOnset(double initialSystemTime, double beatTime){
+        double tmp = initialSystemTime - System.currentTimeMillis();
+        System.out.println("Current time: "+System.currentTimeMillis());
+        if(tmp%beatTime==0){
+            return true;
+        }else{
+            return false;
         }
-
-        /*
-        double startTime = System.currentTimeMillis();
-
-        while(!playMP3.isComplete()){
-            beatAnalyzA.framesFromStart(startTime);
-            //DEBUGGING START
-            System.out.println("StartTime: "+startTime);
-            System.out.println("Current time: "+System.currentTimeMillis());
-            //DEBUGGING END
-        }
-        */
     }
 
 }
