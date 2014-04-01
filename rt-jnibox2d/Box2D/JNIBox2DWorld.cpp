@@ -211,8 +211,6 @@ jmethodID callbackSetData = 0;
 
 
 void updateBodyData(JNIEnv * env, b2Body* body) {
-
-
 	if(jniBodyClass == 0) {
 		jniBodyClass = env->FindClass("de/sopamo/box2dbridge/jnibox2d/JNIBox2DBody");//env->GetObjectClass(caller);
 		if(jniBodyClass == 0) {
