@@ -109,7 +109,12 @@ public class JNIBox2DBody implements IBody {
         return s;
     }
 
-	@Override
+    @Override
+    public void setAngle(float angle) {
+        nSetAngle(bodyID,angle);
+    }
+
+    @Override
 	public void applyForce(Vec2 force, Vec2 point) {
 		nApplyForce(bodyID, force.x, force.y, point.x, point.y);
 	}
@@ -177,7 +182,8 @@ public class JNIBox2DBody implements IBody {
 
 	@Override
 	public void setPosition(Vec2 pos) {
-		nSetPosition(bodyID, pos.x, pos.y);		
+		position = pos;
+        nSetPosition(bodyID, pos.x, pos.y);
 	}
 
 	@Override
@@ -214,7 +220,17 @@ public class JNIBox2DBody implements IBody {
 
 	}
 
-	static {
+    @Override
+    public void setAngularVelocity(float velocity) {
+        nSetAngularVelocity(bodyID,velocity);
+    }
+
+    @Override
+    public void setLinearVelocity(Vec2 velocity) {
+        nSetLinearVelocity(bodyID,velocity.x,velocity.y);
+    }
+
+    static {
 		System.loadLibrary("Box2D");
 	}
 
@@ -237,4 +253,9 @@ public class JNIBox2DBody implements IBody {
 			float angularDamping);
 	native private void nSetPosition(int bodyID, float posx, float posy);
 
+    native private void nSetLinearVelocity(int bodyID, float x, float y);
+
+    native private void nSetAngularVelocity(int bodyID, float velocity);
+
+    native public void nSetAngle(int bodyID,float angle);
 }

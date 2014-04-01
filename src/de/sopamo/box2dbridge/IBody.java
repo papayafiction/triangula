@@ -38,6 +38,8 @@ public interface IBody {
 	// public IShape createFromGeometry(Geometry g);
 	// public void deleteBox();
 
+    public void setAngle(float angle);
+
 	public void setMassFromShapes();
 
 	public Vec2 getWorldCenter();
@@ -73,8 +75,11 @@ public interface IBody {
     public void setUserData(Object obj);
 
 	public void destroyShape(IShape shape);
-	
-	
+
+    public void setAngularVelocity(float velocity);
+
+    public void setLinearVelocity(Vec2 velocity);
+
 	public void setPosition(Vec2 pos);
 
 }

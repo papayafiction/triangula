@@ -208,7 +208,35 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetPosi
 	pos.Set(x, y);
 	bodyList[id]->SetTransform(pos, bodyList[id]->GetAngle());
 
+}
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngularVelocity
+  (JNIEnv *, jobject, jint id, jfloat velocity) {
 
+	if(bodyList[id] == 0)
+		return;
+
+	bodyList[id]->SetAngularVelocity(velocity);
+
+}
+
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetLinearVelocity
+  (JNIEnv *, jobject, jint id, jfloat x, jfloat y) {
+
+	if(bodyList[id] == 0)
+		return;
+        
+        b2Vec2 velocity;
+        velocity.Set(x,y);
+        bodyList[id]->SetLinearVelocity(velocity);
+}
+
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngle
+  (JNIEnv *, jobject, jint id, jfloat angle) {
+
+	if(bodyList[id] == 0)
+		return;
+        
+        bodyList[id]->SetTransform(bodyList[id]->GetWorldCenter(),angle);
 }
 

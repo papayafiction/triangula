@@ -163,6 +163,11 @@ public class JBox2DWorld implements IWorld {
         w.setContactListener(listener);
     }
 
+    @Override
+    public void setGravity(Vec2 gravity) {
+        w.setGravity(gravity);
+    }
+
     public World getWorld() {
         return w;
     }

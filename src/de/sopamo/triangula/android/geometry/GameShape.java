@@ -75,6 +75,10 @@ abstract public class GameShape {
         glShape.draw(p.x, p.y, body.getAngle());
     }
 
+    public Vec2 getShapePosition() {
+        return shapePosition;
+    }
+
     public IShape getShape() {
         return shape;
     }

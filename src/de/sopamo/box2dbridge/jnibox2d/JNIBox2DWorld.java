@@ -171,6 +171,11 @@ public class JNIBox2DWorld implements IWorld {
         nSetContactListener();
     }
 
+    @Override
+    public void setGravity(Vec2 gravity) {
+        nSetGravity(gravity.x,gravity.y);
+    }
+
     // implemented in C/C++
 	// automatically dynamically linked at run-time
 	// JVM looks for .so/.dll files in java.library.path
@@ -187,10 +192,6 @@ public class JNIBox2DWorld implements IWorld {
 			jniOk = false;
 		}
 	}
-
-    public void setGravity(float x,float y) {
-        nSetGravity(x,y);
-    }
 
     @Override
     public void step(float dt, int iterations) {
