@@ -49,7 +49,8 @@ public class GameImpl implements GameInterface {
     private Level level;
     private static GameImpl instance;
 
-    private static IBody bdy;
+    private static IBody playerBody;
+    private static Player player;
 
 
 	IWorld world = Box2DFactory.newWorld();
@@ -94,7 +95,8 @@ public class GameImpl implements GameInterface {
         world.setContactListener(new ContactListener());
         // Create player
         Player player = new Player(this,new Vec2(-8,0));
-        bdy = player.getBody();
+        GameImpl.player = player;
+        playerBody = player.getBody();
 
         // Initalize and make level
         level = new Starter();
@@ -173,13 +175,13 @@ public class GameImpl implements GameInterface {
 
             */
             //Calculate the target vector
-            Vec2 currPlayerPosition = bdy.getWorldCenter();
+            Vec2 currPlayerPosition = playerBody.getWorldCenter();
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            bdy.setAngularDamping(3);
-            bdy.setLinearDamping(1);
-            bdy.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
+            playerBody.setAngularDamping(3);
+            playerBody.setLinearDamping(1);
+            playerBody.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
 
         }
             world.step(TIME_STEP, ITERATIONS);
@@ -208,5 +210,9 @@ public class GameImpl implements GameInterface {
 
     public void removeParticle(Particle particle) {
         this.pl.remove(particle);
+    }
+
+    public static Player getMainPlayer() {
+        return GameImpl.player;
     }
 }

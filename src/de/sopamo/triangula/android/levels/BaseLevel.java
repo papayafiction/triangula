@@ -127,10 +127,12 @@ public class BaseLevel {
             float size = Float.parseFloat(triangle.get("size").toString()) * 0.02f / 2;
             float x = Float.parseFloat(triangle.get("x").toString()) * 0.02f-9+size;
             float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
+            float angle = Float.parseFloat(triangle.get("angle").toString());
+            angle = (float)Math.toRadians(angle);
             y *= -1;
 
             GameShape gs;
-            gs = new GameShapeTriangle(new GLTriangle(size,0));
+            gs = new GameShapeTriangle(new GLTriangle(size,angle));
             int color = getTriangleColor();
             float[] colors = Util.getColorParts(color);
             gs.setColor(colors[0], colors[1], colors[2], 1);

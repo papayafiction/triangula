@@ -46,17 +46,9 @@ public class TestGLSurfaceView extends GLSurfaceView {
         try {
             //setEGLConfigChooser(new MultisampleConfigChooser());
         } catch (RuntimeException e) {
-            Log.e("foo","fpp");
-            // no antialising is not the end of the worldasd
+            // no antialising is not the end of the world
         }
 		setRenderer(pgRenderer);
-        int aslkufgsdilffa = 5;
-        int aslkufgsdil2fa = 5;
-        int aslkufgsdil5fa = 6;
-        String aslkufgsdil6fa = "sdfasd";
-        String aslkufadg5fa = "asf78";
-        String iafgsuasf73t4aslkufadg5fa = "a";
-
 		
 		pgRenderer.init();
 	}
