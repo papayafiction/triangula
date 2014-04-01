@@ -42,7 +42,11 @@ public class TestGLSurfaceView extends GLSurfaceView {
 //		setDebugFlags(DEBUG_LOG_GL_CALLS | DEBUG_CHECK_GL_ERROR);
 
         // Enable AntiAliasing
-        setEGLConfigChooser(new MultisampleConfigChooser());
+        try {
+            setEGLConfigChooser(new MultisampleConfigChooser());
+        } catch (Exception e) {
+            // no antialising is not the end of the world
+        }
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();
