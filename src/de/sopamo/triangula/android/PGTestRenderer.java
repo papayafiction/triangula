@@ -135,6 +135,11 @@ public class PGTestRenderer implements Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
+        float playerX = GameImpl.getMainPlayer().getBody().getWorldCenter().x;
+        viewportX = playerX * -1;
+        if(viewportX > 1) {
+            viewportX = 1;
+        }
 		gl.glTranslatef(viewportX, 0, -5);
         //viewportX-=0.008f;
 		game.gameLoop();

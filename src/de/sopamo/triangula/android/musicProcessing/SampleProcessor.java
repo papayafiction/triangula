@@ -18,9 +18,7 @@
 
 package de.sopamo.triangula.android.musicProcessing;
 
-/**
- * @author Peter Backx
- */
+
 public interface SampleProcessor {
 
     void process(long[] sample);

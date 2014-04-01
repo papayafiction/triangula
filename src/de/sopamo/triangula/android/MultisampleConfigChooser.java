@@ -18,7 +18,6 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
     public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
         mValue = new int[1];
 
-        Log.e("multisample","normal");
         // Try to find a normal multisample configuration first.
         int[] configSpec = {
                 EGL10.EGL_RED_SIZE, 5,
@@ -32,11 +31,12 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
                 EGL10.EGL_NONE
         };
 
-        if (!egl.eglChooseConfig(display, configSpec, null, 0,
-                mValue)) {
+        if (!egl.eglChooseConfig(display, configSpec, null, 0, mValue)) {
             throw new IllegalArgumentException("eglChooseConfig failed");
         }
         int numConfigs = mValue[0];
+
+        Log.e("multisample","normal");
 
         if (numConfigs <= 0) {
             Log.e("multisample","nonormal");
@@ -112,6 +112,8 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
             Log.w(kTag, "Did not find sane config, using first");
         }
         EGLConfig config = configs.length > 0 ? configs[index] : null;
+        Log.e("foo","bar");
+        Log.e("foo",config.toString());
         if (config == null) {
             throw new IllegalArgumentException("No config chosen");
         }

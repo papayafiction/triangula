@@ -25,6 +25,7 @@ package de.sopamo.triangula.android;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -43,8 +44,8 @@ public class TestGLSurfaceView extends GLSurfaceView {
 
         // Enable AntiAliasing
         try {
-            setEGLConfigChooser(new MultisampleConfigChooser());
-        } catch (Exception e) {
+            //setEGLConfigChooser(new MultisampleConfigChooser());
+        } catch (RuntimeException e) {
             // no antialising is not the end of the world
         }
 		setRenderer(pgRenderer);

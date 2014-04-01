@@ -53,8 +53,8 @@ public class GameImpl implements GameInterface {
     private static GameImpl instance;
 
 
-    private static IBody bdy;
-
+    private static IBody playerBody;
+    private static Player player;
 
 
 	IWorld world = Box2DFactory.newWorld();
@@ -101,7 +101,8 @@ public class GameImpl implements GameInterface {
         world.setContactListener(new ContactListener());
         // Create player
         Player player = new Player(this,new Vec2(-8,0),handler);
-        bdy = player.getBody();
+        GameImpl.player = player;
+        playerBody = player.getBody();
         entities.add(player);
 
         // Initalize and make level
@@ -180,7 +181,7 @@ public class GameImpl implements GameInterface {
         for(Entity entity:entities) {
             entity.update();
         }
-
+        
         world.step(TIME_STEP, ITERATIONS);
         world.sync();
 	}
@@ -214,5 +215,9 @@ public class GameImpl implements GameInterface {
 
     public InputHandler getInputHandler() {
         return handler;
+    }
+
+    public static Player getMainPlayer() {
+        return GameImpl.player;
     }
 }
