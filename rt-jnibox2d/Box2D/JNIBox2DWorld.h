@@ -19,6 +19,8 @@ extern b2World* world;
 // universal storage for bodies (duplicate of b2's)
 #define MAX_BODIES 1000
 extern b2Body* bodyList[MAX_BODIES];
+extern jmethodID callback;
+extern jobject worldData;
 
 void throwExc(JNIEnv* env, const char* msg);
 

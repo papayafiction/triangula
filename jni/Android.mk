@@ -11,6 +11,7 @@ SOURCES := \
 	./JNIBox2DWorld.cpp \
 	./JNIBox2DBody.cpp \
 	./JNIBox2DShape.cpp \
+	./JNIContactListener.cpp \
 	./JNIRefs.cpp \
 	./Dynamics/b2Body.cpp \
 	./Dynamics/b2Fixture.cpp \

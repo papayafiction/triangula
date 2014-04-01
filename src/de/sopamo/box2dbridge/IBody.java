@@ -70,6 +70,8 @@ public interface IBody {
 
 	public FilterData getFilterData();
 
+    public void setUserData(Object obj);
+
 	public void destroyShape(IShape shape);
 	
 	
