@@ -128,9 +128,6 @@ public class BaseLevel {
             float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
             y *= -1;
 
-            Log.e("sizex:",x+"");
-            Log.e("sizey:",y+"");
-
             GameShape gs;
             gs = new GameShapeTriangle(new GLTriangle(size,0));
             int color = getTriangleColor();
