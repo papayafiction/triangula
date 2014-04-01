@@ -152,10 +152,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         if(GameImpl.getInstance() == null) return false;
 
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            gameInstance.getHandler().setTouchPosition(new Vec2(event.getX(),event.getY()));
-            gameInstance.getHandler().setTouched();
+            gameInstance.getInputHandler().setTouchPosition(new Vec2(event.getX(),event.getY()));
+            gameInstance.getInputHandler().setTouched();
         } else if(event.getAction() == MotionEvent.ACTION_UP) {
-            gameInstance.getHandler().reset();
+            gameInstance.getInputHandler().reset();
         }
 
         return false;
