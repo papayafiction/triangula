@@ -23,6 +23,7 @@
 
 package de.sopamo.box2dbridge.jnibox2d;
 
+import android.util.Log;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.Segment;
 import org.jbox2d.common.RaycastResult;
@@ -33,11 +34,13 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IJoint;
 import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.IWorld;
+import org.jbox2d.dynamics.ContactListener;
 
 public class JNIBox2DWorld implements IWorld {
 
 
 	JNIBox2DBody groundBody;
+    ContactListener m_listener;
 
 	public boolean testJNI() throws UnsatisfiedLinkError {
 		// this is our plan:
@@ -53,7 +56,12 @@ public class JNIBox2DWorld implements IWorld {
 		}
 		return true;
 	}
-	
+
+    public void listenerCallback(JNIBox2DBody body1, JNIBox2DBody body2) {
+        ((de.sopamo.triangula.android.game.ContactListener)
+                m_listener).add(body1, body2);
+    }
+
 	@Override
 	public int create(AABB worldAABB, Vec2 gravity, boolean doSleep) {
 		
@@ -68,6 +76,7 @@ public class JNIBox2DWorld implements IWorld {
 						gravity.y, doSleep);
 
 		groundBody = new JNIBox2DBody(0);
+
 
 		return 0;
 	}
@@ -156,7 +165,13 @@ public class JNIBox2DWorld implements IWorld {
         nUpdateAllPositions();
 	}
 
-	// implemented in C/C++
+    @Override
+    public void setContactListener(ContactListener listener) {
+        m_listener = listener;
+        nSetContactListener();
+    }
+
+    // implemented in C/C++
 	// automatically dynamically linked at run-time
 	// JVM looks for .so/.dll files in java.library.path
 	native private void nUpdateAllPositions();
@@ -198,5 +213,7 @@ public class JNIBox2DWorld implements IWorld {
 	native public void nDestroyBody(int bodyID);
 
     native public void nSetGravity(float gravity_x, float gravity_y);
+
+    native public void nSetContactListener();
 
 }

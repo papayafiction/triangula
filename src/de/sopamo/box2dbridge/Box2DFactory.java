@@ -30,7 +30,7 @@ import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
 
 public class Box2DFactory {
 
-	private static final boolean USE_JNI = false;
+	private static final boolean USE_JNI = true;
 
 	public static IWorld newWorld() {
 		IWorld world = null;

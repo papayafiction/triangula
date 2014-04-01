@@ -79,6 +79,9 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdate
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nSetGravity
   (JNIEnv *, jobject, jfloat, jfloat);
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nSetContactListener
+(JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

@@ -38,10 +38,6 @@ public class JNIBox2DShape implements IShape {
 
 	}
 
-	/*
-	 * public JNIBox2DShape(int id) { this.body = new JNIBox2DBody(id); }
-	 */
-
 	@Override
 	public IBody getBody() {
 		return body;

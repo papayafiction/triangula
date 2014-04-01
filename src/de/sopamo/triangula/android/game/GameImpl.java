@@ -85,13 +85,13 @@ public class GameImpl implements GameInterface {
         // World setup
         Vec2 gravity = new Vec2(0, -9.8f);
         world.create(aabb,gravity,true);
-        ((JBox2DWorld) world).getWorld().setContactListener(new ContactListener());
+        world.setContactListener(new ContactListener());
         // Create player
         GameShape myTriangle;
         myTriangle = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
         myTriangle.setColor(255.0f,76.0f,22.0f);
         bdy = myTriangle.attachToNewBody(world, null, density);
-        myTriangle.getShape().setUserData("player");
+        bdy.setUserData("player");
         bdy.setPosition(new Vec2(-8, 0f));
         gsl.add(myTriangle);
 

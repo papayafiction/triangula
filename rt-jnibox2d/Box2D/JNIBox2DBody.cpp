@@ -11,6 +11,7 @@
 #include "JNIBox2DWorld.h"
 
 #include <jni.h>
+#include <math.h>
 
 #include <stdio.h>
 //#include <iostream>
@@ -92,7 +93,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
 		return;
 
         b2Vec2 vertices[3];
-
+        
         vertices[0].Set(0,-size);
         vertices[1].Set(size,size);
         vertices[2].Set(-size,size);
@@ -120,7 +121,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nAssocia
 
 	jobject gref = MakeGlobalRef(env, caller);
 	// gref is now JNIBOx2DBody object
-    bodyList[id]->SetUserData(gref);
+        bodyList[id]->SetUserData(gref);
 
 }
 

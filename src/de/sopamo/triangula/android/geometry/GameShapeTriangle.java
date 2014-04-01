@@ -77,7 +77,11 @@ public class GameShapeTriangle extends GameShape {
 		shapePosition = position;
 		
 		this.body = body;
-        shape = body.createTriangle(((GLTriangle)glShape).getSize(),position.x,position.y,density,((GLTriangle)glShape).getAngle());
+        shape = body.createTriangle((
+                (GLTriangle)glShape).getSize(),
+                position.x,position.y,
+                density,
+                ((GLTriangle)glShape).getAngle());
 
 		body.setMassFromShapes();
 		return shape;

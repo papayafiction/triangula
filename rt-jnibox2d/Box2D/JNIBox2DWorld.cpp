@@ -9,6 +9,7 @@
 
 #include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld.h"
 #include "JNIBox2DWorld.h"
+#include "JNIContactListener.h"
 #include "Box2D.h"
 #include "JNIRefs.h"
 #include <jni.h>
@@ -36,6 +37,11 @@ void throwExc(JNIEnv* env, const char* msg) {
 b2World* world = NULL;
 
 b2Body* bodyList[MAX_BODIES];
+
+jmethodID callback;
+jobject worldData;
+
+JNIContactListener* listener;
 
 //----------
 
@@ -69,9 +75,18 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 
 	world = new b2World(gravity);
         
+        jobject worldId = MakeGlobalRef(env,caller);
+        jclass claz = env->FindClass("de/sopamo/box2dbridge/jnibox2d/JNIBox2DWorld");
+
+        callback = env->GetMethodID(claz,"listenerCallback",
+            "(Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;)V");
+        worldData = worldId;
+        
         b2BodyDef bd;
         bd.position.Set(0,0);
         bd.type = b2_staticBody;
+        
+        
 
         bodyList[0] = world->CreateBody(&bd);
       	// ground body
@@ -84,8 +99,9 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
  * Signature: (FI)V
  */
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nStep
-  (JNIEnv *, jobject, jfloat dt, jint iterations) {
-	world->Step(dt, iterations, iterations);
+  (JNIEnv * env, jobject, jfloat dt, jint iterations) {
+    listener->SetEnv(env);
+    world->Step(dt, iterations, iterations);
 }
 
 /*
@@ -116,6 +132,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 
 	b2BodyDef bd;
         bd.type = b2_dynamicBody;
+        bd.allowSleep = false;
 	bd.position.Set(x, y);
 	// look for free spot and insert.
 	for(int i = 0 ; i < MAX_BODIES ; i++) {
@@ -230,6 +247,7 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 
 }
 
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    nUpdateAllPositions
@@ -239,7 +257,7 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdate
   (JNIEnv * env, jobject) {
 
 	// Callback for all JNIBox2DBodies
-
+    
 	for(int i = 0 ; i < MAX_BODIES ; i++) {
 		b2Body* body = bodyList[i];
 
@@ -254,6 +272,8 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdate
 
 }
 
+
+
 /*
 * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
 * Method:    nSetGravity
@@ -264,6 +284,13 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nSetGra
     b2Vec2 gravity;
     gravity.Set(gravity_x,gravity_y);
     world->SetGravity(gravity);
+}
+
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nSetContactListener
+(JNIEnv * env, jobject) {
+    listener = new JNIContactListener();
+    listener->SetEnv(env);
+    world->SetContactListener(listener);
 }
 
 

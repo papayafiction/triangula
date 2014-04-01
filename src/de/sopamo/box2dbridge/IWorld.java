@@ -26,6 +26,7 @@ import org.jbox2d.collision.Segment;
 import org.jbox2d.common.RaycastResult;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.ContactListener;
 
 public interface IWorld {
 
@@ -59,4 +60,6 @@ public interface IWorld {
 	 *  this syncs all such variables 
 	 */
 	public void sync();
+
+    public void setContactListener(ContactListener listener);
 }

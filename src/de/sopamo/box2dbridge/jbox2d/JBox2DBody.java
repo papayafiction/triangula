@@ -98,6 +98,11 @@ public class JBox2DBody implements IBody {
     }
 
     @Override
+    public void setUserData(Object obj) {
+        body.setUserData(obj);
+    }
+
+    @Override
     public void refilter() {
         FilterData fd = new FilterData();
 
