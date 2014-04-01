@@ -1,14 +1,15 @@
 package de.sopamo.triangula.android.levels;
 
 import android.graphics.Color;
-import android.util.Log;
 import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
-import de.sopamo.triangula.android.PGTestRenderer;
-import de.sopamo.triangula.android.geometry.*;
-import de.sopamo.triangula.android.levels.backgroundElements.*;
+import de.sopamo.triangula.android.geometry.GLRectangle;
+import de.sopamo.triangula.android.geometry.GLTriangle;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeTriangle;
+import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
