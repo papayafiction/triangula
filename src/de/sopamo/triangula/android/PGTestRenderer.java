@@ -26,6 +26,7 @@ package de.sopamo.triangula.android;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.GameInterface;
 
@@ -38,18 +39,33 @@ public class PGTestRenderer implements Renderer {
 
 	GameInterface game;
 	
-	private static int mWidth;
-	private static int mHeight;
+	private static int mWidth = 5;
+	private static int mHeight = 5;
 	private static int mHalfWidth;
 	private static int mHalfHeight;
-    private float viewportX = 0;
+    private float viewportX = 1;
 	
 	public PGTestRenderer() {
 		game = new GameImpl();
 	}
-	
 
-	/**
+    public static int getWidth() {
+        return PGTestRenderer.mWidth;
+    }
+
+    public static int getHeight() {
+        return PGTestRenderer.mHeight;
+    }
+
+    public static void setWidth(int mWidth) {
+        PGTestRenderer.mWidth = mWidth;
+    }
+
+    public static void setHeight(int mHeight) {
+        PGTestRenderer.mHeight = mHeight;
+    }
+
+    /**
 	 * Called at startup (and whenever surface needs change)
 	 */
 	@Override
@@ -77,11 +93,12 @@ public class PGTestRenderer implements Renderer {
 
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glFrustumf(-(width / (float) height), ((float) width / height), -1,
-				1, 1f, 100);
+        float ratio = (width / (float) height);
+		gl.glFrustumf(-ratio, ratio, -1, 1, 1f, 100);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
+        // Enabling alpha
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 

@@ -33,7 +33,6 @@ public class TestGLSurfaceView extends GLSurfaceView {
 	
 	public TestGLSurfaceView(Context context) {
 		super(context);
-		
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 //		setDebugFlags(DEBUG_LOG_GL_CALLS | DEBUG_CHECK_GL_ERROR);
