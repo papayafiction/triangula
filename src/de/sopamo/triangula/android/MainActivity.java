@@ -36,8 +36,11 @@ import android.hardware.SensorManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.sopamo.triangula.android.wifi.WifiConnection;
@@ -63,7 +66,12 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        WindowManager w = getWindowManager();
+        Display d = w.getDefaultDisplay();
+        PGTestRenderer.setWidth(d.getWidth());
+        PGTestRenderer.setHeight(d.getHeight());
+
         mGlSurfaceView = new TestGLSurfaceView(this);
         
         setContentView(R.layout.main);
@@ -83,7 +91,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
         //setContentView(R.layout.main);
         //test = (TextView) findViewById(R.id.tv_status);
-
     }
     
     

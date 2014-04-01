@@ -67,7 +67,7 @@ public class WifiConnection extends BroadcastReceiver {
 
                 if(peers.iterator().hasNext()) {
                     WifiP2pDevice device = (WifiP2pDevice) peers.iterator().next();
-                    Toast.makeText(context, device.toString(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, device.toString(), Toast.LENGTH_LONG).show();
                     connectDevice(device);
                 }
             }
@@ -88,7 +88,7 @@ public class WifiConnection extends BroadcastReceiver {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo info) {
                         host = info.groupOwnerAddress.getHostAddress();
-                        Toast.makeText(context, "Host-IP-Adresse gefunden", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, "Host-IP-Adresse gefunden", Toast.LENGTH_LONG).show();
                     }
                 });
             }

@@ -165,7 +165,7 @@ public class GameImpl implements GameInterface {
             bdy.setLinearDamping(1);
             bdy.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
         }
-		
+
 		world.step(TIME_STEP, ITERATIONS);
 		world.sync();
 	}

@@ -6,6 +6,7 @@ import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
+import de.sopamo.triangula.android.PGTestRenderer;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.backgroundElements.*;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
@@ -69,14 +70,24 @@ public class BaseLevel {
     }
 
     protected void makeBackground() {
-        Rectangle rect = new Rectangle(1,2,15f);
-        rect.setColor(1f,1f,0,0.3f);
-        backgroundElements.add(rect);
+        int backgroundShapes = 50;
+        for(int i = 0;i<backgroundShapes;++i) {
+            float y = 4 + new Random().nextFloat() * 2;
+            if(i > backgroundShapes/2) {
+                y *= -1;
+            }
+            float size = new Random().nextFloat() * 10;
+            Rectangle rect = new Rectangle(i+new Random().nextFloat()*2,y,size);
+            rect.setColor(1f,1f,0,0.3f);
+            backgroundElements.add(rect);
+        }
     }
 
     protected void makeFence() {
         float density = 0;
         GameShape gs;
+
+
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
         gs.attachToBody(ground, new Vec2(0, -5f), density);
