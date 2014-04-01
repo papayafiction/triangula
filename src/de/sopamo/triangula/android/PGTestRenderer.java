@@ -70,8 +70,7 @@ public class PGTestRenderer implements Renderer {
 	 */
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		
-		
+
 	}
 
 
@@ -101,6 +100,10 @@ public class PGTestRenderer implements Renderer {
         // Enabling alpha
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
+
+        glEnable(GL_LINE_SMOOTH);
+        glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_MULTISAMPLE);
 
         /* The following part enables lighting. This doesn't look good without 3d objects and / or without materials.
         glEnable(GL_LIGHTING);

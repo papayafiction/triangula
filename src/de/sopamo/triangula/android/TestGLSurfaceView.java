@@ -26,6 +26,10 @@ package de.sopamo.triangula.android;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLDisplay;
+
 public class TestGLSurfaceView extends GLSurfaceView {
 
 	
@@ -36,7 +40,9 @@ public class TestGLSurfaceView extends GLSurfaceView {
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 //		setDebugFlags(DEBUG_LOG_GL_CALLS | DEBUG_CHECK_GL_ERROR);
-		
+
+        // Enable AntiAliasing
+        setEGLConfigChooser(new MultisampleConfigChooser());
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();

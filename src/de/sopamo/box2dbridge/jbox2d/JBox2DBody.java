@@ -175,7 +175,6 @@ public class JBox2DBody implements IBody {
     @Override
     public void setMassFromShapes() {
         body.setMassFromShapes();
-        Log.e("pg", "SET MASS FROM SHAPES");
         Thread.dumpStack();
 
     }
