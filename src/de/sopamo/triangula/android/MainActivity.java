@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         PGTestRenderer.setWidth(d.getWidth());
         PGTestRenderer.setHeight(d.getHeight());
 
+
         mGlSurfaceView = new TestGLSurfaceView(this);
         
         setContentView(R.layout.main);
@@ -119,6 +120,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     	super.onDestroy();
     	
     	mGlSurfaceView.destroy();
+
     }
 
 

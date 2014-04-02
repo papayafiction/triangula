@@ -51,6 +51,7 @@ public class TestGLSurfaceView extends GLSurfaceView {
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();
+
 	}
 
 	public void destroy() {
