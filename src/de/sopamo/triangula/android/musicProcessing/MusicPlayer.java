@@ -1,13 +1,13 @@
 package de.sopamo.triangula.android.musicProcessing;
 
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.io.File;
 
 
 public class MusicPlayer {
     private File file;
-    private double initialPlayTime;
     private double beatTime;
     private MediaPlayer forwardMediaPlayer;
 
@@ -25,8 +25,6 @@ public class MusicPlayer {
         beatAnalyzA.runFileProcessing(file);
         beatTime = beatAnalyzA.getMovementTime();
 
-        System.out.println("Move all " + beatTime + " seconds");
-
 
     }
 
@@ -35,19 +33,35 @@ public class MusicPlayer {
             @Override
             public void run() {
                 forwardMediaPlayer.start();
+                forwardMediaPlayer.setLooping(true);
             }
         }).start();
 
     }
 
+    public void pausePlayer (){
+        forwardMediaPlayer.pause();
+        Log.e("leFuc","La Pause grand a lieu");
+    }
+
     public void destroyPlayer (){
         forwardMediaPlayer.stop();
+        Log.e("leFuc","La déstruction grand a lieu");
+    }
+
+    public void resumePlayer(double pauseStartTime){
+        forwardMediaPlayer.seekTo((int)(pauseStartTime));
+        Log.e("leFuc","Le temps de la pause "+pauseStartTime);
+        forwardMediaPlayer.start();
+    }
+
+    public double getCurrentPos (){
+        Log.e("leFuc","La ");
+        return forwardMediaPlayer.getCurrentPosition();
+
     }
 
 
-    public double getInitialPlayTime(){
-        return initialPlayTime;
-    }
 
     public double getBeatTime(){
         return beatTime;

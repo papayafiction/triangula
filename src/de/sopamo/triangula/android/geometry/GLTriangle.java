@@ -54,7 +54,7 @@ public class GLTriangle extends Triangle implements GLInterface {
 	}
 	public void draw(float x, float y, float angle) {
 		glPushMatrix();
-		
+
 		glTranslatef(x, y, 0);
 		glRotatef((float)Math.toDegrees(this.angle), 0, 0, 1);
 		GLBufferTool.setGLVertexBuffer(2, fbVertices); 
