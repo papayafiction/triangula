@@ -36,7 +36,6 @@ import android.hardware.SensorManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
@@ -50,7 +49,7 @@ import org.jbox2d.common.Vec2;
 public class MainActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
 	
-	TestGLSurfaceView mGlSurfaceView;
+	GameGLSurfaceView mGameGlSurfaceView;
 	private static TextView status;
 	private static MainActivity instance;
     private WifiConnection wifiConnection;
@@ -71,14 +70,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         WindowManager w = getWindowManager();
         Display d = w.getDefaultDisplay();
-        PGTestRenderer.setWidth(d.getWidth());
-        PGTestRenderer.setHeight(d.getHeight());
+        PGRenderer.setWidth(d.getWidth());
+        PGRenderer.setHeight(d.getHeight());
 
-        mGlSurfaceView = new TestGLSurfaceView(this);
+        mGameGlSurfaceView = new GameGLSurfaceView(this);
         
         setContentView(R.layout.main);
         LinearLayout ll = (LinearLayout)findViewById(R.id.layout_main);
-        ll.addView(mGlSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        ll.addView(mGameGlSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
         
         status = (TextView)findViewById(R.id.tv_status);
         
@@ -118,7 +117,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onDestroy() {
     	super.onDestroy();
     	
-    	mGlSurfaceView.destroy();
+    	mGameGlSurfaceView.destroy();
     }
 
 

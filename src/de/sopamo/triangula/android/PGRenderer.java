@@ -26,7 +26,6 @@ package de.sopamo.triangula.android;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.GameInterface;
 
@@ -36,7 +35,7 @@ import de.sopamo.triangula.android.game.InputHandler;
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
 
-public class PGTestRenderer implements Renderer {
+public class PGRenderer implements Renderer {
 
 	GameInterface game;
 	
@@ -46,24 +45,24 @@ public class PGTestRenderer implements Renderer {
 	private static int mHalfHeight;
     private float viewportX = 1;
 	
-	public PGTestRenderer() {
+	public PGRenderer() {
 		game = new GameImpl();
 	}
 
     public static int getWidth() {
-        return PGTestRenderer.mWidth;
+        return PGRenderer.mWidth;
     }
 
     public static int getHeight() {
-        return PGTestRenderer.mHeight;
+        return PGRenderer.mHeight;
     }
 
     public static void setWidth(int mWidth) {
-        PGTestRenderer.mWidth = mWidth;
+        PGRenderer.mWidth = mWidth;
     }
 
     public static void setHeight(int mHeight) {
-        PGTestRenderer.mHeight = mHeight;
+        PGRenderer.mHeight = mHeight;
     }
 
     /**

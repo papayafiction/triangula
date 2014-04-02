@@ -5,7 +5,9 @@ import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
+import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.models.Spikes;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
@@ -25,6 +27,7 @@ public class BaseLevel {
 
     protected IBody ground;
     protected IWorld world;
+    protected GameImpl game;
     protected List<GameShape> gsl;
     protected List<Entity> entities;
     protected Map jsonData;
@@ -127,7 +130,7 @@ public class BaseLevel {
 
             // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
             // the triangle whereas our triangles here are twice as large as size.
-            // The number 50 comes from onDrawFrame in PGTestRenderer. There we set the cameras z position to -5.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
             float size = Float.parseFloat(triangle.get("size").toString()) * 0.02f / 2;
             float x = Float.parseFloat(triangle.get("x").toString()) * 0.02f-9+size;
             float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
@@ -143,6 +146,22 @@ public class BaseLevel {
             IBody body = gs.attachToNewBody(world, null, 0);
             body.setPosition(new Vec2(x,y));
             gsl.add(gs);
+        }
+    }
+
+    public void makeSpikes(List spikes) {
+        for(int i=0;i<spikes.size();i++) {
+            Map spike = (Map)spikes.get(i);
+
+            float size = Float.parseFloat(spike.get("size").toString()) * 0.02f / 2;
+            float x = Float.parseFloat(spike.get("x").toString()) * 0.02f-9;
+            float y = Float.parseFloat(spike.get("y").toString()) * 0.02f-5;
+            float angle = Float.parseFloat(spike.get("angle").toString());
+            int count = Integer.parseInt(spike.get("count").toString());
+
+
+            y*=-1;
+            new Spikes(game,count,size,new Vec2(x,y),angle);
         }
     }
 }

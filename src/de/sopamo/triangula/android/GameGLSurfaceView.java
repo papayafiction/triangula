@@ -25,18 +25,13 @@ package de.sopamo.triangula.android;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLDisplay;
-
-public class TestGLSurfaceView extends GLSurfaceView {
+public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 
 	
-	PGTestRenderer pgRenderer = new PGTestRenderer();
+	PGRenderer pgRenderer = new PGRenderer();
 	
-	public TestGLSurfaceView(Context context) {
+	public GameGLSurfaceView(Context context) {
 		super(context);
 		setFocusable(true);
 		setFocusableInTouchMode(true);
