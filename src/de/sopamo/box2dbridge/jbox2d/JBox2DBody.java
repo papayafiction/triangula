@@ -22,7 +22,9 @@
 
 package de.sopamo.box2dbridge.jbox2d;
 
+import de.sopamo.box2dbridge.jnibox2d.JNIBox2DShape;
 import org.jbox2d.collision.FilterData;
+import org.jbox2d.collision.shapes.CircleDef;
 import org.jbox2d.collision.shapes.PolygonDef;
 import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.common.Vec2;
@@ -74,6 +76,17 @@ public class JBox2DBody implements IBody {
 
         Shape shape = body.createShape(pd);
         return new JBox2DShape(this, shape);
+    }
+
+    @Override
+    public IShape createCircle(float radius, float x, float y, float density) {
+        CircleDef cd = new CircleDef();
+        cd.localPosition = new Vec2(x,y);
+        cd.radius = radius;
+        cd.density = density;
+
+        Shape shape = body.createShape(cd);
+        return new JBox2DShape(this,shape);
     }
 
     @Override
