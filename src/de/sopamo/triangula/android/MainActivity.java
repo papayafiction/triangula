@@ -33,9 +33,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
@@ -43,12 +45,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
+import java.io.File;
+
 public class MainActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
-	
+
 	GameGLSurfaceView mGameGlSurfaceView;
 	private static TextView status;
 	private static MainActivity instance;
@@ -56,6 +61,10 @@ public class MainActivity extends Activity implements SensorEventListener {
     private WifiP2pManager wifiP2pManager;
     private IntentFilter intentFilter;
     private WifiP2pManager.Channel channel;
+    public MediaPlayer forwardMediaPlayer;
+    public MusicPlayer musicPlayer;
+    private double pauseStartTime;
+
     //TextView test;
 
 	public MainActivity() {
@@ -92,6 +101,12 @@ public class MainActivity extends Activity implements SensorEventListener {
         wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
         //setContentView(R.layout.main);
         //test = (TextView) findViewById(R.id.tv_status);
+
+        File file = new File("raw/ingame.mp3");
+
+        forwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame);
+        musicPlayer = new MusicPlayer(file,forwardMediaPlayer);
+        musicPlayer.playMusic();
     }
     
     
@@ -118,6 +133,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     	super.onDestroy();
     	
     	mGameGlSurfaceView.destroy();
+        musicPlayer.destroyPlayer();
+
     }
 
 
@@ -164,6 +181,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onResume() {
         super.onResume();
         registerReceiver(wifiConnection, intentFilter);
+        musicPlayer.resumePlayer(pauseStartTime);
         wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
 
             public void onSuccess() {
@@ -180,5 +198,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(wifiConnection);
+        pauseStartTime = musicPlayer.getCurrentPos();
+
+        musicPlayer.pausePlayer();
+
     }
 }
