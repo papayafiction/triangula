@@ -38,7 +38,7 @@ public class Spikes extends TriangleBaseModel implements Entity {
             triangleBody.setAngle(radian);
             game.getGsl().add(triangle);
             times.add(i%2==0?0l:-TIME_FOR_DOWN);
-            triangles.add(triangleBody);
+            triangles.add(triangleBody);
         }
 
         game.getEntities().add(this);
