@@ -6,6 +6,7 @@ import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.State;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.*;
 import org.jbox2d.common.Vec2;
 
@@ -32,7 +33,9 @@ public class Player implements Rewindable,Entity {
         body = shape.attachToNewBody(game.getWorld(),null,1);
         body.setAngularDamping(3);
         body.setLinearDamping(1);
-        body.setUserData("player");
+        UserData data = new UserData();
+        data.type = "player";
+        body.setUserData(data);
         body.setPosition(pst);
         game.getGsl().add(shape);
         game.getEntities().add(this);
