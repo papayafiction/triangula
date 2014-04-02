@@ -5,6 +5,8 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
+import de.sopamo.triangula.android.game.mechanics.UserData;
+import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -21,23 +23,29 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     }
 
     public void add(IBody body1, IBody body2) {
-        if(body1 != null && body1.getUserData() instanceof String) {
-            if(body1.getUserData().equals("player")) {
-                Vec2 center = body1.getWorldCenter();
+        check(body1,body2);
+        check(body2,body1);
+    }
+    
+    private void check(IBody body,IBody body2) {
+        if(body != null && body.getUserData() instanceof UserData) {
+            if(((UserData)(body.getUserData())).type.equals("player")) {
+                Vec2 center = body.getWorldCenter().add(new Vec2(0,0));
 
                 // Spawn contact particles
                 ParticleSpawner.spawn(10,center.x,center.y);
 
                 // On contact kick player back
-                Vec2 centerEnv = body2.getWorldCenter();
+                Vec2 centerEnv = body2.getWorldCenter().add(new Vec2(0,0));
                 Vec2 force = new Vec2(center.x-centerEnv.x,center.y-centerEnv.y);
                 force.mulLocal(10);
-                body1.applyForce(force,center);
+                body.applyForce(force,center);
             }
-        }
-        if(body2 != null && body2.getUserData() instanceof String) {
-            Log.e("foouserdata2", (String) body2.getUserData());
-        }
+            if(((UserData)(body.getUserData())).type.equals("switch")) {
+                Switch sw = (Switch) ((UserData) body.getUserData()).obj;
+                sw.trigger();
+            }
+        }    
     }
 
     @Override
