@@ -75,13 +75,11 @@ public class GameShapeCircle extends GameShape {
 		shapePosition = position;
 		
 		this.body = body;
-		shape = body.createBox(
-                    ((GLCircle)glShape).getRadius()/2,
-                    ((GLCircle)glShape).getRadius()/2,
-					position.x, 
+		shape = body.createCircle(
+                ((GLCircle)glShape).getRadius(),
+					position.x,
 					position.y, 
-					density, 
-					0
+					density
 				);
 
 		body.setMassFromShapes();

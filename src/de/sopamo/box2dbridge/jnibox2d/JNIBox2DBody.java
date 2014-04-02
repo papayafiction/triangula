@@ -111,6 +111,13 @@ public class JNIBox2DBody implements IBody {
     }
 
     @Override
+    public IShape createCircle(float radius, float x, float y, float density) {
+        nCreateCircle(bodyID,radius,x,y,density);
+        IShape s = new JNIBox2DShape(0,this);
+        return s;
+    }
+
+    @Override
     public void setAngle(float angle) {
         nSetAngle(bodyID,angle);
     }
@@ -259,4 +266,6 @@ public class JNIBox2DBody implements IBody {
     native private void nSetAngularVelocity(int bodyID, float velocity);
 
     native public void nSetAngle(int bodyID,float angle);
+
+    native public void nCreateCircle(int bodyID,float radius,float x, float y,float density);
 }

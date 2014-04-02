@@ -54,7 +54,7 @@ public class GLCircle extends Circle implements GLInterface {
         glTranslatef(x, y, 0);
         glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
         GLBufferTool.setGLVertexBuffer(2, fbVertices);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 44);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 88);
 
 
         glPopMatrix();
@@ -68,10 +68,10 @@ public class GLCircle extends Circle implements GLInterface {
 	protected void onUpdateSize() {
 		super.onUpdateSize();
 		
-		float[] v = new float[88];
+		float[] v = new float[176];
         for(int i = 0; i < v.length;){
-            v[i]= getRadius()* (float)Math.cos(i*(180/v.length));
-            v[i+1]= getRadius()* (float)Math.sin(i*(180/v.length));
+            v[i]= getRadius()* (float)Math.cos(2*i*(Math.PI/v.length));
+            v[i+1]= getRadius()* (float)Math.sin(2*i*(Math.PI/v.length));
             i = i+2;
         }
 
