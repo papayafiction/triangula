@@ -24,7 +24,15 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
         if(body1 != null && body1.getUserData() instanceof String) {
             if(body1.getUserData().equals("player")) {
                 Vec2 center = body1.getWorldCenter();
+
+                // Spawn contact particles
                 ParticleSpawner.spawn(10,center.x,center.y);
+
+                // On contact kick player back
+                Vec2 centerEnv = body2.getWorldCenter();
+                Vec2 force = new Vec2(center.x-centerEnv.x,center.y-centerEnv.y);
+                force.mulLocal(10);
+                body1.applyForce(force,center);
             }
         }
         if(body2 != null && body2.getUserData() instanceof String) {

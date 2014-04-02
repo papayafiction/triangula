@@ -15,14 +15,16 @@ public class Rectangle extends GLRectangle implements BackgroundElement {
     private float y;
     private float angle;
     private float size;
+    private float speed;
 
 
-    public Rectangle(float x, float y, float size) {
+    public Rectangle(float x, float y, float size, float speed) {
         super(size,size);
         this.size = size;
         this.x = x;
         this.y = y;
         this.angle = 0;
+        this.speed = speed;
     }
 
     public void draw() {
@@ -31,7 +33,7 @@ public class Rectangle extends GLRectangle implements BackgroundElement {
     }
 
     public void update() {
-        angle += .001f;
+        angle += speed;
     }
 
     public float getAngle() {
