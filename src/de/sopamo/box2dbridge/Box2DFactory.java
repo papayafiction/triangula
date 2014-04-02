@@ -25,12 +25,14 @@ package de.sopamo.box2dbridge;
 
 import android.util.Log;
 
+import android.widget.Toast;
 import de.sopamo.box2dbridge.jbox2d.JBox2DWorld;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
+import javazoom.jl.player.Player;
 
 public class Box2DFactory {
 
-	private static final boolean USE_JNI = false;
+	private static final boolean USE_JNI = true;
 
 	public static IWorld newWorld() {
 		IWorld world = null;

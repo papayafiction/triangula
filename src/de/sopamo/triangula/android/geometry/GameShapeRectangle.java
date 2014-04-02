@@ -21,6 +21,7 @@
 
 package de.sopamo.triangula.android.geometry;
 
+import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 
@@ -45,8 +46,9 @@ public class GameShapeRectangle extends GameShape {
 		def.angularDamping = 0.5f;
 		def.linearDamping = 0.5f;
 		def.allowSleep = false;
-		body = world.createBody(def);
-		
+        body = (world instanceof JNIBox2DWorld)?
+                ((JNIBox2DWorld) world).createBody(def, density):
+                world.createBody(def);
 		attachToBody(body, position, density);
 		
 		body.refilter(0xFFFF, 0xFFFF, 0);
