@@ -108,7 +108,7 @@ public class Player implements Rewindable,Entity {
 
             body.setAngularDamping(3);
             body.setLinearDamping(1);
-            body.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(1, 10), new Vec2(targetX, targetY));
         }
     }
 }

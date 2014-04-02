@@ -102,6 +102,7 @@ public class JNIBox2DBody implements IBody {
 
     public IShape createTriangle(float size, float x, float y, float density, float angle) {
         nCreateTriangle(bodyID, size, x, y, density, angle);
+        this.setAngle(angle);
 
         // System.out.println("Created shape ID " + shapeID);
 

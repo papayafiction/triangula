@@ -4,7 +4,7 @@ import org.jbox2d.common.Vec2;
 
 public class InputHandler {
 
-    public final static long TIME_FOR_LONGTOUCH = 100;
+    public final static long TIME_FOR_LONGTOUCH = 200;
 
     public boolean longTouched;
 
