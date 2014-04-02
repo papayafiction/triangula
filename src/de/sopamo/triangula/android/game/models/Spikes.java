@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.game.models;
 
+import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
@@ -7,29 +8,41 @@ import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
 import org.jbox2d.common.Vec2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Spikes extends TriangleBaseModel implements Entity {
 
     public final static int TIME_FOR_DOWN = 500;
 
-    private long timeT1 = 0;
-    private long timeT2 = -TIME_FOR_DOWN;
-    private long timeT3 = -2*TIME_FOR_DOWN;
-    private float y;
-
-
+    private List<Long> times = new ArrayList<Long>();
+    private Vec2 direction;
+    private Vec2 pstVec;
+    private Vec2 pst;
     private long lastTick = 0;
 
-    public Spikes(GameImpl game, float x, float y) {
-        this.y = y;
-        x++;
-        for(int i=0;i<3;i++) {
-            GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(1));
+    public Spikes(GameImpl game,int count, float size, Vec2 pst,float angle) {
+        float radian = (float)Math.toRadians(angle);
+        this.pst = pst.add(new Vec2((float)(Math.sqrt(2)*size*Math.cos(radian-Math.PI/4)),
+                                    (float)(Math.sqrt(2)*size*Math.sin(radian-Math.PI/4))));
+        pstVec = new Vec2((float)(size*Math.cos(radian)),
+                          (float)(size*Math.sin(radian)));
+
+        direction = new Vec2(pstVec.y,
+                             -pstVec.x);
+
+        for(int i=0;i<count;i++) {
+            GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
             IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
-            triangleBody.setPosition(new Vec2(x+(2*i),y));
-            triangles.add(triangleBody);
+            triangleBody.setPosition(this.pst.add(pstVec.mul(2*i)));
+            triangleBody.setAngle(radian);
             game.getGsl().add(triangle);
+            times.add(i%2==0?0l:-TIME_FOR_DOWN);
+            triangles.add(triangleBody);
         }
+
         game.getEntities().add(this);
+
     }
 
     @Override
@@ -39,43 +52,26 @@ public class Spikes extends TriangleBaseModel implements Entity {
             return;
         }
         long dt = System.currentTimeMillis()-lastTick;
-        timeT1+=dt;
-        timeT2+=dt;
-        timeT3+=dt;
-
-        if((int)(((float)timeT1)/TIME_FOR_DOWN) % 2 == 0) {
-            movingDown(this.triangles.get(0),timeT1);
-        } else {
-            movingUp(this.triangles.get(0),timeT1);
+        for(int i=0;i<times.size();i++) {
+            IBody triangle = triangles.get(i);
+            Long time = times.get(i);
+            time+=dt;
+            if(time >= 0 && (int)(((float)time)/TIME_FOR_DOWN) % 2 == 0) {
+                movingDown(triangle,i,time);
+            } else if(time >= 0) {
+                movingUp(triangle,i,time);
+            }
         }
-
-        if(timeT2 >= 0 && (int)(((float)timeT2)/TIME_FOR_DOWN) % 2 == 0) {
-            movingDown(this.triangles.get(1),timeT2);
-        } else if(timeT2 >= 0) {
-            movingUp(this.triangles.get(1),timeT2);
-        }
-
-        if(timeT3 >= 0 && (int)(((float)timeT3)/TIME_FOR_DOWN) % 2 == 0) {
-            movingDown(this.triangles.get(2),timeT3);
-        } else if(timeT3 >= 0){
-            movingUp(this.triangles.get(2),timeT3);
-        }
-
-        lastTick = System.currentTimeMillis();
     }
 
-    private void movingUp(IBody triangle,long time) {
-        float y = this.y-1;
-        float t = time % TIME_FOR_DOWN;
-        triangle.setPosition(new Vec2(triangle.getWorldCenter().x,
-                y+(t/TIME_FOR_DOWN)));
+    private void movingUp(IBody triangle,int i, long time) {
+        Vec2 pst = this.pst.add(pstVec.mul(2*i));
+        triangle.setPosition(pst.add(direction.mul(1.0f-(float)(time%TIME_FOR_DOWN)/TIME_FOR_DOWN)));
     }
 
-    private void movingDown(IBody triangle, long time) {
-        float y = this.y;
-        float t = time % TIME_FOR_DOWN;
-        triangle.setPosition(new Vec2(triangle.getWorldCenter().x,
-                y-(t/TIME_FOR_DOWN)));
+    private void movingDown(IBody triangle,int i, long time) {
+        Vec2 pst = this.pst.add(pstVec.mul(2*i));
+        triangle.setPosition(pst.add(direction.mul((float)(time%TIME_FOR_DOWN)/TIME_FOR_DOWN)));
     }
 
 }

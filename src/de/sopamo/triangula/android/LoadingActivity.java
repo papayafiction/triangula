@@ -14,10 +14,8 @@ import java.io.File;
 public class LoadingActivity extends Activity {
 
 
-    public MediaPlayer forwardMediaPlayer;
     private MediaPlayer backwardMediaPlayer;
     public LoadingActivity that;
-    public MusicPlayer musicPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +23,7 @@ public class LoadingActivity extends Activity {
         setContentView(R.layout.loading);
 
         that = this;
-        File file = new File("raw/xoxo.mp3");
 
-        forwardMediaPlayer = MediaPlayer.create(this, R.raw.xoxo);
-        musicPlayer = new MusicPlayer(file,forwardMediaPlayer);
-        musicPlayer.playMusic();
 
         Intent toMain = new Intent(this, MainActivity.class);
         startActivity(toMain);
@@ -39,12 +33,9 @@ public class LoadingActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        musicPlayer.destroyPlayer();
+
     }
 
 
 
-    public MediaPlayer getForwardMP(){
-        return forwardMediaPlayer;
-    }
 }
