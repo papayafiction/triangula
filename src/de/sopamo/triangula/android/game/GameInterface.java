@@ -28,6 +28,6 @@ public interface GameInterface {
 	Level getLevel();
 	void gameLoop();
 	void drawFrame();
-	void init();
+	void init(InputHandler handler);
 	void destroy();
 }

@@ -24,6 +24,7 @@ package de.sopamo.triangula.android.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.geometry.*;
@@ -47,7 +48,10 @@ public class GameImpl implements GameInterface {
 	private static final int   ITERATIONS = 5;
 
     private Level level;
+    private InputHandler handler;
+
     private static GameImpl instance;
+
 
     private static IBody playerBody;
     private static Player player;
@@ -56,6 +60,7 @@ public class GameImpl implements GameInterface {
 	IWorld world = Box2DFactory.newWorld();
 
     List<Rewindable> rewindables = new ArrayList<Rewindable>();
+    List<Entity> entities = new ArrayList<Entity>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
 
@@ -78,7 +83,8 @@ public class GameImpl implements GameInterface {
         return instance;
     }
 
-    public void init() {
+    public void init(InputHandler handler) {
+        this.handler = handler;
 		// density of dynamic bodies
 		float density = 1;
 		
@@ -94,9 +100,10 @@ public class GameImpl implements GameInterface {
         world.create(aabb,gravity,true);
         world.setContactListener(new ContactListener());
         // Create player
-        Player player = new Player(this,new Vec2(-8,0));
+        Player player = new Player(this,new Vec2(-8,0),handler);
         GameImpl.player = player;
         playerBody = player.getBody();
+        entities.add(player);
 
         // Initalize and make level
         level = new Starter();
@@ -135,6 +142,8 @@ public class GameImpl implements GameInterface {
 			return;
 		}
 
+        handler.update();
+
         /** ## DEBUG ## **/
 		frames++;
 		long elap = System.currentTimeMillis() - nanoTime;
@@ -156,7 +165,7 @@ public class GameImpl implements GameInterface {
         }
 
         /** DO SOME REWIND **/
-        if(MainActivity.y  > 5) {
+        if(handler.longTouched) {
             for(int i=0;i<rewindables.size();i++) {
                 Rewindable rewindable = rewindables.get(i);
                 if(!rewindable.isRewinding()) rewindable.startRewind();
@@ -168,24 +177,13 @@ public class GameImpl implements GameInterface {
             }
         }
 
-
-        if(MainActivity.touched){
-            MainActivity.touched = false;
-            /*
-
-            */
-            //Calculate the target vector
-            Vec2 currPlayerPosition = playerBody.getWorldCenter();
-            float targetX = currPlayerPosition.x;
-            float targetY = currPlayerPosition.y;
-
-            playerBody.setAngularDamping(3);
-            playerBody.setLinearDamping(1);
-            playerBody.applyForce(new Vec2(1, 5), new Vec2(targetX, targetY));
-
+        /** Update Entities **/
+        for(Entity entity:entities) {
+            entity.update();
         }
-            world.step(TIME_STEP, ITERATIONS);
-            world.sync();
+        
+        world.step(TIME_STEP, ITERATIONS);
+        world.sync();
 	}
 
     public void addParticle(Particle particle) {
@@ -195,6 +193,9 @@ public class GameImpl implements GameInterface {
         this.pl.add(particle);
     }
 
+    public List<Entity> getEntities() {
+        return entities;
+    }
 
     public IWorld getWorld() {
         return world;
@@ -210,6 +211,10 @@ public class GameImpl implements GameInterface {
 
     public void removeParticle(Particle particle) {
         this.pl.remove(particle);
+    }
+
+    public InputHandler getInputHandler() {
+        return handler;
     }
 
     public static Player getMainPlayer() {

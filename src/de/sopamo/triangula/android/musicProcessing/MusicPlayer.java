@@ -1,51 +1,28 @@
 package de.sopamo.triangula.android.musicProcessing;
 
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import java.io.File;
-import java.io.FileInputStream;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+
+import java.io.*;
 
 
 public class MusicPlayer {
     private File file;
-    private FileInputStream fis;
-    private Player playMP3;
-    private double initialSystemTime;
+    private FileInputStream forwardFileInputStream;
+    private FileInputStream rewindFileInputStream;
+    private OutputStream outputStream;
+    private AdvancedPlayer advancedPlayerForward;
+    private AdvancedPlayer advancedPlayerRewind;
+    private double initialPlayTime;
     private double beatTime;
+    private byte[] bytesIn;
+    private byte[] bytesOut;
 
-    //move all x frames
-    private int move ;
 
     public MusicPlayer(File file){
         this.file = file;
     }
-/*
-    method to play music
-     */
-    public void play(){
-        try{
-            fis = new FileInputStream(file);
 
-            playMP3 = new Player(fis);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        initialSystemTime = System.currentTimeMillis();
-                        playMP3.play();
-                    } catch (JavaLayerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-        }
-        catch(Exception exc){
-            exc.printStackTrace();
-            System.out.println("Failed to play the file.");
-        }
-    }
 /*
     Instantiate a new beatanalyzer, run the file analyze and save the number of frames to be on the beat in int move.
     Afterwards the song is played. a loop checks every frame if onset or not.
@@ -57,16 +34,50 @@ public class MusicPlayer {
 
         System.out.println("Move all " + beatTime + " seconds");
 
+        try {
+            forwardFileInputStream = new FileInputStream(file);
+        /*
+            bytesIn = new byte[(int)file.length()+1];
+            rewindFileInputStream = new FileInputStream(file);
+            rewindFileInputStream.read(bytesIn);
+
+            for(int i = (int)file.length()+1; i > -1; i--){
+                bytesOut[i-(int)file.length()] = bytesIn[i];
+            }
+
+
+        */
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void playMusic (){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 play();
             }
         }).start();
+
     }
 
-    public double getInitialSystemTime(){
-        return initialSystemTime;
+    public void rewindMusic (){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                rewind();
+            }
+        }).start();
+
+    }
+
+    public double getInitialPlayTime(){
+        return initialPlayTime;
     }
 
     public double getBeatTime(){
@@ -82,5 +93,39 @@ public class MusicPlayer {
             return false;
         }
     }
+
+    /*
+    method to play music
+     */
+    private void play(){
+        try{
+
+            advancedPlayerForward = new AdvancedPlayer(forwardFileInputStream);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        initialPlayTime = System.currentTimeMillis();
+                        advancedPlayerForward.play();
+                    } catch (JavaLayerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        }
+        catch(Exception exc){
+            exc.printStackTrace();
+            System.out.println("Failed to play the file.");
+        }
+    }
+    private void rewind(){
+        advancedPlayerForward.stop();
+
+
+    }
+
+
 
 }

@@ -31,6 +31,7 @@ import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.GameInterface;
 
 import android.opengl.GLSurfaceView.Renderer;
+import de.sopamo.triangula.android.game.InputHandler;
 
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
@@ -102,7 +103,7 @@ public class PGTestRenderer implements Renderer {
         glEnable(GL_BLEND);
 
         glEnable(GL_LINE_SMOOTH);
-        glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         glEnable(GL_MULTISAMPLE);
 
         /* The following part enables lighting. This doesn't look good without 3d objects and / or without materials.
@@ -150,7 +151,8 @@ public class PGTestRenderer implements Renderer {
 
 
 	public void init() {
-		game.init();
+        InputHandler handler = new InputHandler();
+		game.init(handler);
 	}
 	public void destroy() {
 		game.destroy();

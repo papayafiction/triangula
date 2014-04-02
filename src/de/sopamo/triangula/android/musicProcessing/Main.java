@@ -32,6 +32,7 @@ public class Main {
         MusicPlayer musicPlayer = new MusicPlayer(file);
 
         musicPlayer.runMusicPlayer();
+        musicPlayer.playMusic();
 
 
     }

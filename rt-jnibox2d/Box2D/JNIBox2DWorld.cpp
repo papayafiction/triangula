@@ -218,8 +218,6 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 			return;
 		}
 
-//		cout << "class = " << jniBodyClass << "\n" << flush;
-
 		callbackSetData = env->GetMethodID(jniBodyClass, "callbackSetData", "(FFFFFFF)V");
 		if(callbackSetData == 0) {
 			throwExc(env, "callbackSetData method ID (FFFFFFF)V not found");
@@ -227,7 +225,6 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 		}
 	}
 
-	//b2Body *body = bodyList[id];
 	float x = body->GetWorldCenter().x,
 			y = body->GetWorldCenter().y,
 			vx = body->GetLinearVelocity().x,
@@ -236,13 +233,9 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 			avel = body->GetAngularVelocity(),
 			inertiaInv = 1.0f / body->GetInertia();
 
-	// The JNIBody reference is made global and stored for all body userdata.
 	if(body->GetUserData() != bodyList[0]->GetUserData())
 		if(body->GetUserData() != 0)
 			env->CallVoidMethod((jobject)body->GetUserData(), callbackSetData, x, y, vx, vy, angle, avel, inertiaInv);
-//		else
-//			cout << "dropped a body (no userdata) \n" << flush;
-
 }
 
 

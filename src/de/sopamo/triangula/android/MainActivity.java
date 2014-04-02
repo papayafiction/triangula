@@ -43,7 +43,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.wifi.WifiConnection;
+import org.jbox2d.common.Vec2;
 
 public class MainActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
@@ -139,16 +141,23 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     // Get touch event positions
     public static int touch_x, touch_y;
-    public static long lastClick = 0;
     public static boolean touched = false;
+    public static boolean longTouched = false;
+
+    private static long lastClick = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        touch_x = (int)event.getX();
-        touch_y = (int)event.getY();
-        if(System.currentTimeMillis()-lastClick >= 100) {
-            touched= true;
-            lastClick = System.currentTimeMillis();
+        GameImpl gameInstance = GameImpl.getInstance();
+
+        if(GameImpl.getInstance() == null) return false;
+
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            gameInstance.getInputHandler().setTouchPosition(new Vec2(event.getX(),event.getY()));
+            gameInstance.getInputHandler().setTouched();
+        } else if(event.getAction() == MotionEvent.ACTION_UP) {
+            gameInstance.getInputHandler().reset();
         }
+
         return false;
     }
 
