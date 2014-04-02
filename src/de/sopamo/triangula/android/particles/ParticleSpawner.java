@@ -7,9 +7,6 @@ import java.util.Random;
 
 public class ParticleSpawner {
 
-    private static int s1 = 2343235;
-    private static int s2 = 6523465;
-
     public static void spawn(int amount,float x,float y) {
         float alpha = (float)Math.PI * 2 / amount;
         int i = -1;
