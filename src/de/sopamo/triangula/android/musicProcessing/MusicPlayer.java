@@ -1,26 +1,19 @@
 package de.sopamo.triangula.android.musicProcessing;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.advanced.AdvancedPlayer;
+import android.media.MediaPlayer;
 
-import java.io.*;
+import java.io.File;
 
 
 public class MusicPlayer {
     private File file;
-    private FileInputStream forwardFileInputStream;
-    private FileInputStream rewindFileInputStream;
-    private OutputStream outputStream;
-    private AdvancedPlayer advancedPlayerForward;
-    private AdvancedPlayer advancedPlayerRewind;
     private double initialPlayTime;
     private double beatTime;
-    private byte[] bytesIn;
-    private byte[] bytesOut;
+    private MediaPlayer forwardMediaPlayer;
 
-
-    public MusicPlayer(File file){
+    public MusicPlayer(File file, MediaPlayer forwardMediaplayer){
         this.file = file;
+        this.forwardMediaPlayer = forwardMediaplayer;
     }
 
 /*
@@ -34,47 +27,23 @@ public class MusicPlayer {
 
         System.out.println("Move all " + beatTime + " seconds");
 
-        try {
-            forwardFileInputStream = new FileInputStream(file);
-        /*
-            bytesIn = new byte[(int)file.length()+1];
-            rewindFileInputStream = new FileInputStream(file);
-            rewindFileInputStream.read(bytesIn);
 
-            for(int i = (int)file.length()+1; i > -1; i--){
-                bytesOut[i-(int)file.length()] = bytesIn[i];
-            }
-
-
-        */
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void playMusic (){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                play();
+                forwardMediaPlayer.start();
             }
         }).start();
 
     }
 
-    public void rewindMusic (){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                rewind();
-            }
-        }).start();
-
+    public void destroyPlayer (){
+        forwardMediaPlayer.stop();
     }
+
 
     public double getInitialPlayTime(){
         return initialPlayTime;
@@ -94,37 +63,7 @@ public class MusicPlayer {
         }
     }
 
-    /*
-    method to play music
-     */
-    private void play(){
-        try{
 
-            advancedPlayerForward = new AdvancedPlayer(forwardFileInputStream);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        initialPlayTime = System.currentTimeMillis();
-                        advancedPlayerForward.play();
-                    } catch (JavaLayerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-        }
-        catch(Exception exc){
-            exc.printStackTrace();
-            System.out.println("Failed to play the file.");
-        }
-    }
-    private void rewind(){
-        advancedPlayerForward.stop();
-
-
-    }
 
 
 

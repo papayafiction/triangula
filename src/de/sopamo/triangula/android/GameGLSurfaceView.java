@@ -46,6 +46,7 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();
+
 	}
 
 	public void destroy() {
