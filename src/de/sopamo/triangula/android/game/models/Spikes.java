@@ -1,11 +1,12 @@
 package de.sopamo.triangula.android.game.models;
 
-import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
+import de.sopamo.triangula.android.levels.BaseLevel;
+import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ public class Spikes extends TriangleBaseModel implements Entity {
     private Vec2 direction;
     private Vec2 pstVec;
     private Vec2 pst;
-    private long lastTick = 0;
 
     public Spikes(GameImpl game,int count, float size, Vec2 pst,float angle) {
         float radian = (float)Math.toRadians(angle);
@@ -33,12 +33,14 @@ public class Spikes extends TriangleBaseModel implements Entity {
 
         for(int i=0;i<count;i++) {
             GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
+            float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+            triangle.setColor(colors[0], colors[1], colors[2], 1);
             IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
             triangleBody.setPosition(this.pst.add(pstVec.mul(2*i)));
             triangleBody.setAngle(radian);
             game.getGsl().add(triangle);
             times.add(i%2==0?0l:-TIME_FOR_DOWN);
-            triangles.add(triangleBody);
+            triangles.add(triangleBody);
         }
 
         game.getEntities().add(this);
@@ -47,15 +49,12 @@ public class Spikes extends TriangleBaseModel implements Entity {
 
     @Override
     public void update() {
-        if(lastTick == 0) {
-            lastTick = System.currentTimeMillis();
-            return;
-        }
-        long dt = System.currentTimeMillis()-lastTick;
+        Long dt = 1000l/60;
         for(int i=0;i<times.size();i++) {
             IBody triangle = triangles.get(i);
             Long time = times.get(i);
-            time+=dt;
+            time+= dt;
+            times.set(i,time);
             if(time >= 0 && (int)(((float)time)/TIME_FOR_DOWN) % 2 == 0) {
                 movingDown(triangle,i,time);
             } else if(time >= 0) {
@@ -70,7 +69,7 @@ public class Spikes extends TriangleBaseModel implements Entity {
     }
 
     private void movingDown(IBody triangle,int i, long time) {
-        Vec2 pst = this.pst.add(pstVec.mul(2*i));
+        Vec2 pst = this.pst.add(pstVec.mul(2 * i));
         triangle.setPosition(pst.add(direction.mul((float)(time%TIME_FOR_DOWN)/TIME_FOR_DOWN)));
     }
 
