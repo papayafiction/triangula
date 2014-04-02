@@ -32,6 +32,8 @@ public class Player implements Rewindable,Entity {
         shape = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
         shape.setColor(255,76,22);
         body = shape.attachToNewBody(game.getWorld(),null,1);
+        body.setAngularDamping(3);
+        body.setLinearDamping(1);
         body.setUserData("player");
         body.setPosition(pst);
         game.getGsl().add(shape);
@@ -106,8 +108,6 @@ public class Player implements Rewindable,Entity {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.setAngularDamping(3);
-            body.setLinearDamping(1);
             body.applyForce(new Vec2(1, 10), new Vec2(targetX, targetY));
         }
     }

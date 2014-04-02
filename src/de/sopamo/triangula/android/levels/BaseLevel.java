@@ -71,15 +71,17 @@ public class BaseLevel {
     }
 
     protected void makeBackground() {
-        int backgroundShapes = 50;
+        int backgroundShapes = 100;
         for(int i = 0;i<backgroundShapes;++i) {
             float y = 4 + new Random().nextFloat() * 2;
-            if(i > backgroundShapes/2) {
+            if(i%2 == 0)  {
                 y *= -1;
             }
-            float size = new Random().nextFloat() * 10;
-            Rectangle rect = new Rectangle(i+new Random().nextFloat()*2,y,size);
-            rect.setColor(1f,1f,0,0.3f);
+            float size = new Random().nextFloat() * 8;
+            float speed = new Random().nextFloat() * 0.02f-0.01f;
+            Rectangle rect = new Rectangle(i+new Random().nextFloat()*2-5,y,size,speed);
+            float grey = new Random().nextFloat();
+            rect.setColor(grey,grey,grey,new Random().nextFloat() * 0.3f);
             backgroundElements.add(rect);
         }
     }
