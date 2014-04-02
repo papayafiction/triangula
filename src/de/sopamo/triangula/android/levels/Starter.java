@@ -3,7 +3,9 @@ package de.sopamo.triangula.android.levels;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.models.Door;
 import de.sopamo.triangula.android.game.models.Spikes;
+import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.geometry.GameShape;
 import org.jbox2d.common.Vec2;
 
@@ -27,6 +29,12 @@ public class Starter extends BaseLevel implements Level {
         super.make(world,gsl);
 
         parseLevel();
+        BaseLevel.colors = (List)jsonData.get("colors");
+
+        /** Debugging Door **/
+        Door door = new Door(game,new Vec2(0,-3),1,20);
+        new Switch(game,new Vec2(0,-4)).attachToDoor(door);
+
         makeSpikes((List)jsonData.get("spikes"));
         makeTriangles((List)jsonData.get("triangles"));
     }
