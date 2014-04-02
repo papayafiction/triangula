@@ -1,6 +1,9 @@
 package de.sopamo.triangula.android.levels;
 
 import de.sopamo.box2dbridge.IWorld;
+import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.models.Spikes;
 import de.sopamo.triangula.android.geometry.GameShape;
 
 import java.util.List;
@@ -13,12 +16,15 @@ public class Starter extends BaseLevel implements Level {
     }
 
     @Override
-    public void make(IWorld world,List<GameShape> gsl) {
+    public void make(GameImpl game) {
+        this.world = game.getWorld();
         this.ground = world.getGroundBody();
-        this.world = world;
-        this.gsl = gsl;
+        this.entities = game.getEntities();
+        this.gsl = game.getGsl();
 
         super.make(world,gsl);
+
+        new Spikes(game,0,-2);
 
         parseLevel();
 

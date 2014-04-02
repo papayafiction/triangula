@@ -103,7 +103,6 @@ public class GameImpl implements GameInterface {
         Player player = new Player(this,new Vec2(-8,0),handler);
         GameImpl.player = player;
         playerBody = player.getBody();
-        entities.add(player);
 
         // Initalize and make level
         level = new Starter();
@@ -111,7 +110,7 @@ public class GameImpl implements GameInterface {
 	}
 
     private void makeLevel() {
-        level.make(world,gsl);
+        level.make(this);
     }
 
 	public void destroy() {

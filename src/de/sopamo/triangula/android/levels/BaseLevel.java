@@ -5,6 +5,7 @@ import com.json.parsers.JSONParser;
 import com.json.parsers.JsonParserFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
+import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
@@ -25,6 +26,7 @@ public class BaseLevel {
     protected IBody ground;
     protected IWorld world;
     protected List<GameShape> gsl;
+    protected List<Entity> entities;
     protected Map jsonData;
     protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
 

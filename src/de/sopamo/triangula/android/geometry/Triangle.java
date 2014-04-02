@@ -54,6 +54,10 @@ public class Triangle {
         return angle;
     }
 
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
     protected void onUpdateSize() {
 	}
 }

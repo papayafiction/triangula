@@ -35,6 +35,7 @@ public class Player implements Rewindable,Entity {
         body.setUserData("player");
         body.setPosition(pst);
         game.getGsl().add(shape);
+        game.getEntities().add(this);
         game.getRewindables().add(this);
     }
 
