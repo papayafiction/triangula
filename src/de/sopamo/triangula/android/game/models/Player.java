@@ -6,9 +6,7 @@ import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.State;
-import de.sopamo.triangula.android.geometry.GLRectangle;
-import de.sopamo.triangula.android.geometry.GameShape;
-import de.sopamo.triangula.android.geometry.GameShapeRectangle;
+import de.sopamo.triangula.android.geometry.*;
 import org.jbox2d.common.Vec2;
 
 import java.util.EmptyStackException;
@@ -29,7 +27,7 @@ public class Player implements Rewindable,Entity {
         this.game = game;
         this.pst = pst;
         this.inputHandler = handler;
-        shape = new GameShapeRectangle(new GLRectangle(0.2f,0.2f));
+        shape = new GameShapeCircle(new GLCircle(0.1f));
         shape.setColor(255,76,22);
         body = shape.attachToNewBody(game.getWorld(),null,1);
         body.setAngularDamping(3);
