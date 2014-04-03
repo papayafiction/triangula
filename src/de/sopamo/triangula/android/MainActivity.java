@@ -49,6 +49,7 @@ import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
+import javax.microedition.khronos.opengles.GL10;
 import java.io.File;
 
 public class MainActivity extends Activity implements SensorEventListener {
@@ -77,11 +78,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WindowManager w = getWindowManager();
-        Display d = w.getDefaultDisplay();
-        PGRenderer.setWidth(d.getWidth());
-        PGRenderer.setHeight(d.getHeight());
-
         mGameGlSurfaceView = new GameGLSurfaceView(this);
         
         setContentView(R.layout.main);
@@ -93,8 +89,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         intentFilter = new IntentFilter();
         wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = wifiP2pManager.initialize(this, getMainLooper(), null);
