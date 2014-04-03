@@ -56,12 +56,7 @@ public class GLCircle extends Circle implements GLInterface {
         GLBufferTool.setGLVertexBuffer(2, fbVertices);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 88);
 
-
         glPopMatrix();
-
-
-
-
 	}
 
 	@Override
