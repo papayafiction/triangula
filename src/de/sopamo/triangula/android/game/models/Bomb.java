@@ -4,6 +4,7 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
+import de.sopamo.triangula.android.geometry.CircleBackground;
 import de.sopamo.triangula.android.geometry.GLCircle;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeCircle;
