@@ -2,10 +2,8 @@ package de.sopamo.triangula.android.game.models;
 
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
-import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLRectangle;
-import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeRectangle;
 import org.jbox2d.common.Vec2;
 
