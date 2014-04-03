@@ -39,6 +39,9 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyForce
   (JNIEnv *, jobject, jint, jfloat, jfloat, jfloat, jfloat);
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyForceToCenter
+  (JNIEnv *, jobject, jint, jfloat , jfloat); 
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nApplyTorque

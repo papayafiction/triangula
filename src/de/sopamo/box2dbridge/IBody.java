@@ -47,6 +47,8 @@ public interface IBody {
 
 	public void applyForce(Vec2 force, Vec2 point);
 
+    public void applyForceToCenter(Vec2 force);
+
 	public void setLinearDamping(float d);
 
 	public void setAngularDamping(float d);

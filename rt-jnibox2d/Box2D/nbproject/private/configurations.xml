@@ -104,27 +104,11 @@
         <in>b2WorldCallbacks.cpp</in>
         <in>b2WorldCallbacks.h</in>
       </df>
-      <df name="Gen">
-        <df name="pc">
-          <df name="Collision">
-            <df name="Shapes">
-            </df>
-          </df>
-          <df name="Common">
-          </df>
-          <df name="Dynamics">
-            <df name="Contacts">
-            </df>
-            <df name="Joints">
-            </df>
-          </df>
-        </df>
-      </df>
       <df name="Headers">
         <df name="gen">
-          <in>com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DBody.h</in>
-          <in>com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DShape.h</in>
-          <in>com_kristianlm_robotanks_box2dbridge_jnibox2d_JNIBox2DWorld.h</in>
+          <in>de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody.h</in>
+          <in>de_sopamo_box2dbridge_jnibox2d_JNIBox2DShape.h</in>
+          <in>de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld.h</in>
         </df>
       </df>
       <df name="Rope">
@@ -136,6 +120,10 @@
       <in>JNIBox2DShape.cpp</in>
       <in>JNIBox2DWorld.cpp</in>
       <in>JNIBox2DWorld.h</in>
+      <in>JNIContactListener.cpp</in>
+      <in>JNIContactListener.h</in>
+      <in>JNIDebugDraw.cpp</in>
+      <in>JNIDebugDraw.h</in>
       <in>JNIRefs.cpp</in>
       <in>JNIRefs.h</in>
     </df>
