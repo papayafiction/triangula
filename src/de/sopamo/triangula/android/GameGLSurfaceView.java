@@ -24,16 +24,19 @@
 package de.sopamo.triangula.android;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 
 public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 
 	
-	PGRenderer pgRenderer = new PGRenderer();
+	PGRenderer pgRenderer;
 	
 	public GameGLSurfaceView(Context context) {
-		super(context);
-		setFocusable(true);
+        super(context);
+        getHolder().setFormat(PixelFormat.RGBA_8888);
+        pgRenderer = new PGRenderer(context);
+        setFocusable(true);
 		setFocusableInTouchMode(true);
 //		setDebugFlags(DEBUG_LOG_GL_CALLS | DEBUG_CHECK_GL_ERROR);
 
@@ -47,7 +50,7 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 		
 		pgRenderer.init();
 
-	}
+    }
 
 	public void destroy() {
 		pgRenderer.destroy();
