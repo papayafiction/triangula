@@ -26,12 +26,18 @@ package de.sopamo.triangula.android;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.GameInterface;
 
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.InputHandler;
+import de.sopamo.triangula.android.game.models.Image;
+import de.sopamo.triangula.android.tools.Hooks;
+import org.jbox2d.common.Vec2;
 import org.json.JSONException;
+
+import java.util.concurrent.Callable;
 
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
@@ -45,8 +51,11 @@ public class PGRenderer implements Renderer {
 	private static int mHalfWidth;
 	private static int mHalfHeight;
     private float viewportX = 1;
+    public static Image image;
+    private Context context;
 	
-	public PGRenderer() {
+	public PGRenderer(Context context) {
+        this.context = context;
 		game = new GameImpl();
 	}
 
@@ -71,17 +80,25 @@ public class PGRenderer implements Renderer {
 	 */
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-	}
-
+        image = new Image(4,2,new Vec2(-6,0),R.drawable.single_tap);
+        image.loadGLTexture(gl, this.context);
+        Hooks.bind(Hooks.TAP,new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                PGRenderer.image = null;
+                return null;
+            }
+        });
+    }
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		onSizeChange(gl, width, height);
+        onSizeChange(gl, width, height);
 	}
 
-
-	
 	public static void onSizeChange(GL10 gl, int width, int height) {
 		mWidth = width;
 		mHeight = height;
@@ -105,6 +122,9 @@ public class PGRenderer implements Renderer {
         glEnable(GL_LINE_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         glEnable(GL_MULTISAMPLE);
+
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+        gl.glShadeModel(GL10.GL_SMOOTH);
 
         /* The following part enables lighting. This doesn't look good without 3d objects and / or without materials.
         glEnable(GL_LIGHTING);
@@ -146,7 +166,12 @@ public class PGRenderer implements Renderer {
 
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
-		
+
+        gl.glEnable(GL10.GL_TEXTURE_2D);
+        if(image != null) {
+            image.draw(gl);
+        }
+        gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 
 
