@@ -105,6 +105,20 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
 
 }
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateCircle
+  (JNIEnv *, jobject, jint ID, jfloat radius, jfloat x, jfloat y, jfloat density) {
+
+	if(bodyList[ID] == 0)
+		return;
+
+        b2CircleShape shape;
+        shape.m_radius = radius;
+        shape.m_p.Set(x,y);
+        
+        bodyList[ID]->CreateFixture(&shape,density);
+
+}
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nAssociateJNIObject
