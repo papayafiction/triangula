@@ -4,29 +4,32 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 
 import java.io.File;
 
-/**
- * Created by Fabi on 02.04.14.
- */
 public class LoadingActivity extends Activity {
 
 
     private MediaPlayer backwardMediaPlayer;
-    public LoadingActivity that;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
-        that = this;
+        final LoadingActivity that = this;
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Intent toMain = new Intent(that, MainActivity.class);
+                startActivity(toMain);
+                finish();
+            }
+        }, 3000);
 
-        Intent toMain = new Intent(this, MainActivity.class);
-        startActivity(toMain);
     }
 
     @Override
