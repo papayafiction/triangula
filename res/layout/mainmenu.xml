@@ -15,8 +15,8 @@
                 android:src="@drawable/menu_background"/>
         <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" android:layout_marginTop="60dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_gravity="center">
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
