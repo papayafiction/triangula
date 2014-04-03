@@ -12,6 +12,6 @@ import java.util.List;
 public interface Level {
     public void drawBackground(GL10 gl);
     public void drawBackgroundElements(GL10 gl);
-    public void make(GameImpl game);
+    public void make();
 
 }

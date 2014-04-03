@@ -57,7 +57,24 @@ public class BaseLevel {
         }
     }
 
-    public void make(IWorld world,List<GameShape> gsl) {
+    public void make() {
+        this.game = GameImpl.getInstance();
+        this.world = game.getWorld();
+        this.ground = world.getGroundBody();
+        this.entities = game.getEntities();
+        this.gsl = game.getGsl();
+        parseLevel();
+
+        try {
+            makeDoors(jsonData.getJSONArray("doors"));
+            makeBombs(jsonData.getJSONArray("bombs"));
+            makeSpikes(jsonData.getJSONArray("spikes"));
+            makeTriangles(jsonData.getJSONArray("triangles"));
+        } catch (JSONException e) {
+            Log.e("json", "Could not parse level String");
+            System.exit(2);
+        }
+
         makeFence();
         makeBackground();
     }

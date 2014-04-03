@@ -110,7 +110,7 @@ public class GameImpl implements GameInterface {
 	}
 
     private void makeLevel() {
-        level.make(this);
+        level.make();
     }
 
 	public void destroy() {
