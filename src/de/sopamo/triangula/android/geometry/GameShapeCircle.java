@@ -85,4 +85,6 @@ public class GameShapeCircle extends GameShape {
 		body.setMassFromShapes();
 		return shape;
 	}
+
+
 }

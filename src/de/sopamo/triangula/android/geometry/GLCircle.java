@@ -54,16 +54,29 @@ public class GLCircle extends Circle implements GLInterface {
         glTranslatef(x, y, 0);
         glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
         GLBufferTool.setGLVertexBuffer(2, fbVertices);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 88);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 176);
 
         glPopMatrix();
 	}
+
+    public void draw(float x,float y, float angle, float radius) {
+        float ratio = radius/this.getRadius();
+        glPushMatrix();
+
+        glTranslatef(x, y, 0);
+        glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
+        glScalef(ratio,ratio,0);
+        GLBufferTool.setGLVertexBuffer(2, fbVertices);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 176);
+
+        glPopMatrix();
+    }
 
 	@Override
 	protected void onUpdateSize() {
 		super.onUpdateSize();
 		
-		float[] v = new float[176];
+		float[] v = new float[176*2];
         for(int i = 0; i < v.length;){
             v[i]= getRadius()* (float)Math.cos(2*i*(Math.PI/v.length));
             v[i+1]= getRadius()* (float)Math.sin(2*i*(Math.PI/v.length));
