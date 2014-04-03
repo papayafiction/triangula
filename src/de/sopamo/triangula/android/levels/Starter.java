@@ -2,11 +2,6 @@ package de.sopamo.triangula.android.levels;
 
 import android.util.Log;
 import de.sopamo.triangula.android.game.GameImpl;
-import de.sopamo.triangula.android.game.mechanics.Entity;
-import de.sopamo.triangula.android.game.models.Bomb;
-import de.sopamo.triangula.android.game.models.Door;
-import de.sopamo.triangula.android.game.models.Switch;
-import org.jbox2d.common.Vec2;
 import org.json.JSONException;
 
 

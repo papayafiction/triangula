@@ -177,7 +177,8 @@ public class GameImpl implements GameInterface {
         }
 
         /** Update Entities **/
-        for(Entity entity:entities) {
+        for(int i=0;i<entities.size();i++) {
+            Entity entity = entities.get(i);
             entity.update();
         }
         

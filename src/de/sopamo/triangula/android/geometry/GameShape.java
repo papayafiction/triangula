@@ -31,15 +31,15 @@ import static android.opengl.GLES10.glColor4f;
 
 abstract public class GameShape {
 
-    IBody body;
-    IShape shape;
-    Vec2 shapePosition;
-    GLInterface glShape;
+    protected IBody body;
+    protected IShape shape;
+    protected Vec2 shapePosition;
+    protected GLInterface glShape;
 
-    float red = 0;
-    float blue = 0;
-    float green = 1;
-    float alpha = 1;
+    protected float red = 0;
+    protected float blue = 0;
+    protected float green = 1;
+    protected float alpha = 1;
 
 	public static GameShape create(GLRectangle rect) {
 		return new GameShapeRectangle(rect);

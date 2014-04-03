@@ -20,11 +20,12 @@ public class Door extends TriangleBaseModel implements Entity {
     private long time=0;
     private Vec2 destination;
     private Vec2 pst;
+    private float[] colors;
 
     public Door(GameImpl game,Vec2 pst,float size,float angle) {
         float radian = (float)Math.toRadians(angle);
         GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
-        float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+        colors = Util.getColorParts(BaseLevel.getTriangleColor());
         triangle.setColor(colors[0], colors[1], colors[2], 1);
         IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
         triangleBody.setAngle(radian);
@@ -37,6 +38,10 @@ public class Door extends TriangleBaseModel implements Entity {
         );
         game.getEntities().add(this);
         game.getGsl().add(triangle);
+    }
+
+    public float[] getColors() {
+        return colors;
     }
 
     @Override

@@ -40,9 +40,11 @@ public class Circle {
 		return radius;
 	}
 
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
 
-	
-	protected void onUpdateSize() {
+    protected void onUpdateSize() {
 
 	}
 }
