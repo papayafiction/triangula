@@ -25,6 +25,8 @@ import java.util.Random;
 
 public class BaseLevel {
 
+    protected static List colors;
+
     protected IBody ground;
     protected IWorld world;
     protected GameImpl game;
@@ -38,7 +40,7 @@ public class BaseLevel {
     }
 
     public void drawBackground(GL10 gl) {
-        int color = Util.hex2Color((String)getColors().get(2));
+        int color = Util.hex2Color((String)colors.get(2));
         float[] colors = Util.getColorParts(color);
         gl.glClearColor(colors[0], colors[1], colors[2], 1);
     }
@@ -55,16 +57,13 @@ public class BaseLevel {
         makeBackground();
     }
 
-    protected List getColors() {
-        return (List)jsonData.get("colors");
-    }
-
-    protected int getTriangleColor() {
+    public static int getTriangleColor() {
+        if(colors == null) return -1;
         int base;
         if(Math.random() > .5f) {
-            base = Util.hex2Color((String)getColors().get(0));
+            base = Util.hex2Color((String) colors.get(0));
         } else {
-            base = Util.hex2Color((String)getColors().get(4));
+            base = Util.hex2Color((String) colors.get(4));
         }
         float hsv[] = new float[3];
         Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);

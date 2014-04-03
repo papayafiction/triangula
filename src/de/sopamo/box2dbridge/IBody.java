@@ -35,6 +35,7 @@ public interface IBody {
 
     public IShape createTriangle(float size, float x, float y, float density, float angle);
 
+    public IShape createCircle(float radius,float x,float y,float density);
 	// public IShape createFromGeometry(Geometry g);
 	// public void deleteBox();
 
