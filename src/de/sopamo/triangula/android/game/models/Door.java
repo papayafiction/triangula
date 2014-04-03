@@ -22,7 +22,8 @@ public class Door extends TriangleBaseModel implements Entity {
     private Vec2 pst;
     private float[] colors;
 
-    public Door(GameImpl game,Vec2 pst,float size,float angle) {
+    public Door(Vec2 pst,float size,float angle) {
+        GameImpl game = GameImpl.getInstance();
         float radian = (float)Math.toRadians(angle);
         GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
         colors = Util.getColorParts(BaseLevel.getTriangleColor());

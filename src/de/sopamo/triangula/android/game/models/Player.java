@@ -15,7 +15,6 @@ import java.util.Stack;
 
 public class Player implements Rewindable,Entity {
     private GameImpl game;
-    private Vec2 pst;
     private IBody body;
     private GameShape shape;
     private Vec2 force = null;
@@ -25,9 +24,8 @@ public class Player implements Rewindable,Entity {
     private Stack<State> states = new Stack<State>();
 
 
-    public Player(GameImpl game, Vec2 pst,InputHandler handler) {
-        this.game = game;
-        this.pst = pst;
+    public Player(Vec2 pst,InputHandler handler) {
+        this.game = GameImpl.getInstance();
         this.inputHandler = handler;
         shape = new GameShapeCircle(new GLCircle(0.1f));
         shape.setColor(255,76,22);

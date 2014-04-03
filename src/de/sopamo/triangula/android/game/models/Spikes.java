@@ -22,7 +22,8 @@ public class Spikes extends TriangleBaseModel implements Entity {
     private Vec2 pstVec;
     private Vec2 pst;
 
-    public Spikes(GameImpl game,int count, float size, Vec2 pst,float angle) {
+    public Spikes(int count, float size, Vec2 pst,float angle) {
+        GameImpl game = GameImpl.getInstance();
         float radian = (float)Math.toRadians(angle);
         this.pst = pst.add(new Vec2((float)(Math.sqrt(2)*size*Math.cos(radian-Math.PI/4)),
                                     (float)(Math.sqrt(2)*size*Math.sin(radian-Math.PI/4))));

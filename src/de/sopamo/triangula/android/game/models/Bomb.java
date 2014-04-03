@@ -25,8 +25,8 @@ public class Bomb implements Entity{
 
     private long time;
 
-    public Bomb(GameImpl game,Vec2 pst) {
-        this.game = game;
+    public Bomb(Vec2 pst) {
+        this.game = GameImpl.getInstance();
         GameShapeCircle circle = new GameShapeCircle(new GLCircle(0.08f));
         IBody circleBody = circle.attachToNewBody(game.getWorld(),null,0);
         circleBody.setPosition(pst);

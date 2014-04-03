@@ -171,7 +171,7 @@ public class BaseLevel {
             int count = spike.getInt("count");
 
             y*=-1;
-            new Spikes(game,count,size,new Vec2(x,y),angle);
+            new Spikes(count,size,new Vec2(x,y),angle);
         }
     }
     
@@ -189,13 +189,13 @@ public class BaseLevel {
             float angle = Float.parseFloat(door.getString("angle"));
             y *= -1;
 
-            Door doorModel = new Door(game,new Vec2(x,y),size,angle);
+            Door doorModel = new Door(new Vec2(x,y),size,angle);
 
             x = Float.parseFloat(sw.getString("x")) * 0.02f-9+0.05f;
             y = Float.parseFloat(sw.getString("y")) * 0.02f-5+0.05f;
             y*=-1;
 
-            new Switch(game,new Vec2(x,y)).attachToDoor(doorModel);
+            new Switch(new Vec2(x,y)).attachToDoor(doorModel);
         }
     }
 
@@ -210,7 +210,7 @@ public class BaseLevel {
             float y = Float.parseFloat(bomb.getString("y")) * 0.02f-5+0.04f;
             y *= -1;
 
-            new Bomb(game,new Vec2(x,y));
+            new Bomb(new Vec2(x,y));
 
         }
     }
