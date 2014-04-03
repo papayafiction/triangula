@@ -31,6 +31,7 @@ import de.sopamo.triangula.android.game.GameInterface;
 
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.InputHandler;
+import org.json.JSONException;
 
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
@@ -130,7 +131,7 @@ public class PGRenderer implements Renderer {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
         game.getLevel().drawBackground(gl);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();

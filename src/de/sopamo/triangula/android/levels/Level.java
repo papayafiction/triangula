@@ -4,6 +4,7 @@ import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.geometry.GameShape;
+import org.json.JSONException;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.util.List;

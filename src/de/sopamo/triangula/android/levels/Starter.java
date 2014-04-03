@@ -1,21 +1,17 @@
 package de.sopamo.triangula.android.levels;
 
-import de.sopamo.box2dbridge.IWorld;
+import android.util.Log;
 import de.sopamo.triangula.android.game.GameImpl;
-import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.models.Door;
-import de.sopamo.triangula.android.game.models.Spikes;
 import de.sopamo.triangula.android.game.models.Switch;
-import de.sopamo.triangula.android.geometry.GameShape;
 import org.jbox2d.common.Vec2;
+import org.json.JSONException;
 
-import java.util.List;
-import java.util.Map;
 
 public class Starter extends BaseLevel implements Level {
 
     public String getLevelString() {
-        return "{\"version\":3,\"name\":\"yolo\",\"created_at\":\"2014/04/02 19:56:25\",\"triangles\":[{\"x\":0,\"y\":0,\"size\":100,\"angle\":0}],\"spikes\":[{\"x\":0,\"y\":0,\"size\":100,\"angle\":0,\"count\":10},{\"x\":-550.890625,\"y\":207.6875,\"size\":99.71428571428571,\"angle\":\"186.76\",\"count\":7},{\"x\":662.03125,\"y\":-18.328125,\"size\":99.71428571428571,\"angle\":\"165.34\",\"count\":7},{\"x\":463,\"y\":352.28125,\"size\":62.142857142857146,\"angle\":\"179.85\",\"count\":7},{\"x\":810.171875,\"y\":324.84375,\"size\":99.33333333333333,\"angle\":\"201.33\",\"count\":3}],\"colors\":[\"00748E\",\"E3DFBB\",\"F4BA4D\",\"E3753C\",\"DA3B3A\"]}";
+        return "{\"version\":4,\"name\":\"level1\",\"created_at\":\"2014/04/03 16:25:02\",\"triangles\":[{\"x\":210,\"y\":181,\"size\":192,\"angle\":\"90.00\"},{\"x\":97,\"y\":378,\"size\":122,\"angle\":\"6.54\"},{\"x\":0,\"y\":392,\"size\":100,\"angle\":0},{\"x\":156.890625,\"y\":22.890625,\"size\":100,\"angle\":\"-60.62\"},{\"x\":262.796875,\"y\":63.796875,\"size\":100,\"angle\":\"5.71\"},{\"x\":66.25,\"y\":0,\"size\":100,\"angle\":\"179.92\"},{\"x\":336,\"y\":95,\"size\":100,\"angle\":0},{\"x\":212,\"y\":372,\"size\":100,\"angle\":0},{\"x\":480,\"y\":417,\"size\":100,\"angle\":0},{\"x\":353,\"y\":412,\"size\":100,\"angle\":0},{\"x\":529,\"y\":340,\"size\":100,\"angle\":0},{\"x\":506,\"y\":253,\"size\":100,\"angle\":0},{\"x\":506,\"y\":156,\"size\":100,\"angle\":0},{\"x\":362.515625,\"y\":20.515625,\"size\":216,\"angle\":\"-39.63\"},{\"x\":0,\"y\":0,\"size\":100,\"angle\":\"-84.21\"},{\"x\":266,\"y\":393,\"size\":100,\"angle\":0}],\"spikes\":[],\"doors\":[],\"bombs\":[],\"exits\":[{\"x\":449,\"y\":368}],\"colors\":[\"00748E\",\"E3DFBB\",\"F4BA4D\",\"E3753C\",\"DA3B3A\"]}";
     }
 
     @Override
@@ -29,13 +25,17 @@ public class Starter extends BaseLevel implements Level {
         super.make(world,gsl);
 
         parseLevel();
-        BaseLevel.colors = (List)jsonData.get("colors");
 
         /** Debugging Door **/
         Door door = new Door(game,new Vec2(0,-3),1,20);
         new Switch(game,new Vec2(0,-4)).attachToDoor(door);
 
-        makeSpikes((List)jsonData.get("spikes"));
-        makeTriangles((List)jsonData.get("triangles"));
+        try {
+            makeSpikes(jsonData.getJSONArray("spikes"));
+            makeTriangles(jsonData.getJSONArray("triangles"));
+        } catch (JSONException e) {
+            Log.e("json", "Could not parse level String");
+            System.exit(2);
+        }
     }
 }
