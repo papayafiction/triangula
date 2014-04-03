@@ -100,7 +100,7 @@ public class GameImpl implements GameInterface {
         world.create(aabb,gravity,true);
         world.setContactListener(new ContactListener());
         // Create player
-        Player player = new Player(this,new Vec2(-8,0),handler);
+        Player player = new Player(new Vec2(-8,0),handler);
         GameImpl.player = player;
         playerBody = player.getBody();
 

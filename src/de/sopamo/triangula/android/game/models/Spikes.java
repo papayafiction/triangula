@@ -3,6 +3,7 @@ package de.sopamo.triangula.android.game.models;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
 import de.sopamo.triangula.android.levels.BaseLevel;
@@ -21,7 +22,8 @@ public class Spikes extends TriangleBaseModel implements Entity {
     private Vec2 pstVec;
     private Vec2 pst;
 
-    public Spikes(GameImpl game,int count, float size, Vec2 pst,float angle) {
+    public Spikes(int count, float size, Vec2 pst,float angle) {
+        GameImpl game = GameImpl.getInstance();
         float radian = (float)Math.toRadians(angle);
         this.pst = pst.add(new Vec2((float)(Math.sqrt(2)*size*Math.cos(radian-Math.PI/4)),
                                     (float)(Math.sqrt(2)*size*Math.sin(radian-Math.PI/4))));
@@ -38,6 +40,9 @@ public class Spikes extends TriangleBaseModel implements Entity {
             IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
             triangleBody.setPosition(this.pst.add(pstVec.mul(2*i)));
             triangleBody.setAngle(radian);
+            UserData data = new UserData();
+            data.type = "spike";
+            triangleBody.setUserData(data);
             game.getGsl().add(triangle);
             times.add(i%2==0?0l:-TIME_FOR_DOWN);
             triangles.add(triangleBody);

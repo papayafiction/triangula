@@ -12,7 +12,8 @@ public class Switch  {
     private Door door;
     private GameShape shape;
 
-    public Switch(GameImpl game,Vec2 pst) {
+    public Switch(Vec2 pst) {
+        GameImpl game = GameImpl.getInstance();
         GameShapeRectangle gameShapeRectangle = new GameShapeRectangle(new GLRectangle(0.1f,0.1f));
         IBody sw = gameShapeRectangle.attachToNewBody(game.getWorld(),null,0);
         sw.setPosition(pst);
