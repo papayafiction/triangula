@@ -1,13 +1,15 @@
 package de.sopamo.triangula.android.levels;
 
 import android.graphics.Color;
-import com.json.parsers.JSONParser;
-import com.json.parsers.JsonParserFactory;
+import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.models.Bomb;
+import de.sopamo.triangula.android.game.models.Door;
 import de.sopamo.triangula.android.game.models.Spikes;
+import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
@@ -16,6 +18,9 @@ import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.util.ArrayList;
@@ -25,14 +30,14 @@ import java.util.Random;
 
 public class BaseLevel {
 
-    protected static List colors;
+    protected static ArrayList<String> colors = new ArrayList<String>();
 
     protected IBody ground;
     protected IWorld world;
     protected GameImpl game;
     protected List<GameShape> gsl;
     protected List<Entity> entities;
-    protected Map jsonData;
+    protected JSONObject jsonData;
     protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
 
     public String getLevelString() {
@@ -40,7 +45,7 @@ public class BaseLevel {
     }
 
     public void drawBackground(GL10 gl) {
-        int color = Util.hex2Color((String)colors.get(2));
+        int color = Util.hex2Color(colors.get(2));
         float[] colors = Util.getColorParts(color);
         gl.glClearColor(colors[0], colors[1], colors[2], 1);
     }
@@ -61,9 +66,9 @@ public class BaseLevel {
         if(colors == null) return -1;
         int base;
         if(Math.random() > .5f) {
-            base = Util.hex2Color((String) colors.get(0));
+            base = Util.hex2Color(colors.get(0));
         } else {
-            base = Util.hex2Color((String) colors.get(4));
+            base = Util.hex2Color(colors.get(4));
         }
         float hsv[] = new float[3];
         Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
@@ -118,22 +123,29 @@ public class BaseLevel {
 
 
     public void parseLevel() {
-        JsonParserFactory factory = JsonParserFactory.getInstance();
-        JSONParser parser = factory.newJsonParser();
-        jsonData = parser.parseJson(getLevelString());
+        try {
+            jsonData = new JSONObject(getLevelString());
+            JSONArray jsonColors = jsonData.getJSONArray("colors");
+            for(int i = 0;i<5;++i) {
+                colors.add(jsonColors.getString(i));
+            }
+        } catch (JSONException e) {
+            Log.e("json","Could not parse level String");
+            System.exit(2);
+        }
     }
 
-    public void makeTriangles(List triangles) {
-        for(int i = 0;i < triangles.size();++i) {
-            Map triangle = (Map)triangles.get(i);
+    public void makeTriangles(JSONArray triangles) throws JSONException {
+        for(int i = 0;i < triangles.length();++i) {
+            JSONObject triangle = triangles.getJSONObject(i);
 
             // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
             // the triangle whereas our triangles here are twice as large as size.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
-            float size = Float.parseFloat(triangle.get("size").toString()) * 0.02f / 2;
-            float x = Float.parseFloat(triangle.get("x").toString()) * 0.02f-9+size;
-            float y = Float.parseFloat(triangle.get("y").toString()) * 0.02f-5+size;
-            float angle = Float.parseFloat(triangle.get("angle").toString());
+            float size = Float.parseFloat(triangle.getString("size")) * 0.02f / 2;
+            float x = Float.parseFloat(triangle.getString("x")) * 0.02f-9+size;
+            float y = Float.parseFloat(triangle.getString("y")) * 0.02f-5+size;
+            float angle = Float.parseFloat(triangle.getString("angle"));
             angle = (float)Math.toRadians(angle);
             y *= -1;
 
@@ -148,19 +160,58 @@ public class BaseLevel {
         }
     }
 
-    public void makeSpikes(List spikes) {
-        for(int i=0;i<spikes.size();i++) {
-            Map spike = (Map)spikes.get(i);
+    public void makeSpikes(JSONArray spikes) throws JSONException {
+        for(int i=0;i<spikes.length();i++) {
+            JSONObject spike = spikes.getJSONObject(i);
 
-            float size = Float.parseFloat(spike.get("size").toString()) * 0.02f / 2;
-            float x = Float.parseFloat(spike.get("x").toString()) * 0.02f-9;
-            float y = Float.parseFloat(spike.get("y").toString()) * 0.02f-5;
-            float angle = Float.parseFloat(spike.get("angle").toString());
-            int count = Integer.parseInt(spike.get("count").toString());
-
+            float size = Float.parseFloat(spike.getString("size")) * 0.02f / 2;
+            float x = Float.parseFloat(spike.getString("x")) * 0.02f-9;
+            float y = Float.parseFloat(spike.getString("y")) * 0.02f-5;
+            float angle = Float.parseFloat(spike.getString("angle"));
+            int count = spike.getInt("count");
 
             y*=-1;
             new Spikes(game,count,size,new Vec2(x,y),angle);
+        }
+    }
+    
+    public void makeDoors(JSONArray doors) throws JSONException {
+        for(int i = 0;i < doors.length();++i) {
+            JSONObject door = doors.getJSONObject(i).getJSONObject("door");
+            JSONObject sw = doors.getJSONObject(i).getJSONObject("switch");
+
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the door whereas our doors here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
+            float size = Float.parseFloat(door.getString("size")) * 0.02f / 2;
+            float x = Float.parseFloat(door.getString("x")) * 0.02f-9+size;
+            float y = Float.parseFloat(door.getString("y")) * 0.02f-5+size;
+            float angle = Float.parseFloat(door.getString("angle"));
+            y *= -1;
+
+            Door doorModel = new Door(game,new Vec2(x,y),size,angle);
+
+            x = Float.parseFloat(sw.getString("x")) * 0.02f-9+0.05f;
+            y = Float.parseFloat(sw.getString("y")) * 0.02f-5+0.05f;
+            y*=-1;
+
+            new Switch(game,new Vec2(x,y)).attachToDoor(doorModel);
+        }
+    }
+
+    public void makeBombs(JSONArray bombs) throws JSONException {
+        for(int i = 0;i < bombs.length();++i) {
+            JSONObject bomb = bombs.getJSONObject(i);
+
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the triangle whereas our triangles here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
+            float x = Float.parseFloat(bomb.getString("x")) * 0.02f-9+0.04f;
+            float y = Float.parseFloat(bomb.getString("y")) * 0.02f-5+0.04f;
+            y *= -1;
+
+            new Bomb(game,new Vec2(x,y));
+
         }
     }
 }

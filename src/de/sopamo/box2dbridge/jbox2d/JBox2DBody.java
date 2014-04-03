@@ -139,6 +139,11 @@ public class JBox2DBody implements IBody {
     }
 
     @Override
+    public void applyForceToCenter(Vec2 force) {
+        body.applyForce(force,getWorldCenter());
+    }
+
+    @Override
     public void applyTorque(float t) {
         body.applyTorque(t);
 

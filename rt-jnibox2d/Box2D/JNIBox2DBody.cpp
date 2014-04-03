@@ -163,6 +163,24 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyFo
 
 }
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nApplyForceToCenter
+  (JNIEnv * env, jobject caller, jint ID, jfloat fx, jfloat fy) {
+
+	if(ID < 0 || ID >= MAX_BODIES) {
+		throwExc(env, "ID #%d out of bounds");
+		return;
+	}
+
+	// make sure body isn't dead
+	if(bodyList[ID] == 0)
+		return;
+
+	b2Vec2 force;
+	force.Set(fx, fy);
+	bodyList[ID]->ApplyForceToCenter(force, true);
+
+}
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nApplyTorque

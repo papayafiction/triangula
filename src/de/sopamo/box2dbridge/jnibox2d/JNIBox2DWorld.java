@@ -57,9 +57,9 @@ public class JNIBox2DWorld implements IWorld {
 		return true;
 	}
 
-    public void listenerCallback(JNIBox2DBody body1, JNIBox2DBody body2) {
+    public void listenerCallback(JNIBox2DBody body1, JNIBox2DBody body2,float x,float y) {
         ((de.sopamo.triangula.android.game.ContactListener)
-                m_listener).add(body1, body2);
+                m_listener).add(body1, body2,new Vec2(x,y));
     }
 
 	@Override
