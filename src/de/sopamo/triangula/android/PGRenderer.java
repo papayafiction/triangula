@@ -33,8 +33,11 @@ import de.sopamo.triangula.android.game.GameInterface;
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.models.Image;
+import de.sopamo.triangula.android.tools.Hooks;
 import org.jbox2d.common.Vec2;
 import org.json.JSONException;
+
+import java.util.concurrent.Callable;
 
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
@@ -48,7 +51,7 @@ public class PGRenderer implements Renderer {
 	private static int mHalfWidth;
 	private static int mHalfHeight;
     private float viewportX = 1;
-    private Image image;
+    public static Image image;
     private Context context;
 	
 	public PGRenderer(Context context) {
@@ -82,7 +85,14 @@ public class PGRenderer implements Renderer {
 
         image = new Image(4,2,new Vec2(-6,0),R.drawable.single_tap);
         image.loadGLTexture(gl, this.context);
-	}
+        Hooks.bind(Hooks.TAP,new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                PGRenderer.image = null;
+                return null;
+            }
+        });
+    }
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -158,7 +168,9 @@ public class PGRenderer implements Renderer {
 		game.drawFrame();
 
         gl.glEnable(GL10.GL_TEXTURE_2D);
-        image.draw(gl);
+        if(image != null) {
+            image.draw(gl);
+        }
         gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 

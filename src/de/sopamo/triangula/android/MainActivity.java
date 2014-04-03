@@ -46,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
+import de.sopamo.triangula.android.tools.Hooks;
 import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
@@ -164,6 +165,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             gameInstance.getInputHandler().setTouchPosition(new Vec2(event.getX(),event.getY()));
             gameInstance.getInputHandler().setTouched();
+            Hooks.call(Hooks.TAP);
         } else if(event.getAction() == MotionEvent.ACTION_UP) {
             gameInstance.getInputHandler().reset();
         }
