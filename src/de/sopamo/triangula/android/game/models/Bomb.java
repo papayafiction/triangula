@@ -21,6 +21,8 @@ public class Bomb implements Entity{
     private GameShape backGround;
     private IBody body;
 
+    private boolean destroy = false;
+
     private long time;
 
     public Bomb(GameImpl game,Vec2 pst) {
@@ -31,6 +33,7 @@ public class Bomb implements Entity{
         circle.setColor(1, 0, 0, 1);
         UserData data = new UserData();
         data.type = "bomb";
+        data.obj = this;
         circleBody.setUserData(data);
         game.getGsl().add(circle);
         game.getEntities().add(this);
@@ -47,12 +50,19 @@ public class Bomb implements Entity{
     }
 
     public void explode() {
-        game.getGsl().remove(shape);
-        game.getWorld().destroyBody(body);
+        destroy = true;
     }
 
     @Override
     public void update() {
+        if(destroy) {
+            destroy = false;
+            game.getGsl().remove(shape);
+            game.getGsl().remove(backGround);
+            game.getEntities().remove(this);
+            game.getWorld().destroyBody(body);
+            return;
+        }
         time+=1000l/60;
         if((int)(((float)time) / TIME_TO_BLINK) % 2 == 0) {
             ((CircleBackground)backGround).setRadius(0.08f +

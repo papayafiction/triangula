@@ -6,6 +6,7 @@ import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
 import de.sopamo.triangula.android.game.mechanics.UserData;
+import de.sopamo.triangula.android.game.models.Bomb;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
@@ -15,6 +16,7 @@ import org.jbox2d.dynamics.contacts.ContactPoint;
 import org.jbox2d.dynamics.contacts.ContactResult;
 
 public class ContactListener implements org.jbox2d.dynamics.ContactListener {
+
     @Override
     public void add(ContactPoint point) {
         Body b1 = point.shape1.getBody();
@@ -32,6 +34,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
         if(body != null && body.getUserData() instanceof UserData) {
             if(((UserData)(body.getUserData())).type.equals("player")) {
                 Player player = (Player) ((UserData) body.getUserData()).obj;
+
 
                 // Spawn contact particles
                 ParticleSpawner.spawn(10,player.getBody().getWorldCenter().x,
@@ -52,7 +55,11 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 sw.trigger();
             }
             if(((UserData)(body.getUserData())).type.equals("bomb")) {
-                Log.i("FOO","BOMB");
+                ((Bomb)((UserData) body.getUserData()).obj).explode();
+                Vec2 force =
+                GameImpl.getInstance().getMainPlayer().getBody().getWorldCenter().sub(position);
+                force.mulLocal(500);
+                GameImpl.getInstance().getMainPlayer().setForce(force);
             }
         }
         return false;
