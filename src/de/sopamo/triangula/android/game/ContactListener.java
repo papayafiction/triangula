@@ -8,6 +8,7 @@ import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.Bomb;
 import de.sopamo.triangula.android.game.models.Player;
+import de.sopamo.triangula.android.game.models.Spikes;
 import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
 import org.jbox2d.common.Vec2;
@@ -32,23 +33,16 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     
     private boolean check(IBody body,Vec2 position) {
         if(body != null && body.getUserData() instanceof UserData) {
+            Player player = GameImpl.getMainPlayer();
             if(((UserData)(body.getUserData())).type.equals("player")) {
-                Player player = (Player) ((UserData) body.getUserData()).obj;
-
-
-                // Spawn contact particles
-                ParticleSpawner.spawn(10,player.getBody().getWorldCenter().x,
-                                        player.getBody().getWorldCenter().y);
-
-
-                // On contact kick player back
-                Vec2 force = player.getBody().getWorldCenter().sub(position);
+                ParticleSpawner.spawn(10, position.x,
+                        position.y);
+            }
+            if(((UserData)(body.getUserData())).type.equals("spike")) {
+                Vec2 force=
+                player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
-                if(!player.isRewinding()) {
-                    player.setForce(force);
-                } else {
-                    GameImpl.getInstance().getInputHandler().reset();
-                }
+                player.setForce(force);
             }
             if(((UserData)(body.getUserData())).type.equals("switch")) {
                 Switch sw = (Switch) ((UserData) body.getUserData()).obj;
@@ -57,9 +51,9 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("bomb")) {
                 ((Bomb)((UserData) body.getUserData()).obj).explode();
                 Vec2 force =
-                GameImpl.getInstance().getMainPlayer().getBody().getWorldCenter().sub(position);
+                player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(500);
-                GameImpl.getInstance().getMainPlayer().setForce(force);
+                player.setForce(force);
             }
         }
         return false;

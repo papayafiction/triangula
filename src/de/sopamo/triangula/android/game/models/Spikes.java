@@ -3,6 +3,7 @@ package de.sopamo.triangula.android.game.models;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
 import de.sopamo.triangula.android.levels.BaseLevel;
@@ -38,6 +39,9 @@ public class Spikes extends TriangleBaseModel implements Entity {
             IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
             triangleBody.setPosition(this.pst.add(pstVec.mul(2*i)));
             triangleBody.setAngle(radian);
+            UserData data = new UserData();
+            data.type = "spike";
+            triangleBody.setUserData(data);
             game.getGsl().add(triangle);
             times.add(i%2==0?0l:-TIME_FOR_DOWN);
             triangles.add(triangleBody);
