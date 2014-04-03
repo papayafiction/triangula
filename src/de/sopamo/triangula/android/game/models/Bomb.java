@@ -73,34 +73,3 @@ public class Bomb implements Entity{
         }
     }
 }
-
-
-/**
- * CircleBackground for moving BombBackground
- *
- */
-class CircleBackground extends GameShapeCircle {
-
-    private Vec2 pst;
-    private float radius;
-
-    public CircleBackground(GLCircle r, Vec2 pst) {
-        super(r);
-        this.pst = pst;
-    }
-
-    public void setRadius(float r) {
-        radius = r;
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    @Override
-    public void draw() {
-        glColor4f(red, green, blue, alpha);
-        ((GLCircle)glShape).draw(pst.x,pst.y,0,
-                radius);
-    }
-}
