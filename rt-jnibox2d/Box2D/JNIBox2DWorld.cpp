@@ -79,7 +79,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
         jclass claz = env->FindClass("de/sopamo/box2dbridge/jnibox2d/JNIBox2DWorld");
 
         callback = env->GetMethodID(claz,"listenerCallback",
-            "(Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;)V");
+            "(Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;Lde/sopamo/box2dbridge/jnibox2d/JNIBox2DBody;FF)V");
         worldData = worldId;
         
         b2BodyDef bd;

@@ -20,6 +20,7 @@
  */
 package de.sopamo.box2dbridge.jnibox2d;
 
+import android.util.Log;
 import org.jbox2d.collision.FilterData;
 import org.jbox2d.common.Vec2;
 
@@ -92,7 +93,7 @@ public class JNIBox2DBody implements IBody {
 	public IShape createBox(float width, float height, float x, float y,
 			float density, float angle) {
 
-		nCreateBox(bodyID, width, height, x, y, density, angle);
+		nCreateBox(bodyID, width, height, x, y, 1, angle);
 
 		// System.out.println("Created shape ID " + shapeID);
 
@@ -101,7 +102,7 @@ public class JNIBox2DBody implements IBody {
 	}
 
     public IShape createTriangle(float size, float x, float y, float density, float angle) {
-        nCreateTriangle(bodyID, size, x, y, density, angle);
+        nCreateTriangle(bodyID, size, x, y, 1, angle);
         this.setAngle(angle);
 
         // System.out.println("Created shape ID " + shapeID);
@@ -112,7 +113,7 @@ public class JNIBox2DBody implements IBody {
 
     @Override
     public IShape createCircle(float radius, float x, float y, float density) {
-        nCreateCircle(bodyID,radius,x,y,density);
+        nCreateCircle(bodyID,radius,x,y,1);
         IShape s = new JNIBox2DShape(0,this);
         return s;
     }
@@ -124,10 +125,15 @@ public class JNIBox2DBody implements IBody {
 
     @Override
 	public void applyForce(Vec2 force, Vec2 point) {
-		nApplyForce(bodyID, force.x, force.y, point.x, point.y);
+        nApplyForce(bodyID, force.x, force.y, point.x, point.y);
 	}
 
-	@Override
+    @Override
+    public void applyForceToCenter(Vec2 force) {
+        nApplyForceToCenter(bodyID,force.x,force.y);
+    }
+
+    @Override
 	public void applyTorque(float t) {
 		nApplyTorque(bodyID, t);
 	}
@@ -257,8 +263,7 @@ public class JNIBox2DBody implements IBody {
 	 */
 	native public void nAssociateJNIObject(int ID);
 
-	native public void nSetDamping(int ID, float linearDamping,
-			float angularDamping);
+	native public void nSetDamping(int ID, float linearDamping,float angularDamping);
 	native private void nSetPosition(int bodyID, float posx, float posy);
 
     native private void nSetLinearVelocity(int bodyID, float x, float y);
@@ -268,4 +273,6 @@ public class JNIBox2DBody implements IBody {
     native public void nSetAngle(int bodyID,float angle);
 
     native public void nCreateCircle(int bodyID,float radius,float x, float y,float density);
+
+    native private void nApplyForceToCenter(int bodyID,float x,float y);
 }

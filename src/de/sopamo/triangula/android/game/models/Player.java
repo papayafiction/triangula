@@ -18,6 +18,7 @@ public class Player implements Rewindable,Entity {
     private Vec2 pst;
     private IBody body;
     private GameShape shape;
+    private Vec2 force = null;
     private boolean rewind = false;
     private State currentState;
     private InputHandler inputHandler;
@@ -35,6 +36,7 @@ public class Player implements Rewindable,Entity {
         body.setLinearDamping(1);
         UserData data = new UserData();
         data.type = "player";
+        data.obj = this;
         body.setUserData(data);
         body.setPosition(pst);
         game.getGsl().add(shape);
@@ -112,5 +114,13 @@ public class Player implements Rewindable,Entity {
 
             body.applyForce(new Vec2(1, 10), new Vec2(targetX, targetY));
         }
+        if(force != null) {
+            body.applyForceToCenter(force);
+            force = null;
+        }
+    }
+
+    public void setForce(Vec2 force) {
+        this.force = force;
     }
 }

@@ -24,7 +24,7 @@ public class LoadingActivity extends Activity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                Intent toMain = new Intent(that, MainActivity.class);
+                Intent toMain = new Intent(that, MainMenu.class);
                 startActivity(toMain);
                 finish();
             }

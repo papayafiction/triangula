@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/layout_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView" android:layout_gravity="center_horizontal"
+                android:src="@drawable/menu_background"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" android:layout_marginTop="60dp">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                <Button
+                        android:layout_width="200px"
+                        android:layout_height="200px"
+                        android:text="Play"
+                        android:id="@+id/playbutton" android:layout_gravity="center"
+                        android:background="#ffffff" android:textColor="#ffae00" android:textSize="20dp"
+                        android:alpha="0.40" android:textStyle="bold"/>
+                <Button android:layout_width="200px" android:layout_height="200px" android:text="WiFi"
+                        android:id="@+id/wifibutton" android:layout_gravity="center" android:background="#ffffff"
+                        android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
+                        android:textStyle="bold" android:layout_marginTop="50px"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

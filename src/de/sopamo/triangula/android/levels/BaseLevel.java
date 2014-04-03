@@ -6,7 +6,10 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.models.Bomb;
+import de.sopamo.triangula.android.game.models.Door;
 import de.sopamo.triangula.android.game.models.Spikes;
+import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
@@ -169,6 +172,46 @@ public class BaseLevel {
 
             y*=-1;
             new Spikes(game,count,size,new Vec2(x,y),angle);
+        }
+    }
+    
+    public void makeDoors(JSONArray doors) throws JSONException {
+        for(int i = 0;i < doors.length();++i) {
+            JSONObject door = doors.getJSONObject(i).getJSONObject("door");
+            JSONObject sw = doors.getJSONObject(i).getJSONObject("switch");
+
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the door whereas our doors here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
+            float size = Float.parseFloat(door.getString("size")) * 0.02f / 2;
+            float x = Float.parseFloat(door.getString("x")) * 0.02f-9+size;
+            float y = Float.parseFloat(door.getString("y")) * 0.02f-5+size;
+            float angle = Float.parseFloat(door.getString("angle"));
+            y *= -1;
+
+            Door doorModel = new Door(game,new Vec2(x,y),size,angle);
+
+            x = Float.parseFloat(sw.getString("x")) * 0.02f-9+0.05f;
+            y = Float.parseFloat(sw.getString("y")) * 0.02f-5+0.05f;
+            y*=-1;
+
+            new Switch(game,new Vec2(x,y)).attachToDoor(doorModel);
+        }
+    }
+
+    public void makeBombs(JSONArray bombs) throws JSONException {
+        for(int i = 0;i < bombs.length();++i) {
+            JSONObject bomb = bombs.getJSONObject(i);
+
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the triangle whereas our triangles here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
+            float x = Float.parseFloat(bomb.getString("x")) * 0.02f-9+0.04f;
+            float y = Float.parseFloat(bomb.getString("y")) * 0.02f-5+0.04f;
+            y *= -1;
+
+            new Bomb(game,new Vec2(x,y));
+
         }
     }
 }
