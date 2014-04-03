@@ -1,10 +1,13 @@
 package de.sopamo.triangula.android;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +22,30 @@ public class MainMenu extends Activity {
         final MainMenu that = this;
 
         final Button playButton = (Button) findViewById(R.id.playbutton);
+        final Button aboutButton = (Button) findViewById(R.id.aboutButton);
+
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("CLICKED", "About wurde geklickt");
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                AlertDialog.Builder builder = new AlertDialog.Builder(that);
+
+                // 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage("triangula is made by papaya fiction.")
+                        .setTitle("About");
+
+                builder.setNegativeButton("Thank you, guys!", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                        // 3. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
 
 
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -30,7 +57,7 @@ public class MainMenu extends Activity {
                     public void run() {
                         Intent toMain = new Intent(that, MainActivity.class);
                         startActivity(toMain);
-                        finish();
+                        //finish();
                     }
                 }, 0);
             }
