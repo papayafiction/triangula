@@ -30,8 +30,8 @@ public class Spikes extends TriangleBaseModel implements Entity {
         pstVec = new Vec2((float)(size*Math.cos(radian)),
                           (float)(size*Math.sin(radian)));
 
-        direction = new Vec2(pstVec.y,
-                             -pstVec.x);
+        direction = new Vec2((float)(2*Math.sin(radian)),
+                             (float)(-2*Math.cos(radian)));
 
         for(int i=0;i<count;i++) {
             GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
