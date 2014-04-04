@@ -28,7 +28,6 @@ package de.sopamo.triangula.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,11 +36,8 @@ import android.media.MediaPlayer;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
@@ -52,15 +48,14 @@ import de.sopamo.triangula.android.tools.Hooks;
 import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
-import javax.microedition.khronos.opengles.GL10;
 import java.io.File;
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class GameActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
 
 	GameGLSurfaceView mGameGlSurfaceView;
 	private static TextView status;
-	private static MainActivity instance;
+	private static GameActivity instance;
     private WifiConnection wifiConnection;
     private WifiP2pManager wifiP2pManager;
     private IntentFilter intentFilter;
@@ -69,9 +64,10 @@ public class MainActivity extends Activity implements SensorEventListener {
     public MusicPlayer musicPlayer;
     private double pauseStartTime;
 
+
     //TextView test;
 
-	public MainActivity() {
+	public GameActivity() {
         instance = this;
 	}
 
@@ -209,5 +205,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         musicPlayer.pausePlayer();
 
+    }
+
+    public static GameActivity getInstance() {
+        return instance;
+    }
+
+    public Handler getHandler() {
+        return mHandler;
     }
 }

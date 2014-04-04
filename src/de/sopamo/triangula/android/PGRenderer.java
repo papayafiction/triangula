@@ -33,12 +33,8 @@ import de.sopamo.triangula.android.game.GameInterface;
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.OnlineLevel;
-import de.sopamo.triangula.android.levels.Starter;
 import de.sopamo.triangula.android.tools.Hooks;
 import org.jbox2d.common.Vec2;
-import org.json.JSONException;
 
 import java.util.concurrent.Callable;
 
@@ -182,7 +178,7 @@ public class PGRenderer implements Renderer {
 
 	public void init() {
         InputHandler handler = new InputHandler();
-		game.init(handler,MainActivity.level);
+		game.init(handler, GameActivity.level);
 	}
 	public void destroy() {
 		game.destroy();

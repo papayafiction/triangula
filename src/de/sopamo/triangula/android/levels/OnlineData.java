@@ -1,11 +1,7 @@
 package de.sopamo.triangula.android.levels;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import de.sopamo.triangula.android.LevelChooserActivity;
-import de.sopamo.triangula.android.LoadingActivity;
-import de.sopamo.triangula.android.MainActivity;
-import de.sopamo.triangula.android.levels.OnlineLevel;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
