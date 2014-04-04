@@ -18,6 +18,8 @@ import org.jbox2d.dynamics.contacts.ContactResult;
 
 public class ContactListener implements org.jbox2d.dynamics.ContactListener {
 
+    private boolean forceSet;
+
     @Override
     public void add(ContactPoint point) {
         Body b1 = point.shape1.getBody();
@@ -37,18 +39,21 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("player")) {
                 ParticleSpawner.spawn(10, position.x,
                         position.y);
-            }
-            if(((UserData)(body.getUserData())).type.equals("spike")) {
-                Vec2 force=
+                Vec2 force =
                 player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
-                player.setForce(force);
+                if(forceSet) {
+                    forceSet = false;
+                } else {
+                    player.setForce(force);
+                }
             }
             if(((UserData)(body.getUserData())).type.equals("switch")) {
                 Switch sw = (Switch) ((UserData) body.getUserData()).obj;
                 sw.trigger();
             }
             if(((UserData)(body.getUserData())).type.equals("bomb")) {
+                forceSet = true;
                 ((Bomb)((UserData) body.getUserData()).obj).explode();
                 Vec2 force =
                 player.getBody().getWorldCenter().sub(position);
