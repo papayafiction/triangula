@@ -6,10 +6,7 @@ import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.game.models.Bomb;
-import de.sopamo.triangula.android.game.models.Player;
-import de.sopamo.triangula.android.game.models.Spikes;
-import de.sopamo.triangula.android.game.models.Switch;
+import de.sopamo.triangula.android.game.models.*;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -59,6 +56,15 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(500);
                 player.setForce(force);
+            }
+            if(((UserData)(body.getUserData())).type.equals("exit")) {
+                Exit exit = (Exit) ((UserData) body.getUserData()).obj;
+                exit.endGame();
+            }
+            if(((UserData)(body.getUserData())).type.equals("sucker")) {
+                Exit exit = (Exit) ((UserData) body.getUserData()).obj;
+                exit.removeSucker();
+                player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.5f)));
             }
         }
         return false;

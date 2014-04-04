@@ -6,10 +6,7 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
-import de.sopamo.triangula.android.game.models.Bomb;
-import de.sopamo.triangula.android.game.models.Door;
-import de.sopamo.triangula.android.game.models.Spikes;
-import de.sopamo.triangula.android.game.models.Switch;
+import de.sopamo.triangula.android.game.models.*;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShape;
@@ -50,13 +47,15 @@ public class BaseLevel {
     }
 
     public void drawBackgroundElements(GL10 gl) {
-        for(BackgroundElement backgroundElement: backgroundElements) {
+        for(int i=0;i<backgroundElements.size();i++) {
+            BackgroundElement backgroundElement = backgroundElements.get(i);
             backgroundElement.draw();
             backgroundElement.update();
         }
     }
 
     public void make() {
+        this.backgroundElements = new ArrayList<BackgroundElement>();
         this.game = GameImpl.getInstance();
         this.world = game.getWorld();
         this.ground = world.getGroundBody();
@@ -68,6 +67,7 @@ public class BaseLevel {
             makeDoors(jsonData.getJSONArray("doors"));
             makeBombs(jsonData.getJSONArray("bombs"));
             makeSpikes(jsonData.getJSONArray("spikes"));
+            makeExits(jsonData.getJSONArray("exits"));
             makeTriangles(jsonData.getJSONArray("triangles"));
         } catch (JSONException e) {
             Log.e("json", "Could not parse level String");
@@ -230,4 +230,20 @@ public class BaseLevel {
 
         }
     }
+
+    public void makeExits(JSONArray exits) throws JSONException {
+        for(int i = 0;i < exits.length();++i) {
+            JSONObject exit = exits.getJSONObject(i);
+
+            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
+            // the triangle whereas our triangles here are twice as large as size.
+            // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
+            float x = Float.parseFloat(exit.getString("x")) * 0.02f-9+0.2f;
+            float y = Float.parseFloat(exit.getString("y")) * 0.02f-5+0.4f;
+            y *= -1;
+
+            new Exit(new Vec2(x,y));
+        }
+    }
+    
 }
