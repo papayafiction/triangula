@@ -88,12 +88,12 @@ public class PGRenderer implements Renderer {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-        image = new Image(4,2,new Vec2(-6,0),R.drawable.single_tap);
+        image = new Image(4,2,new Vec2(-6,0),R.drawable.beware_bombs);
         image.loadGLTexture(gl, this.context);
         Hooks.bind(Hooks.TAP,new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                PGRenderer.image = null;
+                //PGRenderer.image = null;
                 return null;
             }
         });
