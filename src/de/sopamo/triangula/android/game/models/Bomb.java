@@ -4,6 +4,7 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
+import de.sopamo.triangula.android.geometry.CircleBackground;
 import de.sopamo.triangula.android.geometry.GLCircle;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeCircle;
@@ -71,36 +72,5 @@ public class Bomb implements Entity{
             ((CircleBackground)backGround).setRadius(0.08f +
                     (CIRCLE - 0.08f) * (1 - (float)(time % TIME_TO_BLINK)/TIME_TO_BLINK));
         }
-    }
-}
-
-
-/**
- * CircleBackground for moving BombBackground
- *
- */
-class CircleBackground extends GameShapeCircle {
-
-    private Vec2 pst;
-    private float radius;
-
-    public CircleBackground(GLCircle r, Vec2 pst) {
-        super(r);
-        this.pst = pst;
-    }
-
-    public void setRadius(float r) {
-        radius = r;
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    @Override
-    public void draw() {
-        glColor4f(red, green, blue, alpha);
-        ((GLCircle)glShape).draw(pst.x,pst.y,0,
-                radius);
     }
 }
