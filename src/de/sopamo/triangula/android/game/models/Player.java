@@ -18,6 +18,9 @@ public class Player implements Rewindable,Entity {
     private IBody body;
     private GameShape shape;
     private Vec2 force = null;
+    private Vec2 suckerForce = null;
+    private float suckerToLow;
+    private float suckerStrength = 1.5f;
     private boolean rewind = false;
     private State currentState;
     private InputHandler inputHandler;
@@ -110,12 +113,36 @@ public class Player implements Rewindable,Entity {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.applyForce(new Vec2(1, 10), new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(1, 10),new Vec2(targetX, targetY));
         }
         if(force != null) {
             body.applyForceToCenter(force);
             force = null;
         }
+        if(suckerForce != null && suckerToLow <= 0) {
+            Vec2 vector = suckerForce.sub(body.getWorldCenter());
+            suckerStrength+=.05f;
+            vector.mulLocal(suckerStrength/vector.length());
+            body.setLinearVelocity(vector);
+        }
+        if(suckerToLow > 0) {
+            Vec2 up = new Vec2(
+                    (body.getWorldCenter().x < suckerForce.x)?1f:-1f,
+                    5);
+            suckerStrength+=.05f;
+            up.mulLocal(suckerStrength/up.length());
+            body.setLinearVelocity(up);
+            suckerToLow = suckerForce.y - body.getWorldCenter().y+0.2f;
+        }
+    }
+
+    public void suck(Vec2 pst) {
+        suckerForce = pst;
+        if(body.getWorldCenter().y+0.2f < pst.y)  {
+            suckerToLow  = pst.y - body.getWorldCenter().y+0.2f;
+            return;
+        }
+        suckerToLow = 0;
     }
 
     public void setForce(Vec2 force) {

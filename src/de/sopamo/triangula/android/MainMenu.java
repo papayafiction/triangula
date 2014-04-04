@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 
@@ -65,7 +64,7 @@ public class MainMenu extends Activity {
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        Intent toMain = new Intent(that, MainActivity.class);
+                        Intent toMain = new Intent(that, GameActivity.class);
                         startActivity(toMain);
                         //finish();
                     }

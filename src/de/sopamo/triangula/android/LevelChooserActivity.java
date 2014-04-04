@@ -3,12 +3,10 @@ package de.sopamo.triangula.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.OnlineLevel;
 
 public class LevelChooserActivity extends Activity {
@@ -44,7 +42,7 @@ public class LevelChooserActivity extends Activity {
             return;
         }
         button.setActivated(true);
-        final Intent startLevel = new Intent(that,MainActivity.class);
+        final Intent startLevel = new Intent(that,GameActivity.class);
         startLevel.putExtra("level",level);
         that.startActivity(startLevel);
     }
