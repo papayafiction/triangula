@@ -199,14 +199,14 @@ public class GameImpl implements GameInterface {
             }
         }
 
+        world.step(TIME_STEP, ITERATIONS);
+        world.sync();
+
         /** Update Entities **/
         for(int i=0;i<entities.size();i++) {
             Entity entity = entities.get(i);
             entity.update();
         }
-
-        world.step(TIME_STEP, ITERATIONS);
-        world.sync();
 	}
 
     public void addParticle(Particle particle) {

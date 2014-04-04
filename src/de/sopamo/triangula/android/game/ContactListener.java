@@ -26,11 +26,11 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     }
 
     public void add(IBody body1, IBody body2,Vec2 position) {
-        check(body1,position);
-        check(body2,position);
+        check(body1,body2,position);
+        check(body2,body1,position);
     }
     
-    private boolean check(IBody body,Vec2 position) {
+    private boolean check(IBody body,IBody body2,Vec2 position) {
         if(body != null && body.getUserData() instanceof UserData) {
             Player player = GameImpl.getMainPlayer();
             if(((UserData)(body.getUserData())).type.equals("player")) {
@@ -42,7 +42,9 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 if(forceSet) {
                     forceSet = false;
                 } else {
-                    player.setForce(force);
+                    if(!player.isRewinding()) {
+                        player.setForce(force);
+                    }
                 }
             }
             if(((UserData)(body.getUserData())).type.equals("switch")) {
