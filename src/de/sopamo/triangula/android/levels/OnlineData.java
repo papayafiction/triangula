@@ -71,6 +71,6 @@ public class OnlineData extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String s) {
         level.setLevelString(s);
-        LevelChooserActivity.startGame();
+        level.setReady();
     }
 }
