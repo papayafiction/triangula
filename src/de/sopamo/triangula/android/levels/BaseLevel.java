@@ -76,7 +76,11 @@ public class BaseLevel {
 
         makeFence();
         makeBackground();
+
+        postMake();
     }
+
+    public void postMake() {}
 
     public static int getTriangleColor() {
         if(colors == null) return -1;

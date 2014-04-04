@@ -104,29 +104,30 @@ public class Image {
     }
 
     /** The draw method for the square with the GL context */
-    public void draw(GL10 gl) {
-
+    public void draw() {
+        glEnable(GL10.GL_TEXTURE_2D);
         glTranslatef(position.x, position.y, 0);
         glColor4f(1, 1, 1, 1);
         // bind the previously generated texture
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+        glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
         // Point to our buffers
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
         // Set the face rotation
-        gl.glFrontFace(GL10.GL_CW);
+        glFrontFace(GL10.GL_CW);
 
         // Point to our vertex buffer
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+        glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
+        glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
         // Draw the vertices as triangle strip
-        gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, vertices.length / 3);
+        glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, vertices.length / 3);
 
         //Disable the client state before leaving
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL10.GL_VERTEX_ARRAY);
+        glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        glDisable(GL10.GL_TEXTURE_2D);
     }
 }
