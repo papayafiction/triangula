@@ -24,6 +24,7 @@ public class MainMenu extends Activity {
 
         final Button playButton = (Button) findViewById(R.id.playbutton);
         final Button aboutButton = (Button) findViewById(R.id.aboutButton);
+        final Button levelButton = (Button) findViewById(R.id.levelbutton);
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +70,14 @@ public class MainMenu extends Activity {
                         //finish();
                     }
                 }, 0);
+            }
+        });
+
+        levelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent levelChooser = new Intent(that,LevelChooserActivity.class);
+                startActivity(levelChooser);
             }
         });
     }

@@ -7,6 +7,7 @@ import de.sopamo.triangula.android.geometry.GameShape;
 import org.json.JSONException;
 
 import javax.microedition.khronos.opengles.GL10;
+import java.io.Serializable;
 import java.util.List;
 
 public interface Level {

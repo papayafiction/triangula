@@ -29,6 +29,7 @@ import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.Level;
+import de.sopamo.triangula.android.levels.OnlineLevel;
 import de.sopamo.triangula.android.levels.Starter;
 import de.sopamo.triangula.android.particles.Particle;
 import org.jbox2d.collision.AABB;
@@ -83,7 +84,8 @@ public class GameImpl implements GameInterface {
         return instance;
     }
 
-    public void init(InputHandler handler) {
+    public void init(InputHandler handler, Level level) {
+        this.level = level;
         this.handler = handler;
 		// density of dynamic bodies
 		float density = 1;
@@ -105,7 +107,6 @@ public class GameImpl implements GameInterface {
         playerBody = player.getBody();
 
         // Initalize and make level
-        level = new Starter();
         makeLevel();
 	}
 
