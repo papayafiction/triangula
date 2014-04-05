@@ -24,9 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenu"/>
-        <activity android:name=".LevelChooserActivity"/>
-        <activity android:name=".SuccessScreenActivity"/>
+        <activity android:name=".MainMenu"
+                  android:screenOrientation="landscape"/>
+        <activity android:name=".LevelChooserActivity"
+                  android:screenOrientation="landscape"/>
+        <activity android:name=".SuccessScreenActivity"
+                  android:screenOrientation="landscape"/>
     </application>
 
 
