@@ -52,10 +52,12 @@ public class PGRenderer implements Renderer {
     private float viewportX = 1;
     public static Image image;
     private Context context;
+    private GL10 gl;
+    private static PGRenderer instance;
 	
 	public PGRenderer(Context context) {
         this.context = context;
-
+        PGRenderer.instance = this;
 
 		game = new GameImpl();
 	}
@@ -76,6 +78,14 @@ public class PGRenderer implements Renderer {
         PGRenderer.mHeight = mHeight;
     }
 
+    public static PGRenderer getInstance() {
+        return instance;
+    }
+
+    public GL10 getGl() {
+        return gl;
+    }
+
     /**
 	 * Called at startup (and whenever surface needs change)
 	 */
@@ -83,7 +93,9 @@ public class PGRenderer implements Renderer {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        this.gl = gl;
 
+        GameImpl.getInstance().getLevel().postSurfaceCreated();
 
     }
 
@@ -159,6 +171,7 @@ public class PGRenderer implements Renderer {
 
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
+        game.getLevel().postDraw();
 	}
 
 

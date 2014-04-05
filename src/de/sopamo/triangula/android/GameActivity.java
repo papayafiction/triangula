@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
+import de.sopamo.triangula.android.levels.Level1;
 import de.sopamo.triangula.android.levels.Starter;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
@@ -83,7 +84,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         if(b!= null) {
             level = (Level) b.get("level");
         } else {
-            level = new Starter();
+            level = new Level1();
         }
 
         mGameGlSurfaceView = new GameGLSurfaceView(this);

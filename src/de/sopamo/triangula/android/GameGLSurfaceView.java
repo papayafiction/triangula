@@ -42,7 +42,7 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 
         // Enable AntiAliasing
         try {
-            //setEGLConfigChooser(new MultisampleConfigChooser());
+            // setEGLConfigChooser(new MultisampleConfigChooser());
         } catch (RuntimeException e) {
             // no antialising is not the end of the world
         }

@@ -15,4 +15,6 @@ public interface Level {
     public void drawBackgroundElements(GL10 gl);
     public void make();
     public String getLevelString();
+    public void postDraw();
+    public void postSurfaceCreated();
 }

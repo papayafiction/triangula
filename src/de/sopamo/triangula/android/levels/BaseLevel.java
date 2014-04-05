@@ -249,5 +249,8 @@ public class BaseLevel {
             new Exit(new Vec2(x,y));
         }
     }
-    
+
+    public void postDraw() {}
+    public void postSurfaceCreated() {}
+
 }

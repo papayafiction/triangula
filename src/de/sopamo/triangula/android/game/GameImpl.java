@@ -64,7 +64,6 @@ public class GameImpl implements GameInterface {
     List<Entity> entities = new ArrayList<Entity>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
-	List<Image> images = new ArrayList<Image>();
 
     // Debug stuff
     long nanoTime;
@@ -129,7 +128,6 @@ public class GameImpl implements GameInterface {
         entities = new ArrayList<Entity>();
         gsl = new ArrayList<GameShape>();
         pl = new ArrayList<Particle>();
-        images = new ArrayList<Image>();
 
     }
 
@@ -145,12 +143,6 @@ public class GameImpl implements GameInterface {
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
             particle.draw();
-        }
-
-        // Draw images
-        for(int i = 0;i < pl.size();++i) {
-            Image image = images.get(i);
-            image.draw();
         }
 	}
 

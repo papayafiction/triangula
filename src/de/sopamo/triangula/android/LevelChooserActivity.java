@@ -9,9 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.sopamo.triangula.android.adapters.LevelAdapter;
-import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.OnlineLevel;
-import de.sopamo.triangula.android.levels.Starter;
+import de.sopamo.triangula.android.levels.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +28,11 @@ public class LevelChooserActivity extends Activity {
         that = this;
         setContentView(R.layout.level_chooser);
 
+        levels.add(new Level1());
+        levels.add(new Level2());
+        levels.add(new Level3());
+        levels.add(new Level4());
         levels.add(new Starter());
-        levels.add(new OnlineLevel("level1"));
-        levels.add(new OnlineLevel("level2"));
-        levels.add(new OnlineLevel("level3"));
-        levels.add(new OnlineLevel("level4"));
         levels.add(new OnlineLevel("movethetime"));
 
         ListView view = (ListView) findViewById(R.id.level_list);
