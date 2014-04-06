@@ -7,9 +7,14 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.*;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 public class WifiConnection extends BroadcastReceiver {
 
@@ -18,10 +23,8 @@ public class WifiConnection extends BroadcastReceiver {
     private WifiP2pManager.PeerListListener peerListListener;
     private ArrayList peers = new ArrayList();
     private Context context;
-    private String host;
-    private WifiAsyncTask wifiAsyncTask;
-
-
+    public static InetAddress otherDevice, host;
+    private Boolean isConnected = false;
 
     public WifiConnection(WifiP2pManager wifiP2pManager, WifiP2pManager.Channel channel, IntentFilter intentFilter, Context context) {
 
@@ -40,7 +43,6 @@ public class WifiConnection extends BroadcastReceiver {
         this.wifiP2pManager = wifiP2pManager;
         this.channel = channel;
         this.context = context;
-        wifiAsyncTask = new WifiAsyncTask();
     }
 
     @Override
@@ -49,9 +51,9 @@ public class WifiConnection extends BroadcastReceiver {
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                //
+                Log.e("WifiConnection: onReceive: WIFI_P2P_STATE_CHANGED_ACTION", "WIFI_P2P_STATE_ENABLED");
             } else {
-                //
+                Log.e("WifiConnection: onReceive: WIFI_P2P_STATE_CHANGED_ACTION", "WIFI_P2P_STATE_DISABLED");
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             if (wifiP2pManager != null) {
@@ -67,30 +69,36 @@ public class WifiConnection extends BroadcastReceiver {
 
                 if(peers.iterator().hasNext()) {
                     WifiP2pDevice device = (WifiP2pDevice) peers.iterator().next();
-                    //Toast.makeText(context, device.toString(), Toast.LENGTH_LONG).show();
-                    connectDevice(device);
+                    Toast.makeText(context, device.toString(), Toast.LENGTH_SHORT).show();
+                    //connectDevice();
                 }
             }
         }else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+            Log.e("WifiConnection: onReceive: WIFI_P2P_CONNECTION_CHANGED_ACTION", "else-if");
             if (wifiP2pManager == null) {
                 return;
             }
-
-            NetworkInfo networkInfo = (NetworkInfo) intent
+            Log.e("WifiConnection: onReceive: WIFI_P2P_CONNECTION_CHANGED_ACTION", "wifiP2pManager: not NULL");
+            NetworkInfo networkInfo = intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
+            //checks if the device is connected
             if (networkInfo.isConnected()) {
-
+                Log.e("WifiConnection: onReceive: WIFI_P2P_CONNECTION_CHANGED_ACTION", "networkInfo: isConnected: TRUE");
                 // We are connected with the other device, request connection
                 // info to find group owner IP
 
                 wifiP2pManager.requestConnectionInfo(channel, new WifiP2pManager.ConnectionInfoListener() {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo info) {
-                        host = info.groupOwnerAddress.getHostAddress();
-                        //Toast.makeText(context, "Host-IP-Adresse gefunden", Toast.LENGTH_LONG).show();
+                        Log.e("WifiConnection: onReceive: WIFI_P2P_CONNECTION_CHANGED_ACTION", "requestConnectionInfo");
+                        otherDevice = info.groupOwnerAddress;
+                        isConnected = true;
                     }
                 });
+            } else {
+                Log.e("WifiConnection: onReceive: WIFI_P2P_CONNECTION_CHANGED_ACTION", "networkInfo: isConnected: FALSE");
+                isConnected = false;
             }
         } /* else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
@@ -101,16 +109,41 @@ public class WifiConnection extends BroadcastReceiver {
 
     }
 
-    public void connectDevice(WifiP2pDevice device) {
+    /*public void connectDevice() { //WifiP2pDevice device
         WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
+        config.deviceAddress = this.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
 
         wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
-                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+                Toast.makeText(context, "Connect succeeded.",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(context, "Connect failed. Retry.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }       */
+
+    //connects to the given device
+    public void connectDevice(final WifiP2pDevice deviceToConnect) {
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = deviceToConnect.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(context, "Connect succeeded.",
+                        Toast.LENGTH_SHORT).show();
+
 
             }
 
@@ -122,29 +155,78 @@ public class WifiConnection extends BroadcastReceiver {
         });
     }
 
-    public void connectSockets() {
-        wifiAsyncTask.send(host);
+    public InetAddress getHost() {
+        return otherDevice;
     }
 
-    public ArrayList groupOwners(ArrayList list) {
+    public void disconnectDevice() {
+        wifiP2pManager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(context, "Disconnect succeeded.",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(context, "Disconnect failed. Retry.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public ArrayList<WifiP2pDevice> getPeers() {
+        return peers;
+    }
+
+    //checks the connection status of a device
+    public static String getDeviceStatus(WifiP2pDevice device) {
+        int deviceStatus = device.status;
+        switch (deviceStatus) {
+            case WifiP2pDevice.AVAILABLE:
+                return "Available";
+            case WifiP2pDevice.INVITED:
+                return "Invited";
+            case WifiP2pDevice.CONNECTED:
+                return "Connected";
+            case WifiP2pDevice.FAILED:
+                return "Failed";
+            case WifiP2pDevice.UNAVAILABLE:
+                return "Unavailable";
+            default:
+                return "Unknown";
+
+        }
+    }
+
+    //gets the local ip address
+    public static InetAddress getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
 
-    /*
-    - Multicast und normales senden getrennt -> in Methode dann abfragen, ob es nur zwei Geräte sind,
-    dann normal verbinden, sonst Multicast. Oder nur normal? Immerhin wenig Daten und Multicast angeblich Batterifresser
-    (siehe dazu Link auf der Seite, wo daa vorgeschlagen wurde
-    (http://stackoverflow.com/questions/19197038/android-wi-fi-direct-network)
-
-    - womit die Daten versenden? Intent/Bundle/einfach so/usw
-
-    -  dann dazu empfangen und weitergeben
-
-    - und wie? Sockets und ServerSockets und so
-
-    - evtl check ob Wifi aktiviert wurde bzw abfangen, da dann normal ja die App crasht (aber abwarten ob das überhaupt so ist)
-
-    - Host muss wohl IP-Adresse jedes Geräts in der Gruppe an alle anderen weitergeben? Oder reicht, wenn Host Daten an alle sendet
-      -> kein direktes "kennen" der Clients untereinander nötig
-     */
+    //Soll den Vorgang automatisieren
+    public void initConnection(WifiP2pDevice deviceToConnectTo) {
+        connectDevice(deviceToConnectTo);
+        //sollte eigentlich den Handshake machen
+        /*if(deviceToConnectTo.isGroupOwner()) {
+            ServerHandshake handshake = new ServerHandshake();
+            handshake.execute();
+        } else {
+            ClientHandshake handshake  = new ClientHandshake();
+            handshake.execute(otherDevice);
+        }  */
+    }
 }
