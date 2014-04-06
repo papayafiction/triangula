@@ -21,6 +21,7 @@ public class Player implements Rewindable,Entity {
     private Vec2 suckerForce = null;
     private float suckerToLow;
     private float suckerStrength = 1.5f;
+    private boolean sucking;
     private boolean rewind = false;
     private State currentState;
     private InputHandler inputHandler;
@@ -47,6 +48,7 @@ public class Player implements Rewindable,Entity {
 
     @Override
     public void startRewind() {
+        if(isSucking()) return;
         rewind = true;
         game.getWorld().setGravity(new Vec2(0,0));
     }
@@ -71,6 +73,7 @@ public class Player implements Rewindable,Entity {
     }
 
     public void rewind() {
+        if(isSucking()) stopRewind();
         if(!rewind) return;
         State state = null;
         try {
@@ -108,7 +111,7 @@ public class Player implements Rewindable,Entity {
 
     @Override
     public void update() {
-        if(inputHandler.isTouched()) {
+        if(inputHandler.isTouched() && !isSucking()) {
             Vec2 currPlayerPosition = body.getWorldCenter();
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
@@ -137,7 +140,9 @@ public class Player implements Rewindable,Entity {
     }
 
     public void suck(Vec2 pst) {
+        sucking = true;
         suckerForce = pst;
+        game.getWorld().setGravity(new Vec2(0,0));
         if(body.getWorldCenter().y+0.2f < pst.y)  {
             suckerToLow  = pst.y - body.getWorldCenter().y+0.2f;
             return;
@@ -145,7 +150,12 @@ public class Player implements Rewindable,Entity {
         suckerToLow = 0;
     }
 
+    public boolean isSucking() {
+        return sucking;
+    }
+
     public void setForce(Vec2 force) {
+        if(isSucking()) return;
         this.force = force;
     }
 }
