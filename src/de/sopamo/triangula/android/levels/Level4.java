@@ -29,4 +29,9 @@ public class Level4 extends BaseLevel implements Level,Serializable {
         image = new Image(4,2,new Vec2(7,3), R.drawable.timetravel_info);
         image.loadGLTexture(PGRenderer.getInstance().getGl(), GameActivity.getInstance());
     }
+
+    @Override
+    public void end() {
+        image = null;
+    }
 }

@@ -250,7 +250,9 @@ public class BaseLevel {
         }
     }
 
+    public Class<?> getNextLevel() { return null; }
     public void postDraw() {}
     public void postSurfaceCreated() {}
+    public void end() {}
 
 }
