@@ -33,32 +33,23 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.*;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
 import de.sopamo.triangula.android.levels.Starter;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
-import de.sopamo.triangula.android.wifi.AsyncSend;
-import de.sopamo.triangula.android.wifi.ServerAsyncTask;
 import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameActivity extends Activity implements SensorEventListener {
     /** Called when the activity is first created. */
@@ -73,12 +64,9 @@ public class GameActivity extends Activity implements SensorEventListener {
     public MediaPlayer forwardMediaPlayer;
     public MusicPlayer musicPlayer;
     private double pauseStartTime;
-    private Button showPeers, connectSockets, disconnectPeers, connectPeers, discoverPeers;
-    public TextView sendStatus, receiveStatus, outputText;
-    private ArrayList<WifiP2pDevice> deviceList;
-    public AsyncSend asyncSend;
-    public EditText text;
-    private ServerAsyncTask task;
+
+
+    //TextView test;
 
 	public GameActivity() {
         instance = this;
@@ -109,16 +97,19 @@ public class GameActivity extends Activity implements SensorEventListener {
         
         SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        
+        intentFilter = new IntentFilter();
+        wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        channel = wifiP2pManager.initialize(this, getMainLooper(), null);
+        wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
+        //setContentView(R.layout.main);
+        //test = (TextView) findViewById(R.id.tv_status);
 
         File file = new File("raw/ingame.mp3");
 
         forwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame);
         musicPlayer = new MusicPlayer(file,forwardMediaPlayer);
         musicPlayer.playMusic();
-
-        //hab das mal in die Activity getan, falls das nicht passt, kann man das Zeug auch woanders unterbringen. ;)
-        //wifiWithWifiView();
-
     }
     
     
@@ -195,6 +186,16 @@ public class GameActivity extends Activity implements SensorEventListener {
         super.onResume();
         registerReceiver(wifiConnection, intentFilter);
         musicPlayer.resumePlayer(pauseStartTime);
+        wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+
+            public void onSuccess() {
+                //test.setText("WUHU!");
+            }
+
+            public void onFailure(int reason) {
+
+            }
+        });
     }
 
     @Override
@@ -213,133 +214,5 @@ public class GameActivity extends Activity implements SensorEventListener {
 
     public Handler getHandler() {
         return mHandler;
-    }
-
-    public void populateListView() {
-        deviceList = wifiConnection.getPeers();
-
-        DeviceListAdapter adapter = new DeviceListAdapter(this, R.layout.device_list_item, deviceList);
-        ListView view = (ListView) findViewById(R.id.deviceListView);
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                wifiConnection.initConnection(deviceList.get(position));
-                //populateListView();
-            }
-        });
-        view.setAdapter(adapter);
-    }
-
-    public void wifiWithWifiView() {
-        //setting view to wifi.xml layout
-        setContentView(R.layout.wifi);
-
-        //initiating EditText
-        text = (EditText) findViewById(R.id.text_input);
-
-        //TextViews from wifi.xml
-        sendStatus = (TextView) findViewById(R.id.status_send);
-        receiveStatus = (TextView) findViewById(R.id.status_receive);
-        outputText = (TextView) findViewById(R.id.text_output);
-
-        //Buttons from wifi.xml
-        discoverPeers = (Button) findViewById(R.id.discover_peers);
-        showPeers = (Button) findViewById(R.id.show_peers);
-        connectPeers = (Button) findViewById(R.id.connect_peers);
-        connectSockets = (Button) findViewById(R.id.connect_sockets);
-        disconnectPeers = (Button) findViewById(R.id.disconnect_peers);
-
-        //creating and starting server thread (AsyncTask)
-        task = new ServerAsyncTask();
-        task.setActivity(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
-        else
-            task.execute((Void[]) null);
-
-        //create BroadcastReceiver (WifiConnection) and its parameters
-        intentFilter = new IntentFilter();
-        wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = wifiP2pManager.initialize(this, getMainLooper(), null);
-        wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
-
-        //Button onClick Methods
-        discoverPeers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-
-                    public void onSuccess() {
-                        sendStatus.setText("WUHU!");
-                    }
-
-                    public void onFailure(int reason) {
-                        sendStatus.setText("NOHO!");
-                    }
-                });
-            }
-        });
-        showPeers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                populateListView();
-            }
-        });
-        /*connectPeers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wifiConnection.connectDevice();
-            }
-        });   */
-        connectSockets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                asyncSend = new AsyncSend();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    asyncSend.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wifiConnection.getHost());
-                else
-                    asyncSend.execute(wifiConnection.getHost());
-            }
-        });
-        disconnectPeers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                wifiConnection.disconnectDevice();
-            }
-        });
-
-    }
-
-    public class DeviceListAdapter extends ArrayAdapter<WifiP2pDevice> {
-
-        private List<WifiP2pDevice> devices;
-
-        public DeviceListAdapter(Context context, int textViewResourceId, List<WifiP2pDevice> objects) {
-            super(context, textViewResourceId, objects);
-            devices = objects;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.device_list_item, null);
-            }
-            WifiP2pDevice device = devices.get(position);
-            if (device != null) {
-                TextView leftSide = (TextView) v.findViewById(R.id.deviceName);
-                TextView rightSide = (TextView) v.findViewById(R.id.deviceStatus);
-                if (leftSide != null) {
-                    leftSide.setText(device.deviceName);
-                }
-                if (rightSide != null) {
-                    rightSide.setText(WifiConnection.getDeviceStatus(device));
-                }
-
-            }
-            return v;
-        }
     }
 }
