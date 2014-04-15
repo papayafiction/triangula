@@ -2,7 +2,8 @@
 
 <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        >
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -15,5 +16,5 @@
             android:layout_height="wrap_content"
             android:text="Start"
             android:id="@+id/list_item_button"
-            android:layout_marginTop="28dp" android:layout_below="@+id/list_item_text" android:layout_alignParentLeft="true"/>
+            android:layout_alignTop="@+id/list_item_text" android:layout_alignParentRight="true"/>
 </RelativeLayout>
