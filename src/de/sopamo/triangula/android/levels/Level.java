@@ -15,7 +15,6 @@ public interface Level extends Serializable {
     public void drawBackgroundElements(GL10 gl);
     public void make();
     public void end();
-    public Class<?> getNextLevel();
     public String getLevelString();
     public void postDraw();
     public void postSurfaceCreated();
