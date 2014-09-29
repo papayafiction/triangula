@@ -239,8 +239,7 @@ public class BaseLevel {
         for(int i = 0;i < exits.length();++i) {
             JSONObject exit = exits.getJSONObject(i);
 
-            // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
-            // the triangle whereas our triangles here are twice as large as size.
+            // To get Box2D meters out of pixels we need to divide by 50.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
             float x = Float.parseFloat(exit.getString("x")) * 0.02f-9+0.2f;
             float y = Float.parseFloat(exit.getString("y")) * 0.02f-5+0.4f;

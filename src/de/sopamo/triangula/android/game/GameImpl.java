@@ -57,6 +57,8 @@ public class GameImpl implements GameInterface {
     private static IBody playerBody;
     private static Player player;
 
+    private static Class nextLevel;
+
 
 	IWorld world = Box2DFactory.newWorld();
 
@@ -244,5 +246,13 @@ public class GameImpl implements GameInterface {
 
     public static Player getMainPlayer() {
         return GameImpl.player;
+    }
+
+    public static Class getNextLevel() {
+        return nextLevel;
+    }
+
+    public static void setNextLevel(Class nextLevel) {
+        GameImpl.nextLevel = nextLevel;
     }
 }

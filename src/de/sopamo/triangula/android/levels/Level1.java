@@ -1,8 +1,10 @@
 package de.sopamo.triangula.android.levels;
 
+import android.util.Log;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
+import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.models.Image;
 import de.sopamo.triangula.android.tools.Hooks;
 import org.jbox2d.common.Vec2;
@@ -17,6 +19,14 @@ public class Level1 extends BaseLevel implements Level,Serializable {
 
     public String getLevelString() {
         return levelString;
+    }
+
+    public Level1() {
+        try {
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.Level2"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
