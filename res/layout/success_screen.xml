@@ -4,20 +4,20 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-    >
+        >
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/menu_background"
-            android:contentDescription="background"
-            android:adjustViewBounds="false"
-            android:scaleType="centerCrop"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/menu_background"
+                android:contentDescription="background"
+                android:adjustViewBounds="false"
+                android:scaleType="centerCrop"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -30,10 +30,10 @@
                 android:layout_marginTop="59dp"/>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
 
             <Button
                     android:layout_width="wrap_content"
@@ -48,18 +48,18 @@
                     android:layout_marginRight="2dp"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next Level"
-                android:id="@+id/next_level"
-                android:singleLine="false"
-                android:layout_gravity="right"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/menu_button"
-                android:alpha="0.5"
-                android:background="#ffffff"
-                android:padding="15dp"
-                android:layout_marginLeft="2dp"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next Level"
+                    android:id="@+id/next_level"
+                    android:singleLine="false"
+                    android:layout_gravity="right"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/menu_button"
+                    android:alpha="0.5"
+                    android:background="#ffffff"
+                    android:padding="15dp"
+                    android:layout_marginLeft="2dp" android:visibility="gone"/>
         </RelativeLayout>
 
     </RelativeLayout>

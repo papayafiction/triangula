@@ -61,7 +61,7 @@ public class LevelChooserActivity extends Activity {
         }
         button.setActivated(true);
         final Intent startLevel = new Intent(that,GameActivity.class);
-        startLevel.putExtra("level", (java.io.Serializable) level);
+        startLevel.putExtra("level",level);
         that.startActivity(startLevel);
     }
 

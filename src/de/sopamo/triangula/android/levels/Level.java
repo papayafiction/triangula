@@ -10,10 +10,12 @@ import javax.microedition.khronos.opengles.GL10;
 import java.io.Serializable;
 import java.util.List;
 
-public interface Level {
+public interface Level extends Serializable {
     public void drawBackground(GL10 gl);
     public void drawBackgroundElements(GL10 gl);
     public void make();
+    public void end();
+    public Class<?> getNextLevel();
     public String getLevelString();
     public void postDraw();
     public void postSurfaceCreated();

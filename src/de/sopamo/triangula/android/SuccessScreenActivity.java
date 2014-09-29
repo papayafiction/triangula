@@ -8,37 +8,50 @@ import android.widget.Button;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
+import de.sopamo.triangula.android.levels.Level;
 
 public class SuccessScreenActivity extends Activity {
+
+    private SuccessScreenActivity that;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        that = this;
+        Bundle bundle = getIntent().getExtras();
+        Level level = null;
+        if(bundle != null) {
+            level = (Level) bundle.get("level");
+        }
         setContentView(R.layout.success_screen);
+        final Button menuButton = (Button) findViewById(R.id.menu_button);
+
         final Intent menu = new Intent(this,MainMenu.class);
-        final Button button = (Button) findViewById(R.id.menu_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(menu);
             }
         });
-        final SuccessScreenActivity that = this;
-        final Button next_level_button = (Button) findViewById(R.id.next_level);
-        next_level_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent startLevel = new Intent(that,GameActivity.class);
-                Level level = null;
-                try {
-                    level = (Level) GameImpl.getNextLevel().newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                startLevel.putExtra("level", (java.io.Serializable) level);
-                that.startActivity(startLevel);
+
+        if(level != null && level.getNextLevel() != null) {
+            final Button nextLevelButton = (Button) findViewById(R.id.next_level);
+            nextLevelButton.setVisibility(View.VISIBLE);
+            final Intent nextGame = new Intent(this,GameActivity.class);
+            try {
+                nextGame.putExtra("level",(Level)level.getNextLevel().newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
-        });
+            nextLevelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(nextGame);
+                    that.finish();
+                }
+            });
+        }
     }
 }
