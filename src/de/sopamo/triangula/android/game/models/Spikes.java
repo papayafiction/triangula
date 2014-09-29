@@ -3,6 +3,7 @@ package de.sopamo.triangula.android.game.models;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
@@ -13,7 +14,7 @@ import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spikes extends TriangleBaseModel implements Entity {
+public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
 
     public final static int TIME_FOR_DOWN = 500;
 
@@ -21,6 +22,7 @@ public class Spikes extends TriangleBaseModel implements Entity {
     private Vec2 direction;
     private Vec2 pstVec;
     private Vec2 pst;
+    private boolean isRewinding;
 
     public Spikes(int count, float size, Vec2 pst,float angle) {
         GameImpl game = GameImpl.getInstance();
@@ -49,7 +51,7 @@ public class Spikes extends TriangleBaseModel implements Entity {
         }
 
         game.getEntities().add(this);
-
+        game.getRewindables().add(this);
     }
 
     @Override
@@ -78,4 +80,34 @@ public class Spikes extends TriangleBaseModel implements Entity {
         triangle.setPosition(pst.add(direction.mul((float)(time%TIME_FOR_DOWN)/TIME_FOR_DOWN)));
     }
 
+    @Override
+    public void startRewind() {
+        this.isRewinding = true;
+        negateDirection();
+    }
+
+    @Override
+    public void stopRewind() {
+        this.isRewinding = false;
+        negateDirection();
+    }
+
+    private void negateDirection() {
+        for(int i = 0;i< times.size(); i++) {
+            Long time = times.get(i);
+            long timeDiff = TIME_FOR_DOWN-(time%TIME_FOR_DOWN);
+            time += 2*timeDiff;
+            times.set(i,time);
+        }
+    }
+
+    @Override
+    public void run() {
+
+    }
+
+    @Override
+    public boolean isRewinding() {
+        return isRewinding;
+    }
 }
