@@ -26,7 +26,7 @@ public class Exit implements Entity {
 
     public Exit(Vec2 pst) {
         game = GameImpl.getInstance();
-        GameShapeRectangle rectangle = new GameShapeRectangle(new GLRectangle(.8f,1.6f));
+        GameShapeRectangle rectangle = new GameShapeRectangle(new GLRectangle(.4f,.8f));
         IBody rectangleBody = rectangle.attachToNewBody(game.getWorld(),null,0);
         rectangleBody.setPosition(pst);
         UserData data = new UserData();
