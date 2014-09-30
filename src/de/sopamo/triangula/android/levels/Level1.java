@@ -1,7 +1,8 @@
 package de.sopamo.triangula.android.levels;
 
-import android.util.Log;
+import com.google.android.gms.games.Games;
 import de.sopamo.triangula.android.GameActivity;
+import de.sopamo.triangula.android.MainMenu;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
@@ -47,5 +48,10 @@ public class Level1 extends BaseLevel implements Level,Serializable {
                 return null;
             }
         });
+    }
+
+    @Override
+    public void end() {
+        Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_level_1));
     }
 }

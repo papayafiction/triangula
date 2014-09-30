@@ -36,10 +36,17 @@ import android.media.MediaPlayer;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.plus.Plus;
+import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
@@ -50,8 +57,14 @@ import org.jbox2d.common.Vec2;
 
 import java.io.File;
 
-public class GameActivity extends Activity implements SensorEventListener {
+public class GameActivity extends FragmentActivity implements SensorEventListener,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+
     /** Called when the activity is first created. */
+
+    private static GoogleApiClient mGoogleApiClient;
+    private boolean mAutoStartSignInFlow = true;
+    private boolean mResolvingConnectionFailure = false;
+    private boolean mSignInClicked = false;
 
 	GameGLSurfaceView mGameGlSurfaceView;
 	private static TextView status;
@@ -83,6 +96,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this).addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).
+                addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
 
         Bundle b = getIntent().getExtras();
         if(b!= null) {
@@ -225,5 +242,44 @@ public class GameActivity extends Activity implements SensorEventListener {
 
     public Handler getHandler() {
         return mHandler;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (mResolvingConnectionFailure) {
+            Log.e("yolo", "onConnectionFailed(): already resolving");
+            return;
+        }
+        Log.e("yolo",""+connectionResult.toString());
+        if ( mAutoStartSignInFlow || mSignInClicked) {
+            mAutoStartSignInFlow = false;
+            mSignInClicked = false;
+            mResolvingConnectionFailure = true;
+            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
+                    9001, "Fehler beim einloggen")) {
+                mResolvingConnectionFailure = false;
+            }
+        }
+
+    }
+
+    public static GoogleApiClient getGoogleApiClient() {
+        return mGoogleApiClient;
     }
 }
