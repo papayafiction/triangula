@@ -21,6 +21,7 @@
 package de.sopamo.box2dbridge.jnibox2d;
 
 import android.util.Log;
+import de.sopamo.box2dbridge.IRayCastOutput;
 import org.jbox2d.collision.FilterData;
 import org.jbox2d.common.Vec2;
 
@@ -200,7 +201,16 @@ public class JNIBox2DBody implements IBody {
         nSetPosition(bodyID, pos.x, pos.y);
 	}
 
-	@Override
+    @Override
+    public IRayCastOutput rayCast(Vec2 start, Vec2 end, float fraction) {
+        float frac = nRayCast(start.x,end.x,start.y,end.y,fraction);
+        JNIRayCastOutput rayCastOutput = new JNIRayCastOutput();
+        rayCastOutput.normal = new Vec2(nRayCastX(),nRayCastY());
+        rayCastOutput.fraction = frac;
+        return rayCastOutput;
+    }
+
+    @Override
 	public void setAngularDamping(float d) {
 		angularDamping = d;
 		nSetDamping(bodyID, linearDamping, angularDamping);
@@ -277,4 +287,10 @@ public class JNIBox2DBody implements IBody {
     native private void nApplyForceToCenter(int bodyID,float x,float y);
 
     native private void nCreateLine(int bodyID,float x_start, float x_end, float y_start, float y_end, float thickness, float density);
+
+    native private float nRayCast(float x_start,float x_end, float y_start, float y_end, float fraction);
+
+    native private float nRayCastX();
+
+    native private float nRayCastY();
 }

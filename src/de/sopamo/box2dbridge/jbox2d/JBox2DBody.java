@@ -22,6 +22,7 @@
 
 package de.sopamo.box2dbridge.jbox2d;
 
+import de.sopamo.box2dbridge.IRayCastOutput;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DShape;
 import org.jbox2d.collision.FilterData;
 import org.jbox2d.collision.shapes.CircleDef;
@@ -229,6 +230,11 @@ public class JBox2DBody implements IBody {
     public void setPosition(Vec2 pos) {
         body.setXForm(pos, body.getAngle());
 
+    }
+
+    @Override
+    public IRayCastOutput rayCast(Vec2 start, Vec2 end, float fraction) {
+        return null;
     }
 
     public Body getBody() {
