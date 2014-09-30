@@ -5,71 +5,82 @@ import android.util.Log;
 
 import java.io.File;
 
-
-public class MusicPlayer {
-    private File file;
-    private double beatTime;
-    private MediaPlayer forwardMediaPlayer;
-
-    public MusicPlayer(File file, MediaPlayer forwardMediaplayer){
-        this.file = file;
-        this.forwardMediaPlayer = forwardMediaplayer;
-    }
-
-/*
-    Instantiate a new beatanalyzer, run the file analyze and save the number of frames to be on the beat in int move.
-    Afterwards the song is played. a loop checks every frame if onset or not.
-     */
-    public void runMusicPlayer(){
-        BeatAnalyzA beatAnalyzA = new BeatAnalyzA();
-        beatAnalyzA.runFileProcessing(file);
-        beatTime = beatAnalyzA.getMovementTime();
+import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.game.mechanics.Rewindable;
 
 
+public class MusicPlayer implements Rewindable {
+    private File fileF;
+    private File fileB;
+    private int beatTime;
+    private MediaPlayer mediaPlayerForward;
+    private MediaPlayer mediaPlayerBackwards;
+
+    private int msPerBeat;
+    private GameImpl game;
+    private double initTime;
+    private double initSysTime;
+    private double endSysTime;
+    private double diffTime;
+    private boolean rewinding = false;
+
+
+    public MusicPlayer(File fileF, File fileB, MediaPlayer mediaPlayerForward, MediaPlayer mediaPlayerBackwards, int beatTime){
+        this.fileF = fileF;
+        this.fileB = fileB;
+        this.mediaPlayerForward = mediaPlayerForward;
+        this.mediaPlayerBackwards = mediaPlayerBackwards;
+        this.beatTime = beatTime;
+        msPerBeat = 1000 / beatTime;
+        this.game = GameImpl.getInstance();
+        game.getRewindables().add(this);
     }
 
     public void playMusic (){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                forwardMediaPlayer.start();
-                forwardMediaPlayer.setLooping(true);
+                mediaPlayerForward.start();
+                mediaPlayerForward.setLooping(true);
             }
         }).start();
 
     }
 
-    public void pausePlayer (){
-        forwardMediaPlayer.pause();
-        Log.e("leFuc","La Pause grand a lieu");
+    public void pausePlayerForward(){
+        mediaPlayerForward.pause();
+        Log.e("leFuc","Player forward paused");
+    }
+    public void pausePlayerBackward(){
+        mediaPlayerBackwards.pause();
+        Log.e("leFuc","Player backward paused");
+    }
+
+    public void resumePlayerForward(double pauseStartTime){
+        mediaPlayerForward.seekTo((int) (pauseStartTime));
+        Log.e("leFuc","Player forward resumed at time: "+pauseStartTime);
+        mediaPlayerForward.start();
+    }
+
+    public void resumePlayerBackward(double pauseStartTime){
+        mediaPlayerBackwards.seekTo((int) (pauseStartTime));
+        Log.e("leFuc","Player backwards resumed at time: "+pauseStartTime);
+        mediaPlayerBackwards.start();
     }
 
     public void destroyPlayer (){
-        forwardMediaPlayer.stop();
-        Log.e("leFuc","La déstruction grand a lieu");
+        mediaPlayerForward.stop();
+        mediaPlayerBackwards.stop();
+        Log.e("leFuc","Player stopped");
     }
 
-    public void resumePlayer(double pauseStartTime){
-        forwardMediaPlayer.seekTo((int)(pauseStartTime));
-        Log.e("leFuc","Le temps de la pause "+pauseStartTime);
-        forwardMediaPlayer.start();
+    public double getCurrentPosForward(){
+        Log.e("leFuc", "Player current position " + mediaPlayerForward.getCurrentPosition());
+        return mediaPlayerForward.getCurrentPosition();
     }
 
-    public double getCurrentPos (){
-        Log.e("leFuc","La ");
-        return forwardMediaPlayer.getCurrentPosition();
-
-    }
-
-
-
-    public double getBeatTime(){
-        return beatTime;
-    }
-
-    public boolean isOnset(double initialSystemTime, double beatTime){
-        double tmp = initialSystemTime - System.currentTimeMillis();
-        System.out.println("Current time: "+System.currentTimeMillis());
+    public boolean isOnset(double initialSystemTime){
+        int tmp = (int)initialSystemTime - (int)System.currentTimeMillis();
         if(tmp%beatTime==0){
             return true;
         }else{
@@ -78,7 +89,36 @@ public class MusicPlayer {
     }
 
 
+    @Override
+    public void startRewind() {
+        //when rewinding is initiated
+        rewinding = true;
+        pausePlayerForward();
+        initTime = getCurrentPosForward();
+        initSysTime = System.currentTimeMillis();
 
+        resumePlayerBackward((mediaPlayerForward.getDuration()-initTime));
+        Log.e("baam","duration-init "+(mediaPlayerForward.getDuration()-initTime));
+    }
 
+    @Override
+    public void stopRewind() {
+        //when rewinding is ended
+        rewinding = false;
+        endSysTime = System.currentTimeMillis();
+        diffTime = (initTime-(endSysTime-initSysTime));
+        Log.e("time","diffTime: "+diffTime);
+        pausePlayerBackward();
+        resumePlayerForward(diffTime);
+    }
 
+    @Override
+    public void run() {
+
+    }
+
+    @Override
+    public boolean isRewinding() {
+        return rewinding;
+    }
 }
