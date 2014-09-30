@@ -66,7 +66,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("sucker")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
                 exit.removeSucker();
-                player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.4f)));
+                player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.8f)));
             }
         }
         return false;
