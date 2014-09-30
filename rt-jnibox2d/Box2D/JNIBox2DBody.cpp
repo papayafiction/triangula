@@ -105,6 +105,25 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
 
 }
 
+/*
+ Signature (IFFFFFF)V
+ */
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateLine
+(JNIEnv *, jobject, jint ID, jfloat x_start, jfloat x_end, jfloat y_start, jfloat y_end, jfloat width, jfloat density) {
+    if(bodyList[ID] == 0)
+        return;
+    b2Vec2 vertices[4];
+    vertices[0].Set(x_start,y_start);
+    vertices[1].Set(x_start+width,y_start+width);
+    vertices[2].Set(x_end,y_end);
+    vertices[3].Set(x_end+width,y_end+width);
+    
+    b2PolygonShape ps;
+    ps.Set(vertices,4);
+    
+    bodyList[ID]->CreateFixture(&ps,density);
+}
+
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateCircle
   (JNIEnv *, jobject, jint ID, jfloat radius, jfloat x, jfloat y, jfloat density) {
 
