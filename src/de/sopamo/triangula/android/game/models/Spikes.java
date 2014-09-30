@@ -60,7 +60,8 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
         for(int i=0;i<times.size();i++) {
             IBody triangle = triangles.get(i);
             Long time = times.get(i);
-            time+= dt;
+            if (isRewinding()) time += 2*dt;
+            else time += dt;
             times.set(i,time);
             if(time >= 0 && (int)(((float)time)/TIME_FOR_DOWN) % 2 == 0) {
                 movingDown(triangle,i,time);
