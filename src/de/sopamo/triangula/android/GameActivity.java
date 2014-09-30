@@ -110,11 +110,12 @@ public class GameActivity extends Activity implements SensorEventListener {
         //Music Handling on create
         // Files of the song in the right order and reverse
         File fileF = new File("raw/ingame.mp3");
-        File fileB = new File("raw/ingame_reverse.mp3");
+        File fileB = new File("raw/ingame_reverse_double_pitch.mp3");
 
         //Instantiate players and start playing music forward
         forwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame);
-        backwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame_reverse);
+        backwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame_reverse_double_pitch);
+
         musicPlayer = new MusicPlayer(fileF, fileB, forwardMediaPlayer, backwardMediaPlayer, 156);
         musicPlayer.playMusic();
     }

@@ -31,9 +31,9 @@ public class Player implements Rewindable,Entity {
     public Player(Vec2 pst,InputHandler handler) {
         this.game = GameImpl.getInstance();
         this.inputHandler = handler;
-        shape = new GameShapeCircle(new GLCircle(0.1f));
+        shape = new GameShapeCircle(new GLCircle(0.2f));
         shape.setColor(255,76,22);
-        body = shape.attachToNewBody(game.getWorld(),null,1);
+        body = shape.attachToNewBody(game.getWorld(),null,0.05f);
         body.setAngularDamping(3);
         body.setLinearDamping(1);
         UserData data = new UserData();
@@ -116,7 +116,7 @@ public class Player implements Rewindable,Entity {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.applyForce(new Vec2(1, 10),new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(5, 40),new Vec2(targetX, targetY));
         }
         if(force != null) {
             body.applyForceToCenter(force);

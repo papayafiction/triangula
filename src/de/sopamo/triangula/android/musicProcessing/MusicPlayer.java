@@ -36,6 +36,11 @@ public class MusicPlayer implements Rewindable {
         game.getRewindables().add(this);
     }
 
+    /**
+     * TODO
+     * BackwardsPlayer not able to loop
+     */
+
     public void playMusic (){
         new Thread(new Runnable() {
             @Override
@@ -66,6 +71,7 @@ public class MusicPlayer implements Rewindable {
         mediaPlayerBackwards.seekTo((int) (pauseStartTime));
         Log.e("leFuc","Player backwards resumed at time: "+pauseStartTime);
         mediaPlayerBackwards.start();
+        mediaPlayerBackwards.setLooping(true);
     }
 
     public void destroyPlayer (){
@@ -97,8 +103,8 @@ public class MusicPlayer implements Rewindable {
         initTime = getCurrentPosForward();
         initSysTime = System.currentTimeMillis();
 
-        resumePlayerBackward((mediaPlayerForward.getDuration()-initTime));
-        Log.e("baam","duration-init "+(mediaPlayerForward.getDuration()-initTime));
+        resumePlayerBackward((mediaPlayerForward.getDuration()-initTime)/2);
+        Log.e("baam","duration-init "+(mediaPlayerForward.getDuration()-initTime)/2);
     }
 
     @Override
@@ -106,7 +112,7 @@ public class MusicPlayer implements Rewindable {
         //when rewinding is ended
         rewinding = false;
         endSysTime = System.currentTimeMillis();
-        diffTime = (initTime-(endSysTime-initSysTime));
+        diffTime = (initTime-(endSysTime-initSysTime)*2);
         Log.e("time","diffTime: "+diffTime);
         pausePlayerBackward();
         resumePlayerForward(diffTime);
