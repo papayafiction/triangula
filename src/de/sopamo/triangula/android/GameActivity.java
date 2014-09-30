@@ -43,7 +43,6 @@ import android.widget.TextView;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
-import de.sopamo.triangula.android.levels.Starter;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
 import de.sopamo.triangula.android.wifi.WifiConnection;
@@ -61,9 +60,14 @@ public class GameActivity extends Activity implements SensorEventListener {
     private WifiP2pManager wifiP2pManager;
     private IntentFilter intentFilter;
     private WifiP2pManager.Channel channel;
+    //Music Handling
     public MediaPlayer forwardMediaPlayer;
+    public MediaPlayer backwardMediaPlayer;
     public MusicPlayer musicPlayer;
     private double pauseStartTime;
+
+    private GameImpl gameInstance;
+
 
 
     //TextView test;
@@ -102,13 +106,16 @@ public class GameActivity extends Activity implements SensorEventListener {
         wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = wifiP2pManager.initialize(this, getMainLooper(), null);
         wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
-        //setContentView(R.layout.main);
-        //test = (TextView) findViewById(R.id.tv_status);
 
-        File file = new File("raw/ingame.mp3");
+        //Music Handling on create
+        // Files of the song in the right order and reverse
+        File fileF = new File("raw/ingame.mp3");
+        File fileB = new File("raw/ingame_reverse.mp3");
 
+        //Instantiate players and start playing music forward
         forwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame);
-        musicPlayer = new MusicPlayer(file,forwardMediaPlayer);
+        backwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame_reverse);
+        musicPlayer = new MusicPlayer(fileF, fileB, forwardMediaPlayer, backwardMediaPlayer, 156);
         musicPlayer.playMusic();
     }
     
@@ -136,6 +143,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     	super.onDestroy();
     	
     	mGameGlSurfaceView.destroy();
+        //Music handling on destroy
         musicPlayer.destroyPlayer();
 
     }
@@ -166,7 +174,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     private static long lastClick = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        GameImpl gameInstance = GameImpl.getInstance();
+        gameInstance = GameImpl.getInstance();
 
         if(GameImpl.getInstance() == null) return false;
 
@@ -184,8 +192,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
+        //Music resuming after pause is ended
+        musicPlayer.resumePlayerForward(pauseStartTime);
+
         registerReceiver(wifiConnection, intentFilter);
-        musicPlayer.resumePlayer(pauseStartTime);
         wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
 
             public void onSuccess() {
@@ -202,10 +212,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(wifiConnection);
-        pauseStartTime = musicPlayer.getCurrentPos();
 
-        musicPlayer.pausePlayer();
-
+        //Music pausing, saving current pos
+        pauseStartTime = musicPlayer.getCurrentPosForward();
+        musicPlayer.pausePlayerForward();
     }
 
     public static GameActivity getInstance() {
