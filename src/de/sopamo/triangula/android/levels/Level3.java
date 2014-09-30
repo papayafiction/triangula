@@ -35,7 +35,7 @@ public class Level3 extends BaseLevel implements Level,Serializable {
 
     @Override
     public void postSurfaceCreated() {
-        image = new Image(4,2,new Vec2(-6,0), R.drawable.door_info);
+        image = new Image(4,2,new Vec2(2.8f,-5), R.drawable.door_info);
         image.loadGLTexture(PGRenderer.getInstance().getGl(), GameActivity.getInstance());
     }
 
