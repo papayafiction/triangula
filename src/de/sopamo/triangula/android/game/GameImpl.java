@@ -24,6 +24,7 @@ package de.sopamo.triangula.android.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.models.Image;
 import de.sopamo.triangula.android.game.models.Player;
@@ -108,7 +109,7 @@ public class GameImpl implements GameInterface {
         world.create(aabb,gravity,true);
         world.setContactListener(new ContactListener());
         // Create player
-        Player player = new Player(new Vec2(-8,0),handler);
+        Player player = new Player(new Vec2(1,-5),handler);
         GameImpl.player = player;
         playerBody = player.getBody();
 
@@ -180,7 +181,7 @@ public class GameImpl implements GameInterface {
 			frames = 0;
 
 			String engine = (world instanceof JBox2DWorld ? "JBox2D" : world instanceof JNIBox2DWorld ? "JNIBox2D": "unknown");
-			GameActivity.setStatus(engine + ", fps: " + fps);
+			GameActivity.setStatus(engine + ", fps: " + fps+ " Width: " + PGRenderer.getWidth()+ " Height: "+PGRenderer.getHeight());
 		}
         /** ## END DEBUG ## **/
 

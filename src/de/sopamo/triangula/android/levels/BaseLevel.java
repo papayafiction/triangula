@@ -4,13 +4,12 @@ import android.graphics.Color;
 import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
+import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
-import de.sopamo.triangula.android.geometry.GLRectangle;
-import de.sopamo.triangula.android.geometry.GLTriangle;
-import de.sopamo.triangula.android.geometry.GameShape;
-import de.sopamo.triangula.android.geometry.GameShapeTriangle;
+import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
 import de.sopamo.triangula.android.tools.Util;
@@ -122,22 +121,22 @@ public class BaseLevel {
 
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
-        gs.attachToBody(ground, new Vec2(0, -5f), density);
+        gs.attachToBody(ground, new Vec2(100, 0), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,0,0,1);
-        gs.attachToBody(ground, new Vec2(0, 5f), density);
+        gs.attachToBody(ground, new Vec2(100, -10), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
-        gs.attachToBody(ground, new Vec2(100f, 0), density);
+        gs.attachToBody(ground, new Vec2(200f, -5f), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,1,0,1);
-        gs.attachToBody(ground, new Vec2(-9f, 0), density);
+        gs.attachToBody(ground, new Vec2(0,-5), density);
         gsl.add(gs);
     }
 
@@ -163,12 +162,11 @@ public class BaseLevel {
             // the triangle whereas our triangles here are twice as large as size.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
             float size = Float.parseFloat(triangle.getString("size")) * 0.02f / 2;
-            float x = Float.parseFloat(triangle.getString("x")) * 0.02f-9+size;
-            float y = Float.parseFloat(triangle.getString("y")) * 0.02f-5+size;
+            float x = Float.parseFloat(triangle.getString("x")) * 0.02f+size;
+            float y = Float.parseFloat(triangle.getString("y")) * 0.02f+size;
             float angle = Float.parseFloat(triangle.getString("angle"));
             angle = (float)Math.toRadians(angle);
-            y *= -1;
-
+            y*=-1;
             GameShape gs;
             gs = new GameShapeTriangle(new GLTriangle(size,angle));
             int color = getTriangleColor();
@@ -185,12 +183,13 @@ public class BaseLevel {
             JSONObject spike = spikes.getJSONObject(i);
 
             float size = Float.parseFloat(spike.getString("size")) * 0.02f / 2;
-            float x = Float.parseFloat(spike.getString("x")) * 0.02f-9;
-            float y = Float.parseFloat(spike.getString("y")) * 0.02f-5;
+            float x = Float.parseFloat(spike.getString("x")) * 0.02f;
+            float y = Float.parseFloat(spike.getString("y")) * 0.02f;
             float angle = Float.parseFloat(spike.getString("angle"));
             int count = spike.getInt("count");
 
             y*=-1;
+
             new Spikes(count,size,new Vec2(x,y),angle);
         }
     }
@@ -204,17 +203,17 @@ public class BaseLevel {
             // the door whereas our doors here are twice as large as size.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
             float size = Float.parseFloat(door.getString("size")) * 0.02f / 2;
-            float x = Float.parseFloat(door.getString("x")) * 0.02f-9+size;
-            float y = Float.parseFloat(door.getString("y")) * 0.02f-5+size;
+            float x = Float.parseFloat(door.getString("x")) * 0.02f+size;
+            float y = Float.parseFloat(door.getString("y")) * 0.02f+size;
             float angle = Float.parseFloat(door.getString("angle"));
             y *= -1;
 
             Door doorModel = new Door(new Vec2(x,y),size,angle);
 
-            x = Float.parseFloat(sw.getString("x")) * 0.02f-9+0.05f;
-            y = Float.parseFloat(sw.getString("y")) * 0.02f-5+0.05f;
-            y*=-1;
+            x = Float.parseFloat(sw.getString("x")) * 0.02f+.05f;
+            y = Float.parseFloat(sw.getString("y")) * 0.02f+0.05f;
 
+            y*=-1;
             new Switch(new Vec2(x,y)).attachToDoor(doorModel);
         }
     }
@@ -226,10 +225,9 @@ public class BaseLevel {
             // To get Box2D meters out of pixels we need to divide by 50. The level editor's size is the full size of
             // the triangle whereas our triangles here are twice as large as size.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
-            float x = Float.parseFloat(bomb.getString("x")) * 0.02f-9+0.04f;
-            float y = Float.parseFloat(bomb.getString("y")) * 0.02f-5+0.04f;
-            y *= -1;
-
+            float x = Float.parseFloat(bomb.getString("x")) * 0.02f+0.04f;
+            float y = Float.parseFloat(bomb.getString("y")) * 0.02f+0.04f;
+            y*=-1;
             new Bomb(new Vec2(x,y));
 
         }
@@ -241,10 +239,10 @@ public class BaseLevel {
 
             // To get Box2D meters out of pixels we need to divide by 50.
             // The number 50 comes from onDrawFrame in PGRenderer. There we set the cameras z position to -5.
-            float x = Float.parseFloat(exit.getString("x")) * 0.02f-9+0.2f;
-            float y = Float.parseFloat(exit.getString("y")) * 0.02f-5+0.4f;
-            y *= -1;
+            float x = Float.parseFloat(exit.getString("x")) * 0.02f+.2f;
+            float y = Float.parseFloat(exit.getString("y")) * 0.02f+.8f;
 
+            y*=-1;
             new Exit(new Vec2(x,y));
         }
     }

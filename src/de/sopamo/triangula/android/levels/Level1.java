@@ -38,7 +38,7 @@ public class Level1 extends BaseLevel implements Level,Serializable {
 
     @Override
     public void postSurfaceCreated() {
-        image = new Image(4,2,new Vec2(-6,0), R.drawable.single_tap);
+        image = new Image(4,2,new Vec2(2.8f,-5), R.drawable.single_tap);
         image.loadGLTexture(PGRenderer.getInstance().getGl(), GameActivity.getInstance());
         Hooks.bind(Hooks.TAP, new Callable<Integer>() {
             @Override

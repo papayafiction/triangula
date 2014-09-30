@@ -20,7 +20,7 @@ void JNIContactListener::BeginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     b2Manifold* m = contact->GetManifold();
-    
+    b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
     b2Vec2 point = worldManifold.points[0];
             env->CallVoidMethod(worldData,callback,

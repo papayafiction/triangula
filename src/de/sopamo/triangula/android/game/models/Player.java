@@ -17,6 +17,7 @@ public class Player implements Rewindable,Entity {
     private GameImpl game;
     private IBody body;
     private GameShape shape;
+    private long state = 0;
     private Vec2 force = null;
     private Vec2 suckerForce = null;
     private float suckerToLow;
@@ -95,7 +96,7 @@ public class Player implements Rewindable,Entity {
     }
 
     public void saveCurrentState() {
-        if(rewind) return;
+        if(rewind || (state++)%2 != 0) return;
         State state = new State();
         state.angularVelocity = body.getAngularVelocity();
         state.linearVelocity = body.getLinearVelocity();
