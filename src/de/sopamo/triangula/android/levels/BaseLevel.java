@@ -121,22 +121,22 @@ public class BaseLevel {
 
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
-        gs.attachToBody(ground, new Vec2(5, 5f), density);
+        gs.attachToBody(ground, new Vec2(100, 0), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,0,0,1);
-        gs.attachToBody(ground, new Vec2(0, 5f), density);
+        gs.attachToBody(ground, new Vec2(100, -10), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
-        gs.attachToBody(ground, new Vec2(100f, 0), density);
+        gs.attachToBody(ground, new Vec2(200f, -5f), density);
         gsl.add(gs);
 
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,1,0,1);
-        gs.attachToBody(ground, new Vec2(0,0), density);
+        gs.attachToBody(ground, new Vec2(0,-5), density);
         gsl.add(gs);
     }
 
