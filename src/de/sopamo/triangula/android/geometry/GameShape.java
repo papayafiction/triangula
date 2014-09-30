@@ -72,7 +72,6 @@ abstract public class GameShape {
 
 
     public void draw() {
-
         glColor4f(red, green, blue, alpha);
         Vec2 p = body.getWorldCenter().add(shapePosition);
 
@@ -87,10 +86,22 @@ abstract public class GameShape {
         return shape;
     }
 
+    public IBody getBody() {
+        return body;
+    }
+
     public void detachFromBody(IBody body) {
         body.destroyShape(shape);
         shape = null;
         body = null;
+    }
+
+    public void setPosition(Vec2 pst) {
+        body.setPosition(pst);
+    }
+
+    public Vec2 getPosition() {
+        return body.getWorldCenter();
     }
 
     public ArrayList<Line> getWalls() {

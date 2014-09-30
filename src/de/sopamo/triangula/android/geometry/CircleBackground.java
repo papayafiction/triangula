@@ -34,4 +34,14 @@ public class CircleBackground extends GameShapeCircle {
         ((GLCircle)glShape).draw(pst.x,pst.y,0,
                 radius);
     }
+
+    @Override
+    public void setPosition(Vec2 pst) {
+        this.pst = pst;
+    }
+
+    @Override
+    public Vec2 getPosition() {
+        return this.pst;
+    }
 }

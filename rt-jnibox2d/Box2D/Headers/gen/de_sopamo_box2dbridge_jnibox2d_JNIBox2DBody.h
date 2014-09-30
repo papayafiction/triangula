@@ -86,6 +86,10 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngl
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateCircle
   (JNIEnv *, jobject, jint, jfloat, jfloat, jfloat, jfloat);
 
+JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateLine
+(JNIEnv *, jobject, jint, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat);
+
+        
 #ifdef __cplusplus
 }
 #endif

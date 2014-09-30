@@ -275,4 +275,6 @@ public class JNIBox2DBody implements IBody {
     native public void nCreateCircle(int bodyID,float radius,float x, float y,float density);
 
     native private void nApplyForceToCenter(int bodyID,float x,float y);
+
+    native private void nCreateLine(int bodyID,float x_start, float x_end, float y_start, float y_end, float thickness, float density);
 }

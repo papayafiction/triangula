@@ -17,6 +17,8 @@ public class Player implements Rewindable,Entity {
     private GameImpl game;
     private IBody body;
     private GameShape shape;
+    private GameShape shapeInner;
+    private long state = 0;
     private Vec2 force = null;
     private Vec2 suckerForce = null;
     private float suckerToLow;
@@ -31,11 +33,16 @@ public class Player implements Rewindable,Entity {
     public Player(Vec2 pst,InputHandler handler) {
         this.game = GameImpl.getInstance();
         this.inputHandler = handler;
-        shape = new GameShapeCircle(new GLCircle(0.1f));
-        shape.setColor(255,76,22);
-        body = shape.attachToNewBody(game.getWorld(),null,1);
+        shape = new GameShapeCircle(new GLCircle(0.2f));
+        shape.setColor(0,0,0);
+        body = shape.attachToNewBody(game.getWorld(),null,0.05f);
         body.setAngularDamping(3);
         body.setLinearDamping(1);
+
+        shapeInner = new GameShapeCircle(new GLCircle(0.16f));
+        shapeInner.setColor(220,220,220);
+        shapeInner.attachToBody(body, new Vec2(0,0),0.05f);
+        
         UserData data = new UserData();
         data.type = "player";
         data.obj = this;
@@ -44,6 +51,8 @@ public class Player implements Rewindable,Entity {
         game.getGsl().add(shape);
         game.getEntities().add(this);
         game.getRewindables().add(this);
+
+        game.getGsl().add(shapeInner);
     }
 
     @Override
@@ -95,7 +104,7 @@ public class Player implements Rewindable,Entity {
     }
 
     public void saveCurrentState() {
-        if(rewind) return;
+        if(rewind || (state++)%2 != 0) return;
         State state = new State();
         state.angularVelocity = body.getAngularVelocity();
         state.linearVelocity = body.getLinearVelocity();
@@ -116,7 +125,7 @@ public class Player implements Rewindable,Entity {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.applyForce(new Vec2(1, 10),new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(8, 45),new Vec2(targetX, targetY));
         }
         if(force != null) {
             body.applyForceToCenter(force);

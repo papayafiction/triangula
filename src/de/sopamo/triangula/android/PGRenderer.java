@@ -33,10 +33,6 @@ import de.sopamo.triangula.android.game.GameInterface;
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.tools.Hooks;
-import org.jbox2d.common.Vec2;
-
-import java.util.concurrent.Callable;
 
 import static android.opengl.GLES10.*;
 import static android.opengl.GLES10.GL_BLEND;
@@ -45,11 +41,12 @@ public class PGRenderer implements Renderer {
 
 	GameInterface game;
 	
-	private static int mWidth = 5;
-	private static int mHeight = 5;
-	private static int mHalfWidth;
+	private static int mWidth = 0;
+	private static int mHeight = 0;
+    private static float ratio;
+    private static int mHalfWidth;
 	private static int mHalfHeight;
-    private float viewportX = 1;
+    private float viewportX = 0;
     public static Image image;
     private Context context;
     private GL10 gl;
@@ -105,19 +102,18 @@ public class PGRenderer implements Renderer {
 	}
 
 	public static void onSizeChange(GL10 gl, int width, int height) {
+        ratio = (width / (float) height);
 		mWidth = width;
 		mHeight = height;
 
 		mHalfWidth = width / 2;
 		mHalfHeight = height / 2;
 
-		gl.glViewport(0, 0, width, height);
 
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-        float ratio = (width / (float) height);
-		gl.glFrustumf(-ratio, ratio, -1, 1, 1f, 100);
-
+        gl.glViewport(0, 0, width, height);
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+		gl.glFrustumf(0,2*ratio, -2, 0, 1f, 10f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
         // Enabling alpha
@@ -160,13 +156,13 @@ public class PGRenderer implements Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
+
         float playerX = GameImpl.getMainPlayer().getBody().getWorldCenter().x;
-        viewportX = playerX * -1;
-        if(viewportX > 1) {
-            viewportX = 1;
+        viewportX = playerX * -1 - 1 + ratio*5;
+        if(viewportX >0) {
+            viewportX = 0;
         }
-		gl.glTranslatef(viewportX, 0, -5);
-        //viewportX-=0.008f;
+        gl.glTranslatef(viewportX,0,-5f);
 		game.gameLoop();
 
         game.getLevel().drawBackgroundElements(gl);

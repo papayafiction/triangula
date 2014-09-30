@@ -37,7 +37,7 @@ public class Exit implements Entity {
         game.getGsl().add(rectangle);
         this.exitBody = rectangleBody;
 
-        GameShapeCircle circle = new GameShapeCircle(new GLCircle(1f));
+        GameShapeCircle circle = new GameShapeCircle(new GLCircle(1.5f));
         IBody sucker = circle.attachToNewBody(game.getWorld(),null,0);
         sucker.setPosition(pst);
         UserData suckerData = new UserData();
