@@ -28,6 +28,7 @@ public class BaseLevel {
     protected static ArrayList<String> colors = new ArrayList<String>();
 
     protected IBody ground;
+    protected List<String> achievments = new ArrayList<String>();
     protected IWorld world;
     protected GameImpl game;
     protected List<GameShape> gsl;
@@ -245,6 +246,10 @@ public class BaseLevel {
             y*=-1;
             new Exit(new Vec2(x,y));
         }
+    }
+
+    public List<String> getAchievements() {
+        return achievments;
     }
 
     public void postDraw() {}

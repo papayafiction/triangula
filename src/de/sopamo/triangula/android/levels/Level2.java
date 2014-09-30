@@ -45,7 +45,6 @@ public class Level2 extends BaseLevel implements Level,Serializable {
     @Override
     public void end() {
         image = null;
-        Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_level_2));
-
+        achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_2));
     }
 }

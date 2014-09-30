@@ -3,25 +3,46 @@ package de.sopamo.triangula.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.plus.Plus;
+import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
 import de.sopamo.triangula.android.levels.Level;
 
-public class SuccessScreenActivity extends Activity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SuccessScreenActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
 
     private SuccessScreenActivity that;
+    private GoogleApiClient mGoogleApiClient;
+    private boolean mAutoStartSignInFlow = true;
+    private boolean mResolvingConnectionFailure = false;
+    private List<String> achievements = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         that = this;
         Bundle bundle = getIntent().getExtras();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this).addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).
+                        addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
         Level level = null;
         if(bundle != null) {
             level = (Level) bundle.get("level");
+            List<String> achievements = (List<String>) bundle.getSerializable("achievements");
+            if(achievements != null) {
+                this.achievements = achievements;
+            }
         }
         setContentView(R.layout.success_screen);
         final Button menuButton = (Button) findViewById(R.id.menu_button);
@@ -54,5 +75,41 @@ public class SuccessScreenActivity extends Activity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if(achievements != null) {
+            for(int i=0;i<achievements.size(); i++) {
+                Games.Achievements.unlock(mGoogleApiClient,achievements.get(i));
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (mResolvingConnectionFailure) {
+            return;
+        }
+        if ( mAutoStartSignInFlow) {
+            mAutoStartSignInFlow = false;
+            mResolvingConnectionFailure = true;
+            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
+                    9001, "Fehler beim einloggen")) {
+                mResolvingConnectionFailure = false;
+            }
+        }
+
     }
 }
