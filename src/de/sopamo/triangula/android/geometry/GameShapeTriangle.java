@@ -25,8 +25,13 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
+import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.game.raycasting.Line;
+import de.sopamo.triangula.android.game.raycasting.Ray;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
+
+import java.util.ArrayList;
 
 public class GameShapeTriangle extends GameShape {
 
@@ -86,4 +91,26 @@ public class GameShapeTriangle extends GameShape {
 		body.setMassFromShapes();
 		return shape;
 	}
+
+    @Override
+    public ArrayList<Line> getWalls() {
+        ArrayList<Line> walls = new ArrayList<Line>();
+        float size = ((GLTriangle)glShape).getSize();
+
+        Vec2 p = body.getWorldCenter().add(shapePosition);
+        Vec2 p1 = new Vec2(p.x + 0, p.y + -size);
+        Vec2 p2 = new Vec2(p.x + size, p.y + size);
+        Vec2 p3 = new Vec2(p.x + -size, p.y + size);
+        walls.add(new Line(p1,p2));
+        walls.add(new Line(p2,p3));
+        walls.add(new Line(p3,p1));
+        Ray ray1 = new Ray(p1,p2);
+        Ray ray3 = new Ray(p2,p3);
+        Ray ray2 = new Ray(p3,p1);
+        GameImpl.getInstance().addRay(ray1);
+        GameImpl.getInstance().addRay(ray2);
+        GameImpl.getInstance().addRay(ray3);
+
+        return walls;
+    }
 }

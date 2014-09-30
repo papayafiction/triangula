@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.game;
 
+import android.graphics.Color;
 import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IShape;
@@ -34,10 +35,18 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
         if(body != null && body.getUserData() instanceof UserData) {
             Player player = GameImpl.getMainPlayer();
             if(((UserData)(body.getUserData())).type.equals("player")) {
-                ParticleSpawner.spawn(10, position.x,
-                        position.y);
-                Vec2 force =
-                player.getBody().getWorldCenter().sub(position);
+
+                // Get a realistic direction force for the emitted particles
+                Vec2 direction = player.getBody().getLinearVelocity().negate().mul(0.01f);
+                // Emit particles if the force was large enough
+                if(direction.length() > 0.04) {
+                    UserData collisionUserData = ((UserData)(body2.getUserData()));
+                    if(collisionUserData == null) {
+                        collisionUserData = new UserData();
+                    }
+                    ParticleSpawner.spawn(10, position.x, position.y, direction,collisionUserData.color);
+                }
+                Vec2 force = player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
                 if(forceSet) {
                     forceSet = false;

@@ -21,11 +21,15 @@
 
 package de.sopamo.triangula.android.geometry;
 
+import de.sopamo.triangula.android.game.raycasting.Line;
 import org.jbox2d.common.Vec2;
 
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.IWorld;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.opengl.GLES10.glColor4f;
 
@@ -87,5 +91,9 @@ abstract public class GameShape {
         body.destroyShape(shape);
         shape = null;
         body = null;
+    }
+
+    public ArrayList<Line> getWalls() {
+        return new ArrayList<Line>();
     }
 }

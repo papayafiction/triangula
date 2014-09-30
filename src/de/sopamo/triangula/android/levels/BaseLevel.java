@@ -6,6 +6,7 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GLTriangle;
@@ -175,6 +176,10 @@ public class BaseLevel {
             float[] colors = Util.getColorParts(color);
             gs.setColor(colors[0], colors[1], colors[2], 1);
             IBody body = gs.attachToNewBody(world, null, 0);
+            UserData data = new UserData();
+            data.type = "triangle";
+            data.color = Color.rgb((int)(colors[0]*255),(int)(colors[1]*255),(int)(colors[2]*255));
+            body.setUserData(data);
             body.setPosition(new Vec2(x,y));
             gsl.add(gs);
         }

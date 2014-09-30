@@ -23,35 +23,32 @@
 
 package de.sopamo.triangula.android.geometry;
 
-import java.nio.FloatBuffer;
-import static android.opengl.GLES10.*;
-
-import android.util.Log;
 import de.sopamo.triangula.android.tools.BufferTool;
 import de.sopamo.triangula.android.tools.GLBufferTool;
+import org.jbox2d.common.Vec2;
 
-public class GLRectangle extends Rectangle implements GLInterface {
-	
+import java.nio.FloatBuffer;
+
+import static android.opengl.GLES10.*;
+
+public class GLLine implements GLInterface {
+
 	FloatBuffer fbVertices;
-	
-	public GLRectangle() {
-		super();		
-	}
-	
-	public GLRectangle(float w, float h) {
-		super(w, h);
+    private double angle;
+    private Vec2 center;
+    private float width;
+
+	public GLLine(Vec2 start, Vec2 end) {
+        center = new Vec2((start.x+end.x)/2,(start.y+end.y)/2);
+        angle = Math.atan2(start.y - end.y, start.x - end.x);
+        width = end.sub(start).length();
+        onUpdateSize();
 	}
 	
 	public void draw() {
-		GLBufferTool.setGLVertexBuffer(2, fbVertices);
-		glDrawArrays(GL_TRIANGLE_STRIP, 
-				0, 
-				4);
-	}
-	public void draw(float x, float y, float angle) {
 		glPushMatrix();
 
-		glTranslatef(x, y, 0);
+		glTranslatef(center.x, center.y, 0);
 		glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
 		GLBufferTool.setGLVertexBuffer(2, fbVertices); 
 		glDrawArrays(GL_TRIANGLE_STRIP, 
@@ -59,22 +56,27 @@ public class GLRectangle extends Rectangle implements GLInterface {
 				4);
 		
 		glPopMatrix();
-
 	}
 
-	@Override
+    @Override
+    public void draw(float x, float y, float angle) {
+        center = new Vec2(x,y);
+        this.angle = angle;
+        onUpdateSize();
+        draw();
+    }
+
 	protected void onUpdateSize() {
-		super.onUpdateSize();
+		float halfWidth = width * 0.5f;
 		
 		float[] v = {
-				 getHalfWidth(),  getHalfHeight(),
-				 getHalfWidth(), -getHalfHeight(),
-				-getHalfWidth(),  getHalfHeight(),
-				-getHalfWidth(), -getHalfHeight(),
+                halfWidth,  .05f,
+                halfWidth, -.05f,
+				-halfWidth,  .05f,
+				-halfWidth, -.05f,
 		};
 
 		
 		fbVertices = BufferTool.makeFloatBuffer(v);
 	}
-
 }
