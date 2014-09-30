@@ -28,6 +28,7 @@ public class LevelChooserActivity extends Activity {
         that = this;
         setContentView(R.layout.level_chooser);
 
+        levels.add(new Skihuette());
         levels.add(new Level1());
         levels.add(new Level2());
         levels.add(new Level3());

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.levels.Level;
+import de.sopamo.triangula.android.levels.Level1;
 import de.sopamo.triangula.android.levels.Level;
 
 public class SuccessScreenActivity extends Activity {
@@ -31,12 +34,13 @@ public class SuccessScreenActivity extends Activity {
             }
         });
 
-        if(level != null && level.getNextLevel() != null) {
+        Class nextLevel = GameImpl.getNextLevel();
+        if(level != null && nextLevel != null) {
             final Button nextLevelButton = (Button) findViewById(R.id.next_level);
             nextLevelButton.setVisibility(View.VISIBLE);
             final Intent nextGame = new Intent(this,GameActivity.class);
             try {
-                nextGame.putExtra("level",(Level)level.getNextLevel().newInstance());
+                nextGame.putExtra("level",(Level)nextLevel.newInstance());
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
