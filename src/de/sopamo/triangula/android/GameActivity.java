@@ -158,7 +158,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     protected void onDestroy() {
     	super.onDestroy();
-    	
+    	GameImpl.getInstance().getPhysicsTask().cancel(true);
     	mGameGlSurfaceView.destroy();
         //Music handling on destroy
         musicPlayer.destroyPlayer();

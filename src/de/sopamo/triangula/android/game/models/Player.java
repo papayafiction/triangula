@@ -10,7 +10,9 @@ import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.State;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.geometry.*;
+import de.sopamo.triangula.android.geometry.GLCircle;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeCircle;
 import org.jbox2d.common.Vec2;
 
 import java.util.EmptyStackException;

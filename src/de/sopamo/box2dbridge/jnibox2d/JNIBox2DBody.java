@@ -20,15 +20,12 @@
  */
 package de.sopamo.box2dbridge.jnibox2d;
 
-import android.util.Log;
+import android.util.FloatMath;
+import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IRayCastOutput;
+import de.sopamo.box2dbridge.IShape;
 import org.jbox2d.collision.FilterData;
 import org.jbox2d.common.Vec2;
-
-import android.util.FloatMath;
-
-import de.sopamo.box2dbridge.IBody;
-import de.sopamo.box2dbridge.IShape;
 
 public class JNIBox2DBody implements IBody {
 
@@ -197,7 +194,6 @@ public class JNIBox2DBody implements IBody {
 
 	@Override
 	public void setPosition(Vec2 pos) {
-		position = pos;
         nSetPosition(bodyID, pos.x, pos.y);
 	}
 
