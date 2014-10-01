@@ -84,6 +84,7 @@ public class PhysicsTask extends Thread {
     }
 
     public void softCancel() {
+        if(isCancelled()) return;
         cancel();
         while(isUpdating());
     }
