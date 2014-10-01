@@ -84,12 +84,11 @@ public class BaseLevel {
 
     public static int getTriangleColor() {
         if(colors == null) return -1;
-        int base;
-        if(Math.random() > .5f) {
-            base = Util.hex2Color(colors.get(0));
-        } else {
-            base = Util.hex2Color(colors.get(4));
+        int randomColor = new Random().nextInt(4);
+        if(randomColor == 2) {
+            randomColor = 1;
         }
+        int base = Util.hex2Color(colors.get(randomColor));
         float hsv[] = new float[3];
         Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
         hsv[1] += Math.random()*0.1-0.05;
