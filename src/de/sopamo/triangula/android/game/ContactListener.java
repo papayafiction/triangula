@@ -20,6 +20,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
 
     private boolean forceSet;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer explosionMediaPlayer1;
 
     @Override
     public void add(ContactPoint point) {
@@ -42,23 +43,25 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 // Get a realistic direction force for the emitted particles
                 Vec2 direction = player.getBody().getLinearVelocity().negate().mul(0.01f);
                 // Emit particles if the force was large enough
-                if(direction.length() > 0.04) {
+                if(direction.length() > 0.03) {
                     UserData collisionUserData = ((UserData)(body2.getUserData()));
                     if(collisionUserData == null) {
                         collisionUserData = new UserData();
                     }
                     ParticleSpawner.spawn(10, position.x, position.y, direction,collisionUserData.color);
+
+                    //sound when bouncing
+                    if (mediaPlayer!=null){
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.bounce);;
+                    mediaPlayer.start();
                 }
                 Vec2 force = player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
 
-                //sound when bouncing
-                if (mediaPlayer!=null){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                }
-                mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.bounce);;
-                mediaPlayer.start();
+
 
                 if(forceSet) {
                     forceSet = false;
@@ -71,13 +74,16 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("switch")) {
                 Switch sw = (Switch) ((UserData) body.getUserData()).obj;
                 sw.trigger();
-                //sound when switching
-                if (mediaPlayer!=null){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
+                if (!sw.isAlreadyActivated()) {
+                    //sound when switching if not already switched
+                    if (mediaPlayer != null) {
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    mediaPlayer = MediaPlayer.create(GameActivity.getInstance(), R.raw.switches);
+                    mediaPlayer.start();
+                    sw.setAlreadyActivated(true);
                 }
-                mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.switches);
-                mediaPlayer.start();
             }
             if(((UserData)(body.getUserData())).type.equals("bomb")) {
                 forceSet = true;
@@ -86,8 +92,8 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                     mediaPlayer.release();
                     mediaPlayer = null;
                 }
-                mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.bomb);
-                mediaPlayer.start();
+                explosionMediaPlayer1 = MediaPlayer.create(GameActivity.getInstance(),R.raw.bomb);
+                explosionMediaPlayer1.start();
 
                 ((Bomb)((UserData) body.getUserData()).obj).explode();
                 Vec2 force =
