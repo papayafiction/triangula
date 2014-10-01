@@ -275,7 +275,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
             mAutoStartSignInFlow = false;
             mSignInClicked = false;
             mResolvingConnectionFailure = true;
-            if (BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
+            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
                     9001, "Fehler beim einloggen")) {
                 return;
             }
