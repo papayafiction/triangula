@@ -239,6 +239,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         musicPlayer.pausePlayerForward();
 
         GameImpl.getInstance().getPhysicsTask().softCancel();
+        GameImpl.getInstance().getWorld().setContactListener(null);
     }
 
     public static GameActivity getInstance() {
