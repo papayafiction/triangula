@@ -85,4 +85,6 @@ public interface IBody {
 
 	public void setPosition(Vec2 pos);
 
+    public IRayCastOutput rayCast(Vec2 start, Vec2 end, float fraction);
+
 }

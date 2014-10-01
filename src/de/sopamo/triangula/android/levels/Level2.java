@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.levels;
 
+import com.google.android.gms.games.Games;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
@@ -44,5 +45,6 @@ public class Level2 extends BaseLevel implements Level,Serializable {
     @Override
     public void end() {
         image = null;
+        achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_2));
     }
 }

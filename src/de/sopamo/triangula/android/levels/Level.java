@@ -16,6 +16,7 @@ public interface Level extends Serializable {
     public void make();
     public void end();
     public String getLevelString();
+    public List<String> getAchievements();
     public void postDraw();
     public void postSurfaceCreated();
 }

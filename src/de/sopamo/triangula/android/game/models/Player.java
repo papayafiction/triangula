@@ -1,13 +1,18 @@
 package de.sopamo.triangula.android.game.models;
 
+import com.google.android.gms.games.Games;
 import de.sopamo.box2dbridge.IBody;
+import de.sopamo.triangula.android.GameActivity;
+import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.State;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.geometry.*;
+import de.sopamo.triangula.android.geometry.GLCircle;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeCircle;
 import org.jbox2d.common.Vec2;
 
 import java.util.EmptyStackException;
@@ -57,6 +62,8 @@ public class Player implements Rewindable,Entity {
 
     @Override
     public void startRewind() {
+        Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+
         if(isSucking()) return;
         rewind = true;
         game.getWorld().setGravity(new Vec2(0,0));

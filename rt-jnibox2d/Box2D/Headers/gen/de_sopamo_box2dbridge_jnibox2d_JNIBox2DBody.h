@@ -89,7 +89,13 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateC
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateLine
 (JNIEnv *, jobject, jint, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat);
 
-        
+JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCast
+  (JNIEnv* , jobject, jfloat , jfloat, jfloat, jfloat, jfloat );
+
+   JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCastY
+       (JNIEnv* , jobject);
+       JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCastY
+           (JNIEnv* , jobject);
 #ifdef __cplusplus
 }
 #endif
