@@ -20,10 +20,10 @@ public class PhysicsTask extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... params) {
         while(true) {
+            while(mWait && !isCancelled());
             if(isCancelled()) {
                 break;
             }
-            while(mWait && !isCancelled());
             mWait = true;
             if (mGame.getWorld() == null) {
                 Log.e("pg", "World not initialized");
@@ -58,6 +58,10 @@ public class PhysicsTask extends AsyncTask<Void,Void,Void> {
             for (int i = 0; i < mGame.getEntities().size(); i++) {
                 Entity entity = mGame.getEntities().get(i);
                 entity.update();
+            }
+
+            if(isCancelled()) {
+                break;
             }
             mUpdating = false;
         }

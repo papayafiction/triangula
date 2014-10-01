@@ -1,15 +1,15 @@
 package de.sopamo.triangula.android.game;
 
 import android.media.MediaPlayer;
-
-import android.graphics.Color;
-import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.game.models.*;
+import de.sopamo.triangula.android.game.models.Bomb;
+import de.sopamo.triangula.android.game.models.Exit;
+import de.sopamo.triangula.android.game.models.Player;
+import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -110,7 +110,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.exit);
                 mediaPlayer.start();
 
-                exit.endGame();
                 exit.removeSucker();
                 player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.4f)));
             }

@@ -22,24 +22,6 @@
 package de.sopamo.triangula.android.game;
 
 import android.os.AsyncTask;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.sopamo.triangula.android.PGRenderer;
-import de.sopamo.triangula.android.game.mechanics.Entity;
-import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.game.models.Player;
-import de.sopamo.triangula.android.game.mechanics.Rewindable;
-import de.sopamo.triangula.android.game.raycasting.Line;
-import de.sopamo.triangula.android.game.raycasting.Ray;
-import de.sopamo.triangula.android.game.raycasting.Raycaster;
-import de.sopamo.triangula.android.geometry.*;
-import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.particles.Particle;
-import org.jbox2d.collision.AABB;
-import org.jbox2d.common.Vec2;
-import android.util.Log;
 import de.sopamo.box2dbridge.Box2DFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
@@ -50,7 +32,10 @@ import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.models.Player;
+import de.sopamo.triangula.android.game.raycasting.Line;
+import de.sopamo.triangula.android.game.raycasting.Ray;
 import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.Shadow;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.particles.Particle;
 import org.jbox2d.collision.AABB;
@@ -169,15 +154,21 @@ public class GameImpl implements GameInterface {
         }
 
         // Draw game shape shadows
-		for(int i=0;i<gsl.size();i++) {
+        for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
-			gs.draw();
-		}
-
-        // Draw particles
-        for(int i = 0;i < pl.size();++i) {
-            Particle particle = pl.get(i);
-            particle.draw();
+            if(!(gs instanceof Shadow)) continue;
+            gs.draw();
+        }
+// Draw game shapes
+        for(int i=0;i<gsl.size();i++) {
+            GameShape gs = gsl.get(i);
+            if(gs instanceof Shadow) continue;
+            gs.draw();
+        }
+// Draw rays
+        for(int i = 0;i < rays.size();++i) {
+//Ray ray = rays.get(i);
+//ray.draw();
         }
 	}
 
