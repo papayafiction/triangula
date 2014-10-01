@@ -1,13 +1,12 @@
 package de.sopamo.triangula.android.game;
 
-import android.os.AsyncTask;
 import android.util.Log;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 
 import java.util.List;
 
-public class PhysicsTask extends AsyncTask<Void,Void,Void> {
+public class PhysicsTask extends Thread {
     private GameImpl mGame;
     private InputHandler mHandler;
 
@@ -15,6 +14,7 @@ public class PhysicsTask extends AsyncTask<Void,Void,Void> {
     private List<Rewindable> mRewindableList;
 
     private static boolean mUpdating = false;
+    private boolean mCanceled = false;
     private boolean mWait = true;
 
 
@@ -26,7 +26,7 @@ public class PhysicsTask extends AsyncTask<Void,Void,Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    public void run() {
         while(true) {
             while(mWait && !isCancelled());
             if(isCancelled()) {
@@ -72,11 +72,19 @@ public class PhysicsTask extends AsyncTask<Void,Void,Void> {
                 break;
             }
         }
-        return null;
+        Thread.currentThread().interrupt();
+    }
+
+    private void cancel() {
+        this.mCanceled = true;
+    }
+
+    public boolean isCancelled() {
+        return mCanceled;
     }
 
     public void softCancel() {
-        cancel(false);
+        cancel();
         while(isUpdating());
     }
 

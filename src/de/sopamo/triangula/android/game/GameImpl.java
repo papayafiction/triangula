@@ -21,7 +21,6 @@
 
 package de.sopamo.triangula.android.game;
 
-import android.os.AsyncTask;
 import de.sopamo.box2dbridge.Box2DFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
@@ -131,8 +130,7 @@ public class GameImpl implements GameInterface {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
-        physicsTask.cancel(false);
-        while(physicsTask.getStatus() != AsyncTask.Status.FINISHED);
+        physicsTask.softCancel();
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -276,6 +274,6 @@ public class GameImpl implements GameInterface {
     public void startPhysicTask() {
         physicsTask = new PhysicsTask();
         physicsTask.setWaiting(true);
-        physicsTask.execute();
+        physicsTask.start();
     }
 }

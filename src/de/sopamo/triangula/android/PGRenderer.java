@@ -152,12 +152,11 @@ public class PGRenderer implements Renderer {
         game.getPhysicsTask().setWaiting(false);
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
+        game.getLevel().postDraw();
 
         /** Sync World after draw and wait for physics **/
         while(PhysicsTask.isUpdating());
         game.getWorld().sync();
-
-        game.getLevel().postDraw();
 	}
 
 
