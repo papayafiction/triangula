@@ -14,38 +14,71 @@
                 android:id="@+id/imageView" android:layout_gravity="center_horizontal"
                 android:src="@drawable/menu_background"
                 android:scaleType="centerCrop"/>
+
         <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_gravity="center">
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp">
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Play"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/playbutton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
+                     android:textStyle="bold"
+                    android:paddingLeft="50dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="50dp"
+                    android:paddingBottom="20dp"/>
+
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                >
+
                 <Button
-                        android:layout_width="200px"
-                        android:layout_height="200px"
-                        android:text="Play"
-                        android:id="@+id/playbutton" android:layout_gravity="center"
-                        android:background="#ffffff" android:textColor="#ffae00" android:textSize="20dp"
-                        android:alpha="0.40" android:textStyle="bold"/>
-                <Button android:layout_width="200px" android:layout_height="200px" android:text="WiFi"
-                        android:id="@+id/wifibutton" android:layout_gravity="center" android:background="#ffffff"
-                        android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
-                        android:textStyle="bold" android:layout_marginTop="50px"/>
-            </LinearLayout>
-            <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                          android:layout_height="fill_parent" android:id="@+id/linearLayout"
-                          android:layout_marginLeft="50px">
-                <Button android:layout_width="200px" android:layout_height="200px" android:text="Level"
-                        android:id="@+id/levelbutton" android:layout_gravity="center" android:background="#ffffff"
-                        android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
-                        android:textStyle="bold"/>
-                <Button android:layout_width="200px" android:layout_height="200px" android:text="About"
-                        android:id="@+id/aboutButton" android:layout_gravity="center" android:background="#ffffff"
-                        android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
-                        android:textStyle="bold" android:layout_marginTop="50px"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/levelbutton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginRight="20dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/aboutButton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginRight="20dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wifi"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/wifibutton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="10dp"/>
+
             </LinearLayout>
         </LinearLayout>
+
     </FrameLayout>
 </LinearLayout>
