@@ -46,7 +46,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-
 import de.sopamo.triangula.android.game.ContactListener;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
@@ -159,8 +158,8 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     
     @Override
     protected void onDestroy() {
-    	super.onDestroy();
-    	GameImpl.getInstance().getPhysicsTask().cancel(true);
+        GameImpl.getInstance().getPhysicsTask().softCancel();
+        super.onDestroy();
     	mGameGlSurfaceView.destroy();
         //Music handling on destroy
         musicPlayer.destroyPlayer();
@@ -227,6 +226,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         });
         //instantiate new contactlistener on resume
         GameImpl.getInstance().getWorld().setContactListener(new ContactListener());
+        GameImpl.getInstance().startPhysicTask();
     }
 
     @Override
@@ -238,8 +238,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         pauseStartTime = musicPlayer.getCurrentPosForward();
         musicPlayer.pausePlayerForward();
 
-        //destroy contactlistener when pausing
-        GameImpl.getInstance().getWorld().setContactListener(null);
+        GameImpl.getInstance().getPhysicsTask().softCancel();
     }
 
     public static GameActivity getInstance() {

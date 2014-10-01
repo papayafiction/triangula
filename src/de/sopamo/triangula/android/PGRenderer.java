@@ -134,7 +134,6 @@ public class PGRenderer implements Renderer {
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-
         game.getLevel().drawBackground(gl);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -149,14 +148,14 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
-
+        // Free PhysicsTask
         game.getPhysicsTask().setWaiting(false);
-
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
-        if(!PhysicsTask.isUpdating()) {
-            game.getWorld().sync();
-        }
+
+        /** Sync World after draw and wait for physics **/
+        while(PhysicsTask.isUpdating());
+        game.getWorld().sync();
 
         game.getLevel().postDraw();
 	}

@@ -114,8 +114,6 @@ public class GameImpl implements GameInterface {
         Vec2 gravity = new Vec2(0, -9.8f);
         world.create(aabb, gravity, true);
         world.setContactListener(new ContactListener());
-        physicsTask = new PhysicsTask();
-        physicsTask.execute();
         // Create player
         Player player = new Player(new Vec2(1, -5), handler);
         GameImpl.player = player;
@@ -185,6 +183,7 @@ public class GameImpl implements GameInterface {
                 reinit = false;
                 destroy();
                 init(handler, level);
+                startPhysicTask();
             }
         }
         /** ## DEBUG ## **/
@@ -272,5 +271,11 @@ public class GameImpl implements GameInterface {
 
     public PhysicsTask getPhysicsTask() {
         return physicsTask;
+    }
+
+    public void startPhysicTask() {
+        physicsTask = new PhysicsTask();
+        physicsTask.setWaiting(true);
+        physicsTask.execute();
     }
 }
