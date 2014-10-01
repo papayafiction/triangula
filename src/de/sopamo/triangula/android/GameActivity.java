@@ -40,6 +40,8 @@ import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import de.sopamo.triangula.android.game.ContactListener;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
@@ -207,6 +209,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 
             }
         });
+        //instantiate new contactlistener on resume
+        GameImpl.getInstance().getWorld().setContactListener(new ContactListener());
     }
 
     @Override
@@ -217,6 +221,9 @@ public class GameActivity extends Activity implements SensorEventListener {
         //Music pausing, saving current pos
         pauseStartTime = musicPlayer.getCurrentPosForward();
         musicPlayer.pausePlayerForward();
+
+        //destroy contactlistener when pausing
+        GameImpl.getInstance().getWorld().setContactListener(null);
     }
 
     public static GameActivity getInstance() {
