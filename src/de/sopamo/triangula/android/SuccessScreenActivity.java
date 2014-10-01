@@ -1,9 +1,9 @@
 package de.sopamo.triangula.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import com.google.android.gms.common.ConnectionResult;
@@ -13,15 +13,14 @@ import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.Level1;
-import de.sopamo.triangula.android.levels.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuccessScreenActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
+public class SuccessScreenActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
 
     private SuccessScreenActivity that;
+    private Handler mHandler;
     private GoogleApiClient mGoogleApiClient;
     private boolean mAutoStartSignInFlow = true;
     private boolean mResolvingConnectionFailure = false;
@@ -30,6 +29,7 @@ public class SuccessScreenActivity extends Activity implements GoogleApiClient.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.success_screen);
         that = this;
         Bundle bundle = getIntent().getExtras();
 
@@ -37,6 +37,7 @@ public class SuccessScreenActivity extends Activity implements GoogleApiClient.O
                 .addConnectionCallbacks(this).addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).
                         addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
         Level level = null;
+        mHandler = new Handler();
         if(bundle != null) {
             level = (Level) bundle.get("level");
             List<String> achievements = (List<String>) bundle.getSerializable("achievements");
@@ -44,7 +45,6 @@ public class SuccessScreenActivity extends Activity implements GoogleApiClient.O
                 this.achievements = achievements;
             }
         }
-        setContentView(R.layout.success_screen);
         final Button menuButton = (Button) findViewById(R.id.menu_button);
 
         final Intent menu = new Intent(this,MainMenu.class);
@@ -80,14 +80,29 @@ public class SuccessScreenActivity extends Activity implements GoogleApiClient.O
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if(MainMenu.isSignedIn()) mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mGoogleApiClient.isConnected()) unlock();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                unlock();
+            }
+        },200);
+    }
+
+    private void unlock() {
         if(achievements != null) {
             for(int i=0;i<achievements.size(); i++) {
-                Games.Achievements.unlock(mGoogleApiClient,achievements.get(i));
+                Games.Achievements.unlockImmediate(mGoogleApiClient,achievements.get(i));
             }
         }
     }

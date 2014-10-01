@@ -25,7 +25,6 @@
 package de.sopamo.triangula.android;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
@@ -257,7 +256,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if(MainMenu.isSignedIn()) mGoogleApiClient.connect();
     }
 
     @Override
@@ -271,10 +270,11 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
             mAutoStartSignInFlow = false;
             mSignInClicked = false;
             mResolvingConnectionFailure = true;
-            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
+            if (BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
                     9001, "Fehler beim einloggen")) {
-                mResolvingConnectionFailure = false;
+                return;
             }
+            mResolvingConnectionFailure = false;
         }
 
     }

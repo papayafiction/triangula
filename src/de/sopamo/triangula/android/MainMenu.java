@@ -1,34 +1,28 @@
 package de.sopamo.triangula.android;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.example.games.basegameutils.GameHelper;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 public class MainMenu extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
     private static GoogleApiClient mGoogleApiClient;
-    private boolean mAutoStartSignInFlow = true;
+    private boolean mAutoStartSignInFlow = false;
     private boolean mResolvingConnectionFailure = false;
     private boolean mSignInClicked = false;
+    private static boolean mSignedIn = false;
 
     @Override
     protected void onStart() {
@@ -39,8 +33,6 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
     @Override
     protected void onStop() {
         super.onStop();
-        if(mGoogleApiClient.isConnected())
-            mGoogleApiClient.disconnect();
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +59,7 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetAchievement(getString(R.string.achievement_level_1));
+                mGoogleApiClient.disconnect();
             }
         });
 
@@ -141,9 +133,10 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
     }
 
 
+
     @Override
     public void onConnected(Bundle bundle) {
-
+        mSignedIn = true;
     }
 
     @Override
@@ -154,10 +147,8 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if (mResolvingConnectionFailure) {
-            Log.e("yolo", "onConnectionFailed(): already resolving");
             return;
         }
-        Log.e("yolo",""+connectionResult.toString());
         if ( mAutoStartSignInFlow || mSignInClicked) {
             mAutoStartSignInFlow = false;
             mSignInClicked = false;
@@ -170,94 +161,8 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
 
     }
 
-    public void resetAchievement(String id)
-    {
-        if( mGoogleApiClient.isConnected() )
-        {
-            String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-            String scopes = "oauth2:https://www.googleapis.com/auth/games";
-
-            new ResetterTask(this, accountName, scopes,id).execute((Void) null);
-        }
-    }
-
-    private class ResetterTask extends AsyncTask<Void, Void, Void>
-    {
-        public String mAccountName;
-        public String mScope;
-        public String id;
-        public Context mContext;
-
-        public ResetterTask(Context con, String name, String sc,String id)
-        {
-            this.id = id;
-            mContext = con;
-            mAccountName = name;
-            mScope = sc;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-            try
-            {
-                String accesstoken = GoogleAuthUtil.getToken(mContext, mAccountName, mScope);
-
-                HttpClient client = new DefaultHttpClient();
-                //Reset leader board:
-            /*String leaderboardid = "theleaderboardid";
-            HttpPost post = new HttpPost
-                    (
-                        "https://www.googleapis.com"+
-                        "/games/v1management"+
-                        "/leaderboards/"+
-                        leaderboardid+
-                        "/scores/reset?access_token="+accesstoken
-                    );*/
-
-                //Reset a single achievement like this:
-            /*
-            String acheivementid = "acheivementid";
-            HttpPost post = new HttpPost
-                    (
-                        "https://www.googleapis.com"+
-                        "/games/v1management"+
-                        "/achievements/"+
-                        acheivementid+
-                        "/reset?access_token="+accesstoken
-                    );*/
-
-                //This resets all achievements:
-                HttpPost post = new HttpPost
-                        (
-                                "https://www.googleapis.com"+
-                                        "/games/v1management"+
-                                        "/achievements"+
-                                        "/"+id+
-                                        "/reset?access_token="+accesstoken
-                        );
-
-
-                client.execute(post);
-                Log.w("yolo", "Reset achievements done.");
-            }
-            catch(Exception e)
-            {
-                Log.e("yolo", "Failed to reset: " + e.getMessage(), e);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result)
-        {
-            //Launch activity to refresh data on client.
-            //NOTE: Incremental achievements will look like they are not reset.
-            //However, next time you and some steps it will start from 0 and
-            //gui will look ok.
-            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 0);
-        }
+    public static boolean isSignedIn() {
+        return mSignedIn;
     }
 
 

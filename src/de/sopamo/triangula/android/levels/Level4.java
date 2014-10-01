@@ -1,6 +1,5 @@
 package de.sopamo.triangula.android.levels;
 
-import com.google.android.gms.games.Games;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
@@ -20,11 +19,7 @@ public class Level4 extends BaseLevel implements Level,Serializable {
     }
 
     public Level4() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.Movethetime"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+            GameImpl.setNextLevel(null);
     }
 
     @Override
