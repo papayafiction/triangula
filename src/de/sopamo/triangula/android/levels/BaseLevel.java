@@ -9,6 +9,7 @@ import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
+import de.sopamo.triangula.android.game.models.Triangle;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
@@ -167,18 +168,7 @@ public class BaseLevel {
             float angle = Float.parseFloat(triangle.getString("angle"));
             angle = (float)Math.toRadians(angle);
             y*=-1;
-            GameShape gs;
-            gs = new GameShapeTriangle(new GLTriangle(size,angle));
-            int color = getTriangleColor();
-            float[] colors = Util.getColorParts(color);
-            gs.setColor(colors[0], colors[1], colors[2], 1);
-            IBody body = gs.attachToNewBody(world, null, 0);
-            UserData data = new UserData();
-            data.type = "triangle";
-            data.color = Color.rgb((int)(colors[0]*255),(int)(colors[1]*255),(int)(colors[2]*255));
-            body.setUserData(data);
-            body.setPosition(new Vec2(x,y));
-            gsl.add(gs);
+            new Triangle(new Vec2(x,y),size,angle);
         }
     }
 

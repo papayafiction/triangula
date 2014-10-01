@@ -148,11 +148,18 @@ public class GameImpl implements GameInterface {
             particle.draw();
         }
 
-        // Draw game shapes
+        // Draw game shape shadows
 		for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
+            if(!(gs instanceof Shadow)) continue;
 			gs.draw();
 		}
+        // Draw game shapes
+        for(int i=0;i<gsl.size();i++) {
+            GameShape gs = gsl.get(i);
+            if(gs instanceof Shadow) continue;
+            gs.draw();
+        }
 
         // Draw rays
         for(int i = 0;i < rays.size();++i) {
