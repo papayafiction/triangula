@@ -1,6 +1,5 @@
 package de.sopamo.triangula.android.game;
 
-import android.util.Log;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 
@@ -27,19 +26,21 @@ public class PhysicsTask extends Thread {
 
     @Override
     public void run() {
+        Thread currentThread = Thread.currentThread();
+        synchronized (currentThread) {
+            try {
+                currentThread.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        mWait = false;
         while(true) {
-            while(mWait && !isCancelled());
             if(isCancelled()) {
                 break;
             }
-            mWait = true;
-            if (mGame.getWorld() == null) {
-                Log.e("pg", "World not initialized");
-                continue;
-            }
             mHandler.update();
 
-            mUpdating = true;
             /** Save Rewindable Actions **/
             for (int i = 0; i < mRewindableList.size(); i++) {
                 Rewindable rewindable = mRewindableList.get(i);
@@ -61,22 +62,41 @@ public class PhysicsTask extends Thread {
 
             mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
 
+            synchronized (currentThread) {
+                try {
+                    mWait = true;
+                    currentThread.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            mWait = false;
+
             /** Update Entities **/
             for (int i = 0; i < mEntityList.size(); i++) {
                 Entity entity = mEntityList.get(i);
                 entity.update();
             }
 
-            mUpdating = false;
             if(isCancelled()) {
                 break;
             }
+            synchronized (currentThread) {
+                try {
+                    mWait = true;
+                    currentThread.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            mWait = false;
         }
-        Thread.currentThread().interrupt();
+        currentThread.interrupt();
     }
 
-    private void cancel() {
+    private synchronized void cancel() {
         this.mCanceled = true;
+        this.notify();
     }
 
     public boolean isCancelled() {

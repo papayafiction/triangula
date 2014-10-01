@@ -46,7 +46,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import de.sopamo.triangula.android.game.ContactListener;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.Level1;
@@ -135,6 +134,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
         musicPlayer = new MusicPlayer(fileF, fileB, forwardMediaPlayer, backwardMediaPlayer, 156);
         musicPlayer.playMusic();
+        mGameGlSurfaceView.init();
     }
     
     
@@ -144,7 +144,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     	
     	instance.runOnUiThread(new StatusUpdate(text));
     }
-    
+
     private static class StatusUpdate implements Runnable {
     	private String text;
     	public StatusUpdate(String text) {
@@ -159,6 +159,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     protected void onDestroy() {
         GameImpl.getInstance().getPhysicsTask().softCancel();
+        GameImpl.getInstance().getWorld().setContactListener(null);
         super.onDestroy();
     	mGameGlSurfaceView.destroy();
         //Music handling on destroy
@@ -225,8 +226,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
             }
         });
         //instantiate new contactlistener on resume
-        GameImpl.getInstance().getWorld().setContactListener(new ContactListener());
-        GameImpl.getInstance().startPhysicTask();
+        GameImpl.getInstance().resume();
     }
 
     @Override
@@ -238,8 +238,6 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         pauseStartTime = musicPlayer.getCurrentPosForward();
         musicPlayer.pausePlayerForward();
 
-        GameImpl.getInstance().getPhysicsTask().softCancel();
-        GameImpl.getInstance().getWorld().setContactListener(null);
     }
 
     public static GameActivity getInstance() {
