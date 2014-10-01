@@ -23,23 +23,23 @@
 
 package de.sopamo.triangula.android;
 
+import android.content.Context;
+import android.opengl.GLSurfaceView.Renderer;
+import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.game.InputHandler;
+import de.sopamo.triangula.android.game.PhysicsTask;
+import de.sopamo.triangula.android.game.models.Image;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
-import de.sopamo.triangula.android.game.GameImpl;
-import de.sopamo.triangula.android.game.GameInterface;
-
-import android.opengl.GLSurfaceView.Renderer;
-import de.sopamo.triangula.android.game.InputHandler;
-import de.sopamo.triangula.android.game.models.Image;
-
 import static android.opengl.GLES10.*;
-import static android.opengl.GLES10.GL_BLEND;
 
 public class PGRenderer implements Renderer {
 
-	GameInterface game;
+	GameImpl game;
+
+    private long time ;
 	
 	private static int mWidth = 0;
 	private static int mHeight = 0;
@@ -147,10 +147,17 @@ public class PGRenderer implements Renderer {
             viewportX = 0;
         }
         gl.glTranslatef(viewportX,0,-5f);
+
 		game.gameLoop();
+
+        game.getPhysicsTask().setWaiting(false);
 
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
+        if(!PhysicsTask.isUpdating()) {
+            game.getWorld().sync();
+        }
+
         game.getLevel().postDraw();
 	}
 

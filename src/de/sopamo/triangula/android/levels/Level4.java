@@ -19,11 +19,7 @@ public class Level4 extends BaseLevel implements Level,Serializable {
     }
 
     public Level4() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.Movethetime"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+            GameImpl.setNextLevel(null);
     }
 
     @Override
@@ -42,5 +38,6 @@ public class Level4 extends BaseLevel implements Level,Serializable {
     @Override
     public void end() {
         image = null;
+        achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_4));
     }
 }

@@ -21,6 +21,7 @@
 
 package de.sopamo.triangula.android.game;
 
+import android.os.AsyncTask;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +46,32 @@ import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.box2dbridge.jbox2d.JBox2DWorld;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
 import de.sopamo.triangula.android.GameActivity;
+import de.sopamo.triangula.android.PGRenderer;
+import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.Rewindable;
+import de.sopamo.triangula.android.game.models.Player;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.levels.Level;
+import de.sopamo.triangula.android.particles.Particle;
+import org.jbox2d.collision.AABB;
+import org.jbox2d.common.Vec2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameImpl implements GameInterface {
 
-    public static  final int   TIME_TO_RESTART = 500;
-	private static final float TIME_STEP = 1f / 60f;
-	private static final int   ITERATIONS = 5;
+    public static final int TIME_TO_RESTART = 500;
+    public static final float TIME_STEP = 1f / 60f;
+    public static final int ITERATIONS = 5;
+
 
     private Level level;
     private InputHandler handler;
 
     private static GameImpl instance;
+
+    private PhysicsTask physicsTask;
 
     private boolean reinit;
 
@@ -65,7 +81,7 @@ public class GameImpl implements GameInterface {
     private static Class nextLevel;
 
 
-	IWorld world = Box2DFactory.newWorld();
+    IWorld world = Box2DFactory.newWorld();
 
     List<Rewindable> rewindables = new ArrayList<Rewindable>();
     List<Entity> entities = new ArrayList<Entity>();
@@ -97,39 +113,43 @@ public class GameImpl implements GameInterface {
         this.level = level;
         this.handler = handler;
         respawnTime = 0;
-		// density of dynamic bodies
-		float density = 1;
-		
+        // density of dynamic bodies
+        float density = 1;
+
 		/* create world's bounding box. */
-		AABB aabb = new AABB(
-						new Vec2(-50, -50), 
-						new Vec2( 50,  50)
-					);
-        if(world == null) {
+        AABB aabb = new AABB(
+                new Vec2(-50, -50),
+                new Vec2(50, 50)
+        );
+        if (world == null) {
             world = Box2DFactory.newWorld();
         }
 
         // World setup
         Vec2 gravity = new Vec2(0, -9.8f);
-        world.create(aabb,gravity,true);
+        world.create(aabb, gravity, true);
         world.setContactListener(new ContactListener());
+        physicsTask = new PhysicsTask();
+        physicsTask.execute();
         // Create player
-        Player player = new Player(new Vec2(1,-5),handler);
+        Player player = new Player(new Vec2(1, -5), handler);
         GameImpl.player = player;
         playerBody = player.getBody();
 
         // Initalize and make level
         makeLevel();
-	}
+    }
 
     private void makeLevel() {
         level.make();
     }
 
-	public void destroy() {
+    public void destroy() {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
+        physicsTask.cancel(false);
+        while(physicsTask.getStatus() != AsyncTask.Status.FINISHED);
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -151,20 +171,13 @@ public class GameImpl implements GameInterface {
         // Draw game shape shadows
 		for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
-            if(!(gs instanceof Shadow)) continue;
 			gs.draw();
 		}
-        // Draw game shapes
-        for(int i=0;i<gsl.size();i++) {
-            GameShape gs = gsl.get(i);
-            if(gs instanceof Shadow) continue;
-            gs.draw();
-        }
 
-        // Draw rays
-        for(int i = 0;i < rays.size();++i) {
-            //Ray ray = rays.get(i);
-            //ray.draw();
+        // Draw particles
+        for(int i = 0;i < pl.size();++i) {
+            Particle particle = pl.get(i);
+            particle.draw();
         }
 	}
 
@@ -172,72 +185,35 @@ public class GameImpl implements GameInterface {
         reinit = true;
     }
 
-	@Override
-	public void gameLoop() {
-		if(world == null) {
-			Log.e("pg", "World not initialized");
-			return;
-		}
-        if(reinit) {
-            respawnTime+=1000l/60;
-            if(respawnTime>=TIME_TO_RESTART) {
+    @Override
+    public void gameLoop() {
+        /** REINIT **/
+        if (reinit) {
+            respawnTime += 1000l / 60;
+            if (respawnTime >= TIME_TO_RESTART) {
                 reinit = false;
                 destroy();
-                init(handler,level);
+                init(handler, level);
             }
         }
-
-        handler.update();
-
         /** ## DEBUG ## **/
-		frames++;
-		long elap = System.currentTimeMillis() - nanoTime;
+        frames++;
+        long elap = System.currentTimeMillis() - nanoTime;
 
-		if(elap > 1000) {
-			// update info every second
-			fps = frames / ((float)elap / 1000f);
-			nanoTime = System.currentTimeMillis();
-			frames = 0;
+        if (elap > 1000) {
+            // update info every second
+            fps = frames / ((float) elap / 1000f);
+            nanoTime = System.currentTimeMillis();
+            frames = 0;
 
-			String engine = (world instanceof JBox2DWorld ? "JBox2D" : world instanceof JNIBox2DWorld ? "JNIBox2D": "unknown");
-			GameActivity.setStatus(engine + ", fps: " + fps+ " Width: " + PGRenderer.getWidth()+ " Height: "+PGRenderer.getHeight());
-		}
+            String engine = (world instanceof JBox2DWorld ? "JBox2D" : world instanceof JNIBox2DWorld ? "JNIBox2D" : "unknown");
+            GameActivity.setStatus(engine + ", fps: " + fps + " Width: " + PGRenderer.getWidth() + " Height: " + PGRenderer.getHeight());
+        }
         /** ## END DEBUG ## **/
-
-        /** Save Rewindable Actions **/
-        for(int i=0;i<rewindables.size();i++) {
-            Rewindable rewindable = rewindables.get(i);
-            rewindable.run();
-        }
-
-        /** DO SOME REWIND **/
-        if(handler.longTouched) {
-            for(int i=0;i<rewindables.size();i++) {
-                Rewindable rewindable = rewindables.get(i);
-                if(!rewindable.isRewinding()) rewindable.startRewind();
-            }
-        } else {
-            for(int i=0;i<rewindables.size();i++) {
-                Rewindable rewindable = rewindables.get(i);
-                if(rewindable.isRewinding()) rewindable.stopRewind();
-            }
-        }
-
-        world.step(TIME_STEP, ITERATIONS);
-        world.sync();
-
-        /** Update Entities **/
-        for(int i=0;i<entities.size();i++) {
-            Entity entity = entities.get(i);
-            entity.update();
-        }
-
-        // Cast rays
-        //Raycaster.cast();
-	}
+    }
 
     public void addParticle(Particle particle) {
-        if(this.pl.size() > 200) {
+        if (this.pl.size() > 200) {
             this.pl.remove(0);
         }
         this.pl.add(particle);
@@ -293,5 +269,17 @@ public class GameImpl implements GameInterface {
 
     public static void setNextLevel(Class nextLevel) {
         GameImpl.nextLevel = nextLevel;
+    }
+
+    public InputHandler getHandler() {
+        return handler;
+    }
+
+    public List<Particle> getPl() {
+        return pl;
+    }
+
+    public PhysicsTask getPhysicsTask() {
+        return physicsTask;
     }
 }

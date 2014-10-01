@@ -13,6 +13,8 @@ import de.sopamo.triangula.android.geometry.GameShapeCircle;
 import de.sopamo.triangula.android.geometry.GameShapeRectangle;
 import org.jbox2d.common.Vec2;
 
+import java.io.Serializable;
+
 public class Exit implements Entity {
 
     public final static int FRAMES_TO_END = 1;
@@ -69,8 +71,12 @@ public class Exit implements Entity {
             if(frames == FRAMES_TO_END) {
                 GameActivity activity = GameActivity.getInstance();
                 Intent successScreen = new Intent(activity, SuccessScreenActivity.class);
+                GameImpl.getInstance().getPhysicsTask().cancel(true);
                 GameImpl.getInstance().getLevel().end();
                 successScreen.putExtra("level",GameImpl.getInstance().getLevel());
+                if(GameImpl.getInstance().getLevel().getAchievements().size() != 0) {
+                    successScreen.putExtra("achievements",(Serializable) GameImpl.getInstance().getLevel().getAchievements());
+                }
                 activity.startActivity(successScreen);
                 activity.finish();
             }

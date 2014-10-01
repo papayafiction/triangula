@@ -9,6 +9,7 @@
 
 #include "Box2D.h"
 #include "JNIBox2DWorld.h"
+#include "JNIContactListener.h"
 
 #include <jni.h>
 #include <math.h>
@@ -290,4 +291,53 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngl
         
         bodyList[id]->SetTransform(bodyList[id]->GetWorldCenter(),angle);
 }
+
+jclass jniBodyClass2 = 0;
+jmethodID callbackSetData2 = 0;
+
+jfloat xRay = 0;
+jfloat yRay = 0;
+
+JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCast
+  (JNIEnv* env, jobject, jfloat x_start, jfloat x_end, jfloat y_start, jfloat y_end, jfloat fraction) {
+
+        b2Vec2 p1,p2;
+        p1.Set(x_start,y_start);
+        p2.Set(x_end,y_end);
+        
+        b2RayCastInput rayCastInput;
+        rayCastInput.p1 = p1;
+        rayCastInput.p2 = p2;
+        rayCastInput.maxFraction = fraction;
+        
+        float closestFraction = fraction;
+        b2Vec2 intersectionNormal(0,0);
+        for(int i = 0; i<= MAX_BODIES; i++) {
+            if(bodyList[i] == NULL) break;
+            b2Body* b = bodyList[i];
+            for(b2Fixture* f = b->GetFixtureList();f;f=f->GetNext()) {
+                
+                b2RayCastOutput output;
+                if(!f->RayCast(&output,rayCastInput,0))
+                    continue;
+                if(output.fraction < closestFraction) {
+                    closestFraction = output.fraction;
+                    intersectionNormal = output.normal;
+                }
+            }
+        }
+        xRay = intersectionNormal.x;
+        yRay = intersectionNormal.y;
+
+        return (jfloat) closestFraction;
+}
+
+JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCastX
+  (JNIEnv* env, jobject) {
+    return xRay;
+  }
+  JNIEXPORT jfloat JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nRayCastY
+    (JNIEnv* env, jobject) {
+    return yRay;
+    }
 

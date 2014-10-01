@@ -78,6 +78,18 @@
                     android:paddingBottom="10dp"/>
 
             </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
+                      android:layout_height="fill_parent" android:id="@+id/linearLayout2"
+                      android:layout_marginLeft="50px">
+            <Button android:layout_width="200px" android:layout_height="200px" android:text="Login"
+                    android:id="@+id/login" android:layout_gravity="center" android:background="#ffffff"
+                    android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
+                    android:textStyle="bold" android:layout_marginTop="50px"/>
+            <Button android:layout_width="200px" android:layout_height="200px" android:text="Logout"
+                    android:id="@+id/logout" android:layout_gravity="center" android:background="#ffffff"
+                    android:textColor="#ffae00" android:textSize="20dp" android:alpha="0.40"
+                    android:textStyle="bold" android:layout_marginTop="50px"/>
+            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>
