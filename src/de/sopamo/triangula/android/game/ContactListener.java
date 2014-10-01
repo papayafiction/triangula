@@ -21,7 +21,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     private boolean forceSet;
     private MediaPlayer mediaPlayer;
     private MediaPlayer explosionMediaPlayer1;
-    private boolean switched = false;
 
     @Override
     public void add(ContactPoint point) {
@@ -75,7 +74,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("switch")) {
                 Switch sw = (Switch) ((UserData) body.getUserData()).obj;
                 sw.trigger();
-                if (!switched) {
+                if (!sw.isAlreadyActivated()) {
                     //sound when switching if not already switched
                     if (mediaPlayer != null) {
                         mediaPlayer.release();
@@ -83,7 +82,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                     }
                     mediaPlayer = MediaPlayer.create(GameActivity.getInstance(), R.raw.switches);
                     mediaPlayer.start();
-                    switched = true;
+                    sw.setAlreadyActivated(true);
                 }
             }
             if(((UserData)(body.getUserData())).type.equals("bomb")) {

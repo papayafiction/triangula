@@ -11,6 +11,15 @@ import org.jbox2d.common.Vec2;
 public class Switch  {
     private Door door;
     private GameShape shape;
+    private boolean alreadyActivated = false;
+
+    public boolean isAlreadyActivated() {
+        return alreadyActivated;
+    }
+
+    public void setAlreadyActivated(boolean alreadyActivated) {
+        this.alreadyActivated = alreadyActivated;
+    }
 
     public Switch(Vec2 pst) {
         GameImpl game = GameImpl.getInstance();
