@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.opengl.GLES10.glColor4f;
+import static android.opengl.GLES10.glHint;
 
 abstract public class GameShape {
 
