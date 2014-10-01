@@ -126,22 +126,6 @@ public class PGRenderer implements Renderer {
 
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
         gl.glShadeModel(GL10.GL_SMOOTH);
-
-        /* The following part enables lighting. This doesn't look good without 3d objects and / or without materials.
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-
-        float[] light_position0 = { 0f, 0f, 0f, 1.0f };
-
-        float[] light_ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
-        float[] light_diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-        float[] light_specular = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-        glLightfv(GL_LIGHT0,GL_POSITION,light_position0,0);
-        glLightfv(GL_LIGHT0,GL_AMBIENT,light_ambient,0);
-        glLightfv(GL_LIGHT0,GL_DIFFUSE,light_diffuse,0);
-        glLightfv(GL_LIGHT0,GL_SPECULAR,light_specular,0);
-        */
 	}
 	
 	/**

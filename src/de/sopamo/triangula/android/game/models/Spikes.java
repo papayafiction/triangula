@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.game.models;
 
+import android.graphics.Color;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
@@ -44,6 +45,7 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
             triangleBody.setAngle(radian);
             UserData data = new UserData();
             data.type = "spike";
+            data.color = Color.rgb((int) (colors[0] * 255), (int) (colors[1] * 255), (int) (colors[2] * 255));
             triangleBody.setUserData(data);
             game.getGsl().add(triangle);
             times.add(i%2==0?0l:-TIME_FOR_DOWN);

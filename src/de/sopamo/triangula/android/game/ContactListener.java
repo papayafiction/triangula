@@ -2,6 +2,8 @@ package de.sopamo.triangula.android.game;
 
 import android.media.MediaPlayer;
 
+import android.graphics.Color;
+import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.triangula.android.GameActivity;
@@ -33,14 +35,21 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     }
     
     private boolean check(IBody body,IBody body2,Vec2 position) {
-
         if(body != null && body.getUserData() instanceof UserData) {
             Player player = GameImpl.getMainPlayer();
             if(((UserData)(body.getUserData())).type.equals("player")) {
-                ParticleSpawner.spawn(10, position.x,
-                        position.y);
-                Vec2 force =
-                player.getBody().getWorldCenter().sub(position);
+
+                // Get a realistic direction force for the emitted particles
+                Vec2 direction = player.getBody().getLinearVelocity().negate().mul(0.01f);
+                // Emit particles if the force was large enough
+                if(direction.length() > 0.04) {
+                    UserData collisionUserData = ((UserData)(body2.getUserData()));
+                    if(collisionUserData == null) {
+                        collisionUserData = new UserData();
+                    }
+                    ParticleSpawner.spawn(10, position.x, position.y, direction,collisionUserData.color);
+                }
+                Vec2 force = player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
 
                 //sound when bouncing
@@ -89,7 +98,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("exit")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
                 exit.endGame();
-
             }
             if(((UserData)(body.getUserData())).type.equals("sucker")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
@@ -105,7 +113,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 exit.endGame();
                 exit.removeSucker();
                 player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.4f)));
-
             }
         }
         return false;

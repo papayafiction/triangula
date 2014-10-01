@@ -21,13 +21,18 @@
 
 package de.sopamo.triangula.android.geometry;
 
+import de.sopamo.triangula.android.game.raycasting.Line;
 import org.jbox2d.common.Vec2;
 
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IShape;
 import de.sopamo.box2dbridge.IWorld;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.opengl.GLES10.glColor4f;
+import static android.opengl.GLES10.glHint;
 
 abstract public class GameShape {
 
@@ -98,5 +103,9 @@ abstract public class GameShape {
 
     public Vec2 getPosition() {
         return body.getWorldCenter();
+    }
+
+    public ArrayList<Line> getWalls() {
+        return new ArrayList<Line>();
     }
 }

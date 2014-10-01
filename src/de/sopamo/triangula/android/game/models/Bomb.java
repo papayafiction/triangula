@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.game.models;
 
+import android.graphics.Color;
 import android.os.Handler;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.GameActivity;
@@ -36,6 +37,7 @@ public class Bomb implements Entity {
         circle.setColor(1, 0, 0, 1);
         UserData data = new UserData();
         data.type = "bomb";
+        data.color = Color.rgb(255,0,0);
         data.obj = this;
         circleBody.setUserData(data);
         game.getGsl().add(circle);

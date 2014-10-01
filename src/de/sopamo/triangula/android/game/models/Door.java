@@ -1,8 +1,10 @@
 package de.sopamo.triangula.android.game.models;
 
+import android.graphics.Color;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
+import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
 import de.sopamo.triangula.android.levels.BaseLevel;
@@ -29,6 +31,11 @@ public class Door extends TriangleBaseModel implements Entity {
         colors = Util.getColorParts(BaseLevel.getTriangleColor());
         triangle.setColor(colors[0], colors[1], colors[2], 1);
         IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
+        UserData data = new UserData();
+        data.type = "door";
+        data.color = Color.rgb((int) (colors[0] * 255), (int) (colors[1] * 255), (int) (colors[2] * 255));
+        data.obj = this;
+        triangleBody.setUserData(data);
         triangleBody.setAngle(radian);
         triangleBody.setPosition(pst);
         this.triangle = triangleBody;

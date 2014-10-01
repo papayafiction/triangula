@@ -7,16 +7,18 @@ import java.util.Random;
 
 public class ParticleSpawner {
 
-    public static void spawn(int amount,float x,float y) {
-        float alpha = (float)Math.PI * 2 / amount;
+    public static void spawn(int amount,float x,float y, Vec2 direction, int color) {
         int i = -1;
+        // Spawn articles
         while(++i < amount)
         {
-            float theta = alpha * i;
-            Vec2 vec2 = new Vec2();
-            vec2.x = (float) Math.cos(theta) * 0.01f;
-            vec2.y = (float) Math.sin(theta) * 0.01f;
-            Particle particle = new Particle(x,y,vec2);
+            // Get a randomized direction force
+            Vec2 particleDirection = direction.mul((float)Math.random()*0.5f);
+            // Splatter the particles in various directions
+            particleDirection.addLocal(new Vec2(0.02f*(float)Math.random(),0.02f*(float)Math.random()));
+            // Create particle
+            Particle particle = new Particle(x,y,particleDirection,color);
+            // Add particle to the game
             GameImpl.getInstance().addParticle(particle);
         }
     }

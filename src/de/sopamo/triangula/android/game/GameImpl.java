@@ -21,6 +21,7 @@
 
 package de.sopamo.triangula.android.game;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,9 @@ import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.models.Image;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
+import de.sopamo.triangula.android.game.raycasting.Line;
+import de.sopamo.triangula.android.game.raycasting.Ray;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.particles.Particle;
@@ -67,6 +71,7 @@ public class GameImpl implements GameInterface {
     List<Entity> entities = new ArrayList<Entity>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
+	List<Ray> rays = new ArrayList<Ray>();
 
     // Debug stuff
     long nanoTime;
@@ -131,21 +136,35 @@ public class GameImpl implements GameInterface {
         entities = new ArrayList<Entity>();
         gsl = new ArrayList<GameShape>();
         pl = new ArrayList<Particle>();
+        rays = new ArrayList<Ray>();
 
     }
 
 	@Override
 	public void drawFrame() {
-        // Draw game shapes
-		for(int i=0;i<gsl.size();i++) {
-            GameShape gs = gsl.get(i);
-			gs.draw();
-		}
-
         // Draw particles
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
             particle.draw();
+        }
+
+        // Draw game shape shadows
+		for(int i=0;i<gsl.size();i++) {
+            GameShape gs = gsl.get(i);
+            if(!(gs instanceof Shadow)) continue;
+			gs.draw();
+		}
+        // Draw game shapes
+        for(int i=0;i<gsl.size();i++) {
+            GameShape gs = gsl.get(i);
+            if(gs instanceof Shadow) continue;
+            gs.draw();
+        }
+
+        // Draw rays
+        for(int i = 0;i < rays.size();++i) {
+            //Ray ray = rays.get(i);
+            //ray.draw();
         }
 	}
 
@@ -212,6 +231,9 @@ public class GameImpl implements GameInterface {
             Entity entity = entities.get(i);
             entity.update();
         }
+
+        // Cast rays
+        //Raycaster.cast();
 	}
 
     public void addParticle(Particle particle) {
@@ -219,6 +241,22 @@ public class GameImpl implements GameInterface {
             this.pl.remove(0);
         }
         this.pl.add(particle);
+    }
+
+    public ArrayList<Line> getWalls() {
+        ArrayList<Line> walls = new ArrayList<Line>();
+        for(int i=0;i<gsl.size();i++) {
+            GameShape gs = gsl.get(i);
+            walls.addAll(gs.getWalls());
+        }
+        return walls;
+    }
+
+    public void addRay(Ray ray) {
+        this.rays.add(ray);
+    }
+    public void removeRays() {
+        this.rays = new ArrayList<Ray>();
     }
 
     public List<Entity> getEntities() {
