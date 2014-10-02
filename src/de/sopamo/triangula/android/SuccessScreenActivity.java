@@ -122,8 +122,9 @@ public class SuccessScreenActivity extends FragmentActivity implements GoogleApi
             mResolvingConnectionFailure = true;
             if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
                     9001, "Fehler beim einloggen")) {
-                mResolvingConnectionFailure = false;
+                return;
             }
+            mResolvingConnectionFailure = false;
         }
 
     }

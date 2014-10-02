@@ -21,7 +21,6 @@
 
 package de.sopamo.triangula.android.game;
 
-import android.os.AsyncTask;
 import de.sopamo.box2dbridge.Box2DFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
@@ -114,8 +113,8 @@ public class GameImpl implements GameInterface {
         Vec2 gravity = new Vec2(0, -9.8f);
         world.create(aabb, gravity, true);
         world.setContactListener(new ContactListener());
-        physicsTask = new PhysicsTask();
-        physicsTask.execute();
+        startPhysicTask();
+
         // Create player
         Player player = new Player(new Vec2(1, -5), handler);
         GameImpl.player = player;
@@ -133,8 +132,7 @@ public class GameImpl implements GameInterface {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
-        physicsTask.cancel(false);
-        while(physicsTask.getStatus() != AsyncTask.Status.FINISHED);
+        physicsTask.softCancel();
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -185,6 +183,7 @@ public class GameImpl implements GameInterface {
                 reinit = false;
                 destroy();
                 init(handler, level);
+                resume();
             }
         }
         /** ## DEBUG ## **/
@@ -272,5 +271,16 @@ public class GameImpl implements GameInterface {
 
     public PhysicsTask getPhysicsTask() {
         return physicsTask;
+    }
+
+    public void  startPhysicTask() {
+        physicsTask = new PhysicsTask();
+        physicsTask.start();
+    }
+
+    public void resume() {
+        synchronized (physicsTask) {
+            physicsTask.notify();
+        }
     }
 }

@@ -194,6 +194,7 @@ public class JNIBox2DBody implements IBody {
 
 	@Override
 	public void setPosition(Vec2 pos) {
+        position = pos;
         nSetPosition(bodyID, pos.x, pos.y);
 	}
 

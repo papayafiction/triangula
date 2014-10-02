@@ -25,7 +25,6 @@ package de.sopamo.triangula.android;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.opengl.GLSurfaceView;
 
 public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 
@@ -47,8 +46,10 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
         }
 		setRenderer(pgRenderer);
 		
-		pgRenderer.init();
+    }
 
+    public void init() {
+        pgRenderer.init();
     }
 
 	public void destroy() {

@@ -27,7 +27,6 @@ import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.InputHandler;
-import de.sopamo.triangula.android.game.PhysicsTask;
 import de.sopamo.triangula.android.game.models.Image;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -134,7 +133,6 @@ public class PGRenderer implements Renderer {
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-
         game.getLevel().drawBackground(gl);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -149,16 +147,20 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
-
-        game.getPhysicsTask().setWaiting(false);
-
+        // Free PhysicsTask
+        synchronized (game.getPhysicsTask()) {
+            game.getPhysicsTask().notify();
+        }
         game.getLevel().drawBackgroundElements(gl);
 		game.drawFrame();
-        if(!PhysicsTask.isUpdating()) {
-            game.getWorld().sync();
-        }
-
         game.getLevel().postDraw();
+
+        /** Sync World after draw and wait for physics **/
+        while(!game.getPhysicsTask().isWaiting());
+        game.getWorld().sync();
+        synchronized (game.getPhysicsTask()) {
+            game.getPhysicsTask().notify();
+        }
 	}
 
 
@@ -169,5 +171,5 @@ public class PGRenderer implements Renderer {
 	public void destroy() {
 		game.destroy();
 	}
-	
+
 }
