@@ -64,11 +64,18 @@ public class MusicPlayer implements Rewindable {
         mediaPlayerForward.start();
     }
 
-    public void resumePlayerBackward(double pauseStartTime){
-        mediaPlayerBackwards.seekTo((int) (pauseStartTime));
-        mediaPlayerBackwards.start();
-        mediaPlayerBackwards.setLooping(true);
+    public void resumePlayerBackward(final double pauseStartTime){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayerBackwards.seekTo((int) (pauseStartTime));
+                mediaPlayerBackwards.start();
+                mediaPlayerBackwards.setLooping(true);
+            }
+        }).start();
     }
+
+
 
     public void destroyPlayer (){
         mediaPlayerForward.stop();

@@ -1,45 +1,95 @@
 package de.sopamo.triangula.android.game.raycasting;
 
-import android.util.Log;
+import de.sopamo.box2dbridge.IBody;
+import de.sopamo.box2dbridge.IRayCastOutput;
+import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
 import de.sopamo.triangula.android.game.GameImpl;
-import de.sopamo.triangula.android.geometry.GameShape;
-import de.sopamo.triangula.android.particles.ParticleSpawner;
-import org.jbox2d.collision.Segment;
-import org.jbox2d.collision.SegmentCollide;
-import org.jbox2d.common.RaycastResult;
+import de.sopamo.triangula.android.tools.BufferTool;
+import de.sopamo.triangula.android.tools.GLBufferTool;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.common.XForm;
+
+import static android.opengl.GLES10.*;
+import static android.opengl.GLES10.GL_TRIANGLE_STRIP;
+import static android.opengl.GLES10.glPopMatrix;
 
 public class Raycaster {
-    public static void cast() {
-        GameImpl.getInstance().removeRays();
-        /*Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
-        for(int i = 0;i<20;i++) {
 
-            float rayX = 10 * (float)Math.cos(2*i*(Math.PI/20));
-            float rayY = 10 * (float)Math.sin(2*i*(Math.PI/20));
-            Segment segment = new Segment();
-            segment.p1 = player;
-            segment.p2 = new Vec2(player.x + rayX, rayY + player.y);
-            RaycastResult finalResult = new RaycastResult();
-            Float dist = null;
-            for(GameShape gameShape: GameImpl.getInstance().getGsl()) {
-                RaycastResult raycastResult = new RaycastResult();
-                SegmentCollide res = gameShape.getShape().testSegment(gameShape.getShape().getBody().getXForm(),raycastResult,segment,0.01f);
-                if(res == SegmentCollide.HIT_COLLIDE) {
-                    if(dist == null || raycastResult.lambda < dist) {
-                        dist = raycastResult.lambda;
-                        finalResult.set(raycastResult);
-                        Ray ray = new Ray(segment.p1, segment.p2);
-                        GameImpl.getInstance().addRay(ray);
-                    }
-                }
-            }
+    private static Vec2[] points;
+
+    public static void cast() {
+        points = new Vec2[200];
+        GameImpl.getInstance().removeRays();
+        Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
+        IBody body = new JNIBox2DBody(Integer.MAX_VALUE);
+
+        for(int i = 0;i<200;i++) {
+            float rayX = 10 * (float)Math.cos(2 * i * (Math.PI / 200));
+            float rayY = 10 * (float)Math.sin(2*i*(Math.PI/200));
+            Vec2 end = new Vec2(player.x + rayX, rayY + player.y);
+            IRayCastOutput res = body.rayCast(player,end,300);
+            Float dist = res.getFraction();
             if(dist != null) {
-                Vec2 endPos = finalResult.normal.mul(finalResult.lambda);
-                Ray ray2 = new Ray(player, endPos);
-                GameImpl.getInstance().addRay(ray2);
+                Vec2 lengthened = end.sub(player).mul(dist);
+                points[i] = lengthened;
             }
-        }*/
+        }
+
+    }
+
+    public static void draw() {
+        glEnable(GL_STENCIL_TEST);
+        glClearStencil(0);
+        glClear(GL_STENCIL_BUFFER_BIT);
+        glColorMask(false, false, false, false);
+        glDepthMask(false);
+        glStencilFunc(GL_ALWAYS, 1, 1);
+        glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+
+        // Draw stencil
+        glPushMatrix();
+        Vec2 pst =
+        GameImpl.getMainPlayer().getBody().getWorldCenter();
+        glTranslatef(pst.x,pst.y, 0);
+        float[] v = new float[points.length*2];
+
+        int i = 0;
+        for(Vec2 point:points) {
+            v[i] = point.x;
+            i++;
+            v[i] = point.y;
+            i++;
+        }
+
+        GLBufferTool.setGLVertexBuffer(2, BufferTool.makeFloatBuffer(v));
+        glDrawArrays(GL_TRIANGLE_FAN,
+                0,
+                points.length);
+
+        glPopMatrix();
+
+
+        glColorMask(true, true, true, true);
+        glDepthMask(true);
+        glStencilFunc(GL_EQUAL, 0, 1);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+
+        // Draw shadow
+        glColor4f(0,0,0,.7f);
+        float[] v2 = {
+                0,  0,
+                0,  -15,
+                25, -15,
+                25, 0,
+                0,0
+        };
+
+        GLBufferTool.setGLVertexBuffer(2, BufferTool.makeFloatBuffer(v2));
+        glDrawArrays(GL_TRIANGLE_STRIP, 0,
+               5);
+
+
+        glDisable(GL_STENCIL_TEST);
     }
 }

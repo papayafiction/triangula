@@ -28,6 +28,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.models.Image;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -147,6 +148,8 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
+        //Raycaster.cast();
+
         // Free PhysicsTask
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
@@ -171,5 +174,4 @@ public class PGRenderer implements Renderer {
 	public void destroy() {
 		game.destroy();
 	}
-
 }
