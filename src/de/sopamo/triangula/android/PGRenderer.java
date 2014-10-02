@@ -149,6 +149,7 @@ public class PGRenderer implements Renderer {
 
 		game.gameLoop();
         //Raycaster.cast();
+
         // Free PhysicsTask
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();

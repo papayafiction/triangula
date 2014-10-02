@@ -48,10 +48,9 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
             // no antialising is not the end of the world
         }
         // Ask the System Bar to hide for api level < 19
-        int whichHiddenStatusToUse = android.view.View.STATUS_BAR_HIDDEN;
-        this.setSystemUiVisibility(whichHiddenStatusToUse);
+        this.setSystemUiVisibility(android.view.View.STATUS_BAR_HIDDEN);
 
-        // Try
+        // Try to enable immersive mode
         try {
             // if this next line doesn't thrown an exception then we are on ICS or
             // above, so we can use the new field.
@@ -63,7 +62,6 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         } catch (Exception ex) {
-            Log.e("menu","exception");
         }
 		setRenderer(pgRenderer);
 		

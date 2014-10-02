@@ -175,21 +175,25 @@ public class BaseLevel {
         float density = 0;
         GameShape gs;
 
+        // Top
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
         gs.attachToBody(ground, new Vec2(100, .05f), density);
         gsl.add(gs);
 
+        // Bottom
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,0,0,1);
         gs.attachToBody(ground, new Vec2(100, -10.05f), density);
         gsl.add(gs);
 
+        // Right
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
         gs.attachToBody(ground, new Vec2(200f, -5f), density);
         gsl.add(gs);
 
+        // Left
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,1,0,1);
         gs.attachToBody(ground, new Vec2(-0.05f,-5), density);
@@ -230,7 +234,6 @@ public class BaseLevel {
     public void makeBubbles(JSONArray bubbles) throws JSONException {
         for(int i = 0;i < bubbles.length();++i) {
             JSONObject bubble = bubbles.getJSONObject(i);
-
 
             float radius = Float.parseFloat(bubble.getString("size")) * 0.02f / 2;
             float x = Float.parseFloat(bubble.getString("x")) * 0.02f+radius;
