@@ -58,11 +58,14 @@ public class Player implements Rewindable,Entity {
         game.getRewindables().add(this);
 
         game.getGsl().add(shapeInner);
+        game.getNoRayCast().add(body);
     }
 
     @Override
     public void startRewind() {
-        Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        if(GameActivity.getGoogleApiClient().isConnected()) {
+            Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        }
 
         if(isSucking()) return;
         rewind = true;

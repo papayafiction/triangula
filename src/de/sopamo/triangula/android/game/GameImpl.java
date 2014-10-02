@@ -68,6 +68,7 @@ public class GameImpl implements GameInterface {
     IWorld world = Box2DFactory.newWorld();
 
     List<Rewindable> rewindables = new ArrayList<Rewindable>();
+    List<IBody> noRayCast = new ArrayList<IBody>();
     List<Entity> entities = new ArrayList<Entity>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
@@ -145,11 +146,7 @@ public class GameImpl implements GameInterface {
 
 	@Override
 	public void drawFrame() {
-        // Draw particles
-        for(int i = 0;i < pl.size();++i) {
-            Particle particle = pl.get(i);
-            particle.draw();
-        }
+
 
         // Draw game shape shadows
         for(int i=0;i<gsl.size();i++) {
@@ -167,6 +164,11 @@ public class GameImpl implements GameInterface {
         for(int i = 0;i < rays.size();++i) {
 //Ray ray = rays.get(i);
 //ray.draw();
+        }
+        // Draw particles
+        for(int i = 0;i < pl.size();++i) {
+            Particle particle = pl.get(i);
+            particle.draw();
         }
 	}
 
@@ -282,5 +284,9 @@ public class GameImpl implements GameInterface {
         synchronized (physicsTask) {
             physicsTask.notify();
         }
+    }
+
+    public List<IBody> getNoRayCast() {
+        return noRayCast;
     }
 }
