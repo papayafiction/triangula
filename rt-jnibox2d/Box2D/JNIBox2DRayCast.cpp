@@ -84,7 +84,7 @@ JNIEXPORT jobjectArray JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCa
                         if(in(bodyIds,size,k)) continue;
                         b2Body* b = bodyList[k];
                         for(b2Fixture* f2 = b->GetFixtureList();f2;f2=f2->GetNext()) {
-
+                            if(f2->GetType() != b2Shape::e_polygon) continue;
                             b2RayCastOutput output;
                             if(!f2->RayCast(&output,input,0))
                                 continue;

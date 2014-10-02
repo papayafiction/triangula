@@ -136,7 +136,6 @@ public class GameImpl implements GameInterface {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
-        physicsTask.softCancel();
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -191,7 +190,6 @@ public class GameImpl implements GameInterface {
                 reinit = false;
                 destroy();
                 init(handler, level);
-                resume();
             }
         }
         /** ## DEBUG ## **/
