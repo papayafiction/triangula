@@ -1,8 +1,5 @@
 package de.sopamo.triangula.android.game.raycasting;
 
-import de.sopamo.box2dbridge.IBody;
-import de.sopamo.box2dbridge.IRayCastOutput;
-import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DRayCast;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.tools.BufferTool;
@@ -10,8 +7,6 @@ import de.sopamo.triangula.android.tools.GLBufferTool;
 import org.jbox2d.common.Vec2;
 
 import static android.opengl.GLES10.*;
-import static android.opengl.GLES10.GL_TRIANGLE_STRIP;
-import static android.opengl.GLES10.glPopMatrix;
 
 public class Raycaster {
 
@@ -22,11 +17,9 @@ public class Raycaster {
         Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
 
         points = JNIBox2DRayCast.rayCast(player,GameImpl.getInstance().getNoRayCast());
-
     }
 
     public static void draw() {
-
         glEnable(GL_STENCIL_TEST);
         glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
@@ -38,20 +31,23 @@ public class Raycaster {
 
         // Draw stencil
         glPushMatrix();
-        float[] v = new float[points.length*2];
+        float[] v = new float[points.length*2+4];
+        Vec2 pst = GameImpl.getMainPlayer().getBody().getWorldCenter();
 
-        int i = 0;
+        v[0] = pst.x;
+        v[1] = pst.y;
+        int i = 2;
         for(Vec2 point:points) {
-            v[i] = point.x;
-            i++;
-            v[i] = point.y;
-            i++;
+            v[i++] = point.x;
+            v[i++] = point.y;
         }
+        v[i++] = points[0].x;
+        v[i] = points[0].y;
 
         GLBufferTool.setGLVertexBuffer(2, BufferTool.makeFloatBuffer(v));
         glDrawArrays(GL_TRIANGLE_FAN,
                 0,
-                points.length);
+                points.length+2);
 
         glPopMatrix();
 
