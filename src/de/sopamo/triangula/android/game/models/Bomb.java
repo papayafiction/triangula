@@ -1,9 +1,7 @@
 package de.sopamo.triangula.android.game.models;
 
 import android.graphics.Color;
-import android.os.Handler;
 import de.sopamo.box2dbridge.IBody;
-import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
@@ -11,9 +9,8 @@ import de.sopamo.triangula.android.geometry.CircleBackground;
 import de.sopamo.triangula.android.geometry.GLCircle;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeCircle;
+import de.sopamo.triangula.android.particles.ParticleSpawner;
 import org.jbox2d.common.Vec2;
-
-import static android.opengl.GLES10.glColor4f;
 
 public class Bomb implements Entity {
 
@@ -55,6 +52,15 @@ public class Bomb implements Entity {
     }
 
     public void explode() {
+        game.getMainPlayer().remove();
+        ParticleSpawner.spawn(10,body.getWorldCenter().x,body.getWorldCenter().y,new Vec2(0.1f,0.1f), Color.WHITE);
+        ParticleSpawner.spawn(10,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(-(0.1f),-(0.1f)),Color.WHITE);
+        ParticleSpawner.spawn(15,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(0.12f,0),Color.WHITE);
+        ParticleSpawner.spawn(15,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(-(0.12f),0),Color.WHITE);
+        ParticleSpawner.spawn(15,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(0,0.12f),Color.WHITE);
+        ParticleSpawner.spawn(15,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(0,-0.12f),Color.WHITE);
+        ParticleSpawner.spawn(10,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(-(0.1f),0.1f),Color.WHITE);
+        ParticleSpawner.spawn(10,body.getWorldCenter().x,body.getWorldCenter().y, new Vec2(0.1f,-0.1f),Color.WHITE);
         destroy = true;
     }
 

@@ -98,10 +98,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 explosionMediaPlayer1.start();
 
                 ((Bomb)((UserData) body.getUserData()).obj).explode();
-                Vec2 force =
-                player.getBody().getWorldCenter().sub(position);
-                force.mulLocal(500);
-                player.setForce(force);
             }
             if(((UserData)(body.getUserData())).type.equals("exit")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
