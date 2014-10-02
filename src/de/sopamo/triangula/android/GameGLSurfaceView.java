@@ -47,7 +47,6 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
         } catch (RuntimeException e) {
             // no antialising is not the end of the world
         }
-
         // Ask the System Bar to hide for api level < 19
         int whichHiddenStatusToUse = android.view.View.STATUS_BAR_HIDDEN;
         this.setSystemUiVisibility(whichHiddenStatusToUse);
@@ -66,11 +65,14 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
         } catch (Exception ex) {
             Log.e("menu","exception");
         }
-        // now lets actually ask one of our views to request the decreased visibility
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();
 
+    }
+
+    public void init() {
+        pgRenderer.init();
     }
 
 	public void destroy() {

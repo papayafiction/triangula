@@ -9,6 +9,7 @@ import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
+import de.sopamo.triangula.android.game.models.Bubble;
 import de.sopamo.triangula.android.game.models.Triangle;
 import de.sopamo.triangula.android.geometry.*;
 import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
@@ -73,6 +74,12 @@ public class BaseLevel {
         } catch (JSONException e) {
             Log.e("json", "Could not parse level String");
             System.exit(2);
+        }
+
+        try {
+            makeBubbles(jsonData.getJSONArray("bubbles"));
+        } catch (JSONException e){
+            Log.e("json","Failure in parsing bubbles");
         }
 
         makeFence();
@@ -217,6 +224,19 @@ public class BaseLevel {
             angle = (float)Math.toRadians(angle);
             y*=-1;
             new Triangle(new Vec2(x,y),size,angle);
+        }
+    }
+
+    public void makeBubbles(JSONArray bubbles) throws JSONException {
+        for(int i = 0;i < bubbles.length();++i) {
+            JSONObject bubble = bubbles.getJSONObject(i);
+
+
+            float radius = Float.parseFloat(bubble.getString("size")) * 0.02f / 2;
+            float x = Float.parseFloat(bubble.getString("x")) * 0.02f+radius;
+            float y = Float.parseFloat(bubble.getString("y")) * 0.02f+radius;
+            y*=-1;
+            new Bubble(new Vec2(x,y),radius);
         }
     }
 

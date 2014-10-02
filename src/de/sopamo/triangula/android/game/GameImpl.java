@@ -36,6 +36,7 @@ import de.sopamo.triangula.android.game.raycasting.Line;
 import de.sopamo.triangula.android.game.raycasting.Ray;
 import de.sopamo.triangula.android.game.raycasting.Raycaster;
 import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeBubble;
 import de.sopamo.triangula.android.geometry.Shadow;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.particles.Particle;
@@ -70,6 +71,7 @@ public class GameImpl implements GameInterface {
     IWorld world = Box2DFactory.newWorld();
 
     List<Rewindable> rewindables = new ArrayList<Rewindable>();
+    List<IBody> noRayCast = new ArrayList<IBody>();
     List<Entity> entities = new ArrayList<Entity>();
 	List<GameShape> gsl = new ArrayList<GameShape>();
 	List<Particle> pl = new ArrayList<Particle>();
@@ -115,6 +117,8 @@ public class GameImpl implements GameInterface {
         Vec2 gravity = new Vec2(0, -9.8f);
         world.create(aabb, gravity, true);
         world.setContactListener(new ContactListener());
+        startPhysicTask();
+
         // Create player
         Player player = new Player(new Vec2(1, -5), handler);
         GameImpl.player = player;
@@ -132,8 +136,7 @@ public class GameImpl implements GameInterface {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
-        physicsTask.cancel(false);
-        while(physicsTask.getStatus() != AsyncTask.Status.FINISHED);
+        physicsTask.softCancel();
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -146,11 +149,6 @@ public class GameImpl implements GameInterface {
 
 	@Override
 	public void drawFrame() {
-        // Draw particles
-        for(int i = 0;i < pl.size();++i) {
-            Particle particle = pl.get(i);
-            particle.draw();
-        }
 
         // Draw game shape shadows
         for(int i=0;i<gsl.size();i++) {
@@ -171,6 +169,11 @@ public class GameImpl implements GameInterface {
             Ray ray = rays.get(i);
             ray.draw();
         }
+        // Draw particles
+        for(int i = 0;i < pl.size();++i) {
+            Particle particle = pl.get(i);
+            particle.draw();
+        }
 
         //Raycaster.draw();
 	}
@@ -188,7 +191,7 @@ public class GameImpl implements GameInterface {
                 reinit = false;
                 destroy();
                 init(handler, level);
-                startPhysicTask();
+                resume();
             }
         }
         /** ## DEBUG ## **/
@@ -278,9 +281,18 @@ public class GameImpl implements GameInterface {
         return physicsTask;
     }
 
-    public void startPhysicTask() {
+    public void  startPhysicTask() {
         physicsTask = new PhysicsTask();
-        physicsTask.setWaiting(true);
-        physicsTask.execute();
+        physicsTask.start();
+    }
+
+    public void resume() {
+        synchronized (physicsTask) {
+            physicsTask.notify();
+        }
+    }
+
+    public List<IBody> getNoRayCast() {
+        return noRayCast;
     }
 }

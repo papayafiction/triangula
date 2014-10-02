@@ -3,6 +3,7 @@ package de.sopamo.triangula.android;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +20,12 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 public class MainMenu extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
     private static GoogleApiClient mGoogleApiClient;
-    private boolean mAutoStartSignInFlow = false;
+    private boolean mAutoStartSignInFlow = true;
     private boolean mResolvingConnectionFailure = false;
     private boolean mSignInClicked = false;
+    private boolean mAchievements = false;
     private static boolean mSignedIn = false;
+    private SharedPreferences.Editor mSharedPreferences;
 
     @Override
     protected void onStart() {
@@ -38,37 +41,30 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainmenu);
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        mAutoStartSignInFlow = !sp.getBoolean("declined",false);
+        mSharedPreferences = sp.edit();
+
+
 
         final MainMenu that = this;
 
         final Button playButton = (Button) findViewById(R.id.playbutton);
         final Button aboutButton = (Button) findViewById(R.id.aboutButton);
         final Button levelButton = (Button) findViewById(R.id.levelbutton);
-        final Button wifiButton = (Button) findViewById(R.id.wifibutton);
-        final Button loginButton = (Button) findViewById(R.id.login);
-        final Button logoutButton = (Button) findViewById(R.id.logout);
+        final Button achievementButton = (Button) findViewById(R.id.achievementbutton);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+
+        achievementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSignInClicked = true;
-                mGoogleApiClient.connect();
-            }
-        });
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGoogleApiClient.disconnect();
-            }
-        });
-
-        wifiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mGoogleApiClient.isConnected()) {
-                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),5001);
+                if(!mGoogleApiClient.isConnected()) {
+                    mSignInClicked = true;
+                    mAchievements = true;
+                    mGoogleApiClient.connect();
+                    return;
                 }
+                startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),5001);
             }
         });
 
@@ -137,6 +133,12 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
     @Override
     public void onConnected(Bundle bundle) {
         mSignedIn = true;
+        mSharedPreferences.putBoolean("declined",false);
+        mSharedPreferences.commit();
+        if(mAchievements) {
+            mAchievements = false;
+            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),5001);
+        }
     }
 
     @Override
@@ -146,6 +148,9 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        mSignedIn = false;
+        mSharedPreferences.putBoolean("declined",true);
+        mSharedPreferences.commit();
         if (mResolvingConnectionFailure) {
             return;
         }
@@ -155,10 +160,25 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
             mResolvingConnectionFailure = true;
             if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
                     9001, "Fehler beim einloggen")) {
-                mResolvingConnectionFailure = false;
+                return;
             }
+            mResolvingConnectionFailure = false;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 9001) {
+            mResolvingConnectionFailure = false;
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mGoogleApiClient.isConnecting() &&
+                        !mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.connect();
+                }
+            }
+        }
     }
 
     public static boolean isSignedIn() {

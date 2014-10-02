@@ -1,5 +1,7 @@
 package de.sopamo.triangula.android.game.models;
 
+import android.util.Log;
+
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.UserData;
@@ -14,6 +16,7 @@ public class Switch  {
     private boolean alreadyActivated = false;
 
     public boolean isAlreadyActivated() {
+        Log.e("baam","isAlreadyActivated");
         return alreadyActivated;
     }
 

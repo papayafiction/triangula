@@ -49,6 +49,7 @@ public class Exit implements Entity {
         this.suckerBody = sucker;
 
         game.getEntities().add(this);
+        game.getNoRayCast().add(sucker);
 
     }
 
@@ -71,7 +72,6 @@ public class Exit implements Entity {
             if(frames == FRAMES_TO_END) {
                 GameActivity activity = GameActivity.getInstance();
                 Intent successScreen = new Intent(activity, SuccessScreenActivity.class);
-                GameImpl.getInstance().getPhysicsTask().cancel(true);
                 GameImpl.getInstance().getLevel().end();
                 successScreen.putExtra("level",GameImpl.getInstance().getLevel());
                 if(GameImpl.getInstance().getLevel().getAchievements().size() != 0) {
