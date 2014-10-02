@@ -175,7 +175,7 @@ public class GameImpl implements GameInterface {
             particle.draw();
         }
 
-        //Raycaster.draw();
+        Raycaster.draw();
 	}
 
     public void reinit() {

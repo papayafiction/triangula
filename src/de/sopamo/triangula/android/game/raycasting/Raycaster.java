@@ -3,6 +3,7 @@ package de.sopamo.triangula.android.game.raycasting;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IRayCastOutput;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DBody;
+import de.sopamo.box2dbridge.jnibox2d.JNIBox2DRayCast;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.tools.BufferTool;
 import de.sopamo.triangula.android.tools.GLBufferTool;
@@ -17,26 +18,15 @@ public class Raycaster {
     private static Vec2[] points;
 
     public static void cast() {
-        points = new Vec2[200];
         GameImpl.getInstance().removeRays();
         Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
-        IBody body = new JNIBox2DBody(Integer.MAX_VALUE);
 
-        for(int i = 0;i<200;i++) {
-            float rayX = 10 * (float)Math.cos(2 * i * (Math.PI / 200));
-            float rayY = 10 * (float)Math.sin(2*i*(Math.PI/200));
-            Vec2 end = new Vec2(player.x + rayX, rayY + player.y);
-            IRayCastOutput res = body.rayCast(player,end,300);
-            Float dist = res.getFraction();
-            if(dist != null) {
-                Vec2 lengthened = end.sub(player).mul(dist);
-                points[i] = lengthened;
-            }
-        }
+        points = JNIBox2DRayCast.rayCast(player,GameImpl.getInstance().getNoRayCast());
 
     }
 
     public static void draw() {
+
         glEnable(GL_STENCIL_TEST);
         glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
@@ -48,9 +38,6 @@ public class Raycaster {
 
         // Draw stencil
         glPushMatrix();
-        Vec2 pst =
-        GameImpl.getMainPlayer().getBody().getWorldCenter();
-        glTranslatef(pst.x,pst.y, 0);
         float[] v = new float[points.length*2];
 
         int i = 0;
