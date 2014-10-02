@@ -1,8 +1,6 @@
 package de.sopamo.triangula.android.levels;
 
-import com.google.android.gms.games.Games;
 import de.sopamo.triangula.android.GameActivity;
-import de.sopamo.triangula.android.MainMenu;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
