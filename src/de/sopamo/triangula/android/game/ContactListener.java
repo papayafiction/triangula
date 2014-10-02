@@ -22,6 +22,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     private MediaPlayer mediaPlayer;
     private MediaPlayer explosionMediaPlayer1;
     private MediaPlayer switchMediaPlayer;
+    private int counter;
 
     @Override
     public void add(ContactPoint point) {
@@ -97,11 +98,15 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 explosionMediaPlayer1 = MediaPlayer.create(GameActivity.getInstance(),R.raw.bomb);
                 explosionMediaPlayer1.start();
 
+
+
                 ((Bomb)((UserData) body.getUserData()).obj).explode();
                 Vec2 force =
                 player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(500);
                 player.setForce(force);
+                //count number of touched bombs
+                count();
             }
             if(((UserData)(body.getUserData())).type.equals("exit")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
@@ -125,6 +130,18 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
         return false;
     }
 
+    //counter for bomb touches
+    public void count(){
+        counter = counter+1;
+    }
+    public void resetCounter(){
+        counter = 0;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
     @Override
     public void persist(ContactPoint point) {
 
@@ -139,4 +156,5 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     public void result(ContactResult point) {
 
     }
+
 }
