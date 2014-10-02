@@ -54,22 +54,18 @@ public class MusicPlayer implements Rewindable {
 
     public void pausePlayerForward(){
         mediaPlayerForward.pause();
-        Log.e("leFuc","Player forward paused");
     }
     public void pausePlayerBackward(){
         mediaPlayerBackwards.pause();
-        Log.e("leFuc","Player backward paused");
     }
 
     public void resumePlayerForward(double pauseStartTime){
         mediaPlayerForward.seekTo((int) (pauseStartTime));
-        Log.e("leFuc","Player forward resumed at time: "+pauseStartTime);
         mediaPlayerForward.start();
     }
 
     public void resumePlayerBackward(double pauseStartTime){
         mediaPlayerBackwards.seekTo((int) (pauseStartTime));
-        Log.e("leFuc","Player backwards resumed at time: "+pauseStartTime);
         mediaPlayerBackwards.start();
         mediaPlayerBackwards.setLooping(true);
     }
@@ -77,11 +73,9 @@ public class MusicPlayer implements Rewindable {
     public void destroyPlayer (){
         mediaPlayerForward.stop();
         mediaPlayerBackwards.stop();
-        Log.e("leFuc","Player stopped");
     }
 
     public double getCurrentPosForward(){
-        Log.e("leFuc", "Player current position " + mediaPlayerForward.getCurrentPosition());
         return mediaPlayerForward.getCurrentPosition();
     }
 
@@ -104,7 +98,6 @@ public class MusicPlayer implements Rewindable {
         initSysTime = System.currentTimeMillis();
 
         resumePlayerBackward((mediaPlayerForward.getDuration()-initTime)/2);
-        Log.e("baam","duration-init "+(mediaPlayerForward.getDuration()-initTime)/2);
     }
 
     @Override
@@ -113,7 +106,6 @@ public class MusicPlayer implements Rewindable {
         rewinding = false;
         endSysTime = System.currentTimeMillis();
         diffTime = (initTime-(endSysTime-initSysTime)*2);
-        Log.e("time","diffTime: "+diffTime);
         pausePlayerBackward();
         resumePlayerForward(diffTime);
     }
