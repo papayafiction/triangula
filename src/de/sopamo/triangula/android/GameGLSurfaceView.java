@@ -26,6 +26,8 @@ package de.sopamo.triangula.android;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
+import android.view.View;
 
 public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
 
@@ -45,6 +47,26 @@ public class GameGLSurfaceView extends android.opengl.GLSurfaceView {
         } catch (RuntimeException e) {
             // no antialising is not the end of the world
         }
+
+        // Ask the System Bar to hide for api level < 19
+        int whichHiddenStatusToUse = android.view.View.STATUS_BAR_HIDDEN;
+        this.setSystemUiVisibility(whichHiddenStatusToUse);
+
+        // Try
+        try {
+            // if this next line doesn't thrown an exception then we are on ICS or
+            // above, so we can use the new field.
+            this.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } catch (Exception ex) {
+            Log.e("menu","exception");
+        }
+        // now lets actually ask one of our views to request the decreased visibility
 		setRenderer(pgRenderer);
 		
 		pgRenderer.init();

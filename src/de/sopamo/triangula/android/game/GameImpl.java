@@ -34,6 +34,7 @@ import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.raycasting.Line;
 import de.sopamo.triangula.android.game.raycasting.Ray;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.Shadow;
 import de.sopamo.triangula.android.levels.Level;
@@ -157,17 +158,21 @@ public class GameImpl implements GameInterface {
             if(!(gs instanceof Shadow)) continue;
             gs.draw();
         }
-// Draw game shapes
+
+        // Draw game shapes
         for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
             if(gs instanceof Shadow) continue;
             gs.draw();
         }
-// Draw rays
+
+        // Draw rays
         for(int i = 0;i < rays.size();++i) {
-//Ray ray = rays.get(i);
-//ray.draw();
+            Ray ray = rays.get(i);
+            ray.draw();
         }
+
+        //Raycaster.draw();
 	}
 
     public void reinit() {

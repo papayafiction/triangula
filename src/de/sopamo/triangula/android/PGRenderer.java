@@ -29,6 +29,7 @@ import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.PhysicsTask;
 import de.sopamo.triangula.android.game.models.Image;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -148,10 +149,11 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
+        //Raycaster.cast();
         // Free PhysicsTask
         game.getPhysicsTask().setWaiting(false);
         game.getLevel().drawBackgroundElements(gl);
-		game.drawFrame();
+        game.drawFrame();
 
         /** Sync World after draw and wait for physics **/
         while(PhysicsTask.isUpdating());
