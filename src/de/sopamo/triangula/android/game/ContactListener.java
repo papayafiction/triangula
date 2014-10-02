@@ -1,6 +1,8 @@
 package de.sopamo.triangula.android.game;
 
 import android.media.MediaPlayer;
+import com.google.android.gms.games.Game;
+import com.google.android.gms.games.Games;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
 import de.sopamo.triangula.android.GameActivity;
@@ -105,8 +107,20 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(500);
                 player.setForce(force);
+
                 //count number of touched bombs
                 count();
+
+                //unlock achievements
+                if (counter >= 10 && GameActivity.getGoogleApiClient().isConnected()){
+                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_10));
+                }else if (counter >= 5 && GameActivity.getGoogleApiClient().isConnected()){
+                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_5));
+                }else if (counter >= 3 && GameActivity.getGoogleApiClient().isConnected()){
+                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_3));
+                }else if (counter == 1 && GameActivity.getGoogleApiClient().isConnected()){
+                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.first_bomb));
+                }
             }
             if(((UserData)(body.getUserData())).type.equals("exit")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
@@ -133,13 +147,6 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     //counter for bomb touches
     public void count(){
         counter = counter+1;
-    }
-    public void resetCounter(){
-        counter = 0;
-    }
-
-    public int getCounter() {
-        return counter;
     }
 
     @Override

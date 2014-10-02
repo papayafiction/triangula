@@ -71,10 +71,15 @@ public class BaseLevel {
             makeSpikes(jsonData.getJSONArray("spikes"));
             makeExits(jsonData.getJSONArray("exits"));
             makeTriangles(jsonData.getJSONArray("triangles"));
-            makeBubbles(jsonData.getJSONArray("bubble"));
         } catch (JSONException e) {
             Log.e("json", "Could not parse level String");
             System.exit(2);
+        }
+
+        try {
+            makeBubbles(jsonData.getJSONArray("bubbles"));
+        } catch (JSONException e){
+            Log.e("json","Failure in parsing bubbles");
         }
 
         makeFence();
@@ -179,7 +184,7 @@ public class BaseLevel {
             JSONObject bubble = bubbles.getJSONObject(i);
 
 
-            float radius = Float.parseFloat(bubble.getString("radius")) * 0.02f / 2;
+            float radius = Float.parseFloat(bubble.getString("size")) * 0.02f / 2;
             float x = Float.parseFloat(bubble.getString("x")) * 0.02f+radius;
             float y = Float.parseFloat(bubble.getString("y")) * 0.02f+radius;
             y*=-1;
