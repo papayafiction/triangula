@@ -58,6 +58,7 @@ public class LevelChooserActivity extends Activity {
         levelList = (ListView) findViewById(R.id.level_list);
         emptyTextView = (TextView) findViewById(android.R.id.empty);
 
+
         final List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("Official levels");
         spinnerArray.add("Community levels (online)");
@@ -83,7 +84,7 @@ public class LevelChooserActivity extends Activity {
 
                 } else if (typeSpinner.getSelectedItemPosition() == 1) { //community levels
                     if (searchValue.isEmpty()) {
-                        url =BASE_URL;
+                        url = BASE_URL;
                     } else {
                         url = BASE_URL + "?search=" + searchValue;
                     }
@@ -91,13 +92,14 @@ public class LevelChooserActivity extends Activity {
 
                 } else if(typeSpinner.getSelectedItemPosition() == 2) { //my levels)
 
-                    //TODO: get userId from google+
-                    userId = "dummyUser";
+                    if(null==userId) {
+                        //TODO: get google+ user id
+                    }
 
                     if(searchValue.isEmpty()) {
-                        url=BASE_URL + "?tag=" + userId;
+                        url = BASE_URL + "?googleid=" + userId;
                     } else {
-                        url = BASE_URL + "?tag=" + userId + "&search=" + searchValue;
+                        url = BASE_URL + "?googleid=" + userId + "&search=" + searchValue;
                     }
 
                 }
@@ -126,21 +128,23 @@ public class LevelChooserActivity extends Activity {
                     return;
 
                 } else if(i==1) { //community levels (online)
+
                     if (searchValue.isEmpty()) {
-                        url =BASE_URL;
+                        url = BASE_URL;
                     } else {
                         url = BASE_URL + "?search=" + searchValue;
                     }
 
                 } else if(i==2) { //my levels (online)
 
-                    //TODO: get userId from google+
-                    userId = "dummyUser";
+                    if(null==userId) {
+                        //TODO: get google+ user id
+                    }
 
                     if(searchValue.isEmpty()) {
-                        url=BASE_URL + "?tag=" + userId;
+                        url = BASE_URL + "?googleid=" + userId;
                     } else {
-                        url = BASE_URL + "?tag=" + userId + "&search=" + searchValue;
+                        url = BASE_URL + "?googleid=" + userId + "&search=" + searchValue;
                     }
                 }
 
