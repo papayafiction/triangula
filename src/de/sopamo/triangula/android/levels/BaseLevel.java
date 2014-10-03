@@ -24,10 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BaseLevel {
+public abstract class BaseLevel implements Level{
 
     protected static ArrayList<String> colors = new ArrayList<String>();
 
+    protected String creatorTag;
+    protected String levelName;
+    protected boolean isOnlineLevel;
     protected IBody ground;
     protected List<String> achievments = new ArrayList<String>();
     protected IWorld world;
@@ -36,9 +39,13 @@ public class BaseLevel {
     protected List<Entity> entities;
     protected JSONObject jsonData;
     protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
+    protected String levelString;
 
     public String getLevelString() {
-        return "";
+        return levelString;
+    }
+    public void setLevelString(String jsonString) {
+        levelString=jsonString;
     }
 
     public void drawBackground(GL10 gl) {
@@ -249,4 +256,33 @@ public class BaseLevel {
     public void postSurfaceCreated() {}
     public void end() {}
 
+
+    @Override
+    public String getLevelName() {
+        return levelName;
+    }
+
+    @Override
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+    @Override
+    public boolean isOnlineLevel() {
+        return isOnlineLevel;
+    }
+
+    public void setIsOnlineLevel(boolean isOnlineLevel) {
+        this.isOnlineLevel = isOnlineLevel;
+    }
+
+    @Override
+    public String getCreatorTag() {
+        return creatorTag;
+    }
+
+    @Override
+    public void setCreatorTag(String creatorTag) {
+        this.creatorTag = creatorTag;
+    }
 }
