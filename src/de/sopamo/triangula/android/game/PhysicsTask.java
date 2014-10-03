@@ -15,6 +15,7 @@ public class PhysicsTask extends Thread {
     private static boolean mUpdating = false;
     private boolean mCanceled = false;
     private boolean mWait = true;
+    private boolean mReinit = false;
 
 
     public PhysicsTask() {
@@ -26,15 +27,8 @@ public class PhysicsTask extends Thread {
 
     @Override
     public void run() {
-        Thread currentThread = Thread.currentThread();
-        synchronized (currentThread) {
-            try {
-                currentThread.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        mWait = false;
+        mUpdating = true;
+        startWait();
         while(true) {
             if(isCancelled()) {
                 break;
@@ -62,15 +56,10 @@ public class PhysicsTask extends Thread {
 
             mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
 
-            synchronized (currentThread) {
-                try {
-                    mWait = true;
-                    currentThread.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if(isCancelled()) {
+                break;
             }
-            mWait = false;
+            startWait();
 
             /** Update Entities **/
             for (int i = 0; i < mEntityList.size(); i++) {
@@ -78,21 +67,28 @@ public class PhysicsTask extends Thread {
                 entity.update();
             }
 
+
             if(isCancelled()) {
                 break;
             }
-            synchronized (currentThread) {
-                try {
-                    mWait = true;
-                    currentThread.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            mWait = false;
+            startWait();
+
+
         }
-        currentThread.interrupt();
+        mUpdating = false;
+        Thread.currentThread().interrupt();
     }
+
+    private synchronized void startWait() {
+        mWait = true;
+        try {
+            Thread.currentThread().wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mWait = false;
+    }
+
 
     private synchronized void cancel() {
         this.mCanceled = true;
@@ -121,4 +117,7 @@ public class PhysicsTask extends Thread {
         return mUpdating;
     }
 
+    public void reinit() {
+        mReinit = true;
+    }
 }

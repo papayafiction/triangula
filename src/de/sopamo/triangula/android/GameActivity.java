@@ -225,8 +225,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
             }
         });
-        //instantiate new contactlistener on resume
-        GameImpl.getInstance().resume();
+
     }
 
     @Override

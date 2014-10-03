@@ -23,7 +23,9 @@
 
 package de.sopamo.triangula.android.geometry;
 
-public class Triangle {
+public class
+
+        Triangle {
 
     private float size;
     protected float angle;

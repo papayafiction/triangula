@@ -12,6 +12,7 @@ SOURCES := \
 	./JNIBox2DBody.cpp \
 	./JNIBox2DShape.cpp \
 	./JNIContactListener.cpp \
+	./JNIBox2DRayCast.cpp \
 	./JNIRefs.cpp \
 	./Dynamics/b2Body.cpp \
 	./Dynamics/b2Fixture.cpp \
@@ -60,7 +61,7 @@ SOURCES := \
 	./Collision/b2BroadPhase.cpp
 LOCAL_SRC_FILES := $(addprefix Box2D/,$(SOURCES))
 
-#LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog
+LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog
 
 include $(BUILD_SHARED_LIBRARY)
 

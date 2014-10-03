@@ -30,6 +30,7 @@ public class Player implements Rewindable,Entity {
     private float suckerStrength = 1.5f;
     private boolean sucking;
     private boolean rewind = false;
+    private boolean killed = false;
     private State currentState;
     private InputHandler inputHandler;
     private Stack<State> states = new Stack<State>();
@@ -58,11 +59,22 @@ public class Player implements Rewindable,Entity {
         game.getRewindables().add(this);
 
         game.getGsl().add(shapeInner);
+        game.getNoRayCast().add(body);
+    }
+
+    public void remove() {
+        body.setLinearVelocity(new Vec2(0,0));
+        game.getGsl().remove(shape);
+        game.getGsl().remove(shapeInner);
+        game.getEntities().remove(this);
+        game.getRewindables().remove(this);
     }
 
     @Override
     public void startRewind() {
-        Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        if(GameActivity.getGoogleApiClient().isConnected()) {
+            Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        }
 
         if(isSucking()) return;
         rewind = true;

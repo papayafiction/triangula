@@ -49,6 +49,7 @@ public class Exit implements Entity {
         this.suckerBody = sucker;
 
         game.getEntities().add(this);
+        game.getNoRayCast().add(sucker);
 
     }
 
