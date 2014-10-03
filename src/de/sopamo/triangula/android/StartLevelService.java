@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
  */
 public class StartLevelService extends IntentService{
 
-    private static String BASE_URL = "http://triangula.papaya-fiction.com/levels/";
+    private static String BASE_URL = "http://triangula-login.papaya-fiction.com/levels";
     private Level level;
 
 
@@ -44,7 +44,6 @@ public class StartLevelService extends IntentService{
             loadLevelTask.execute();
 
         } else {
-
             Intent startLevel = new Intent(getApplicationContext(), GameActivity.class);
             startLevel.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startLevel.putExtra("level",level);
@@ -76,7 +75,7 @@ public class StartLevelService extends IntentService{
             try {
                 HttpClient client = new DefaultHttpClient();
 
-                URI website = new URI(BASE_URL+level.getCreatorTag() + "-"+level.getLevelName()+ ".txt");
+                URI website = new URI(BASE_URL+ level.getLevelUrl());
                 HttpGet request = new HttpGet();
                 request.setURI(website);
                 HttpResponse response = client.execute(request);

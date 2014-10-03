@@ -28,6 +28,7 @@ public abstract class BaseLevel implements Level{
 
     protected String creatorTag;
     protected String levelName;
+    protected String levelUrl;
     protected boolean isOnlineLevel;
     protected IBody ground;
     protected List<String> achievments = new ArrayList<String>();
@@ -358,5 +359,15 @@ public abstract class BaseLevel implements Level{
     @Override
     public void setCreatorTag(String creatorTag) {
         this.creatorTag = creatorTag;
+    }
+
+    @Override
+    public String getLevelUrl() {
+        return levelUrl;
+    }
+
+    @Override
+    public void setLevelUrl(String levelUrl) {
+        this.levelUrl = levelUrl;
     }
 }

@@ -14,7 +14,7 @@ import org.jbox2d.common.Vec2;
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 
-public class Level1 extends BaseOfficialLevel implements Level,Serializable {
+public class Level1 extends BaseOfficialLevel implements Level, Serializable {
 
 
 

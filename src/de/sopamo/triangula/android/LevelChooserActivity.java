@@ -36,7 +36,7 @@ import java.util.*;
 public class LevelChooserActivity extends Activity {
 
     public static Level level;
-    private static final String BASE_URL = "http://triangula.papaya-fiction.com/getlevels.json";
+    private static final String BASE_URL = "http://triangula-login.papaya-fiction.com/api/getlevels.json";
 
 
     private Spinner typeSpinner;
@@ -298,13 +298,18 @@ public class LevelChooserActivity extends Activity {
 
                     String name = playerObj.getString("name");
 
+
                     JSONArray levelArray = playerObj.getJSONArray("levels");
 
 
                     for(int j=0; j<levelArray.length(); j++) {
 
-                        BaseOnlineLevel l = new BaseOnlineLevel(name, levelArray.getString(j));
-                        l.setIsOnlineLevel(true);
+                        String levelUrl = levelArray.getString(j);
+
+                        String levelName=levelUrl.replace(levelUrl.substring(0, levelUrl.indexOf("-")+1), "");
+                        levelName=levelName.replace(levelName.substring(levelName.indexOf("-"), levelName.length()), "");
+
+                        BaseOnlineLevel l = new BaseOnlineLevel(name, levelName, levelUrl);
                         levels.add(l);
                     }
 

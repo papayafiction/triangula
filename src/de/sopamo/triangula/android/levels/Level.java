@@ -26,5 +26,7 @@ public interface Level extends Serializable {
     public void setLevelName(String levelName);
     public boolean isOnlineLevel();
     public void setIsOnlineLevel(boolean isOnlineLevel);
+    public void setLevelUrl(String url);
+    public String getLevelUrl();
 
 }
