@@ -1,11 +1,9 @@
 package de.sopamo.triangula.android.levels;
 
-import de.sopamo.triangula.android.levels.BaseLevel;
-
 /**
  * Created by moe on 03.10.14.
  */
-public class BaseOnlineLevel extends BaseLevel {
+public class BaseOnlineLevel extends BaseLevel implements Level {
 
     //this is a template for onlineLevels. Just set creatorTag and levelName in the constructor, and the JSON string later
 

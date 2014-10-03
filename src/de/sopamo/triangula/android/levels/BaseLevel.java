@@ -6,9 +6,8 @@ import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.models.*;
-import de.sopamo.triangula.android.game.models.Bubble;
-import de.sopamo.triangula.android.game.models.Triangle;
-import de.sopamo.triangula.android.geometry.*;
+import de.sopamo.triangula.android.geometry.GLRectangle;
+import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.levels.backgroundElements.BackgroundElement;
 import de.sopamo.triangula.android.levels.backgroundElements.Rectangle;
 import de.sopamo.triangula.android.tools.Util;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class BaseLevel implements Level{
+public abstract class BaseLevel {
 
     protected ArrayList<String> colors = new ArrayList<String>();
 
@@ -334,15 +333,13 @@ public abstract class BaseLevel implements Level{
     public void end() {}
 
 
-    @Override
+
     public String getLevelName() { return levelName; }
 
-    @Override
     public void setLevelName(String levelName) {
         this.levelName = levelName;
     }
 
-    @Override
     public boolean isOnlineLevel() {
         return isOnlineLevel;
     }
@@ -351,22 +348,18 @@ public abstract class BaseLevel implements Level{
         this.isOnlineLevel = isOnlineLevel;
     }
 
-    @Override
     public String getCreatorTag() {
         return creatorTag;
     }
 
-    @Override
     public void setCreatorTag(String creatorTag) {
         this.creatorTag = creatorTag;
     }
 
-    @Override
     public String getLevelUrl() {
         return levelUrl;
     }
 
-    @Override
     public void setLevelUrl(String levelUrl) {
         this.levelUrl = levelUrl;
     }
