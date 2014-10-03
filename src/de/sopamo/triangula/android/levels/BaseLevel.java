@@ -1,13 +1,10 @@
 package de.sopamo.triangula.android.levels;
 
-import android.graphics.Color;
 import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
-import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
-import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
 import de.sopamo.triangula.android.game.models.Bubble;
 import de.sopamo.triangula.android.game.models.Triangle;
@@ -41,6 +38,11 @@ public abstract class BaseLevel implements Level{
     protected JSONObject jsonData;
     protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
     protected String levelString;
+
+    public BaseLevel () {
+
+    }
+
 
     public String getLevelString() {
         return levelString;
@@ -332,9 +334,7 @@ public abstract class BaseLevel implements Level{
 
 
     @Override
-    public String getLevelName() {
-        return levelName;
-    }
+    public String getLevelName() { return levelName; }
 
     @Override
     public void setLevelName(String levelName) {

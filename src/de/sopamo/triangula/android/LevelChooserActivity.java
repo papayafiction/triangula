@@ -6,11 +6,14 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import de.sopamo.triangula.android.adapters.LevelAdapter;
+import de.sopamo.triangula.android.levels.BaseOnlineLevel;
 import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.backgroundElements.LevelTemplate;
+import de.sopamo.triangula.android.levels.official.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -22,8 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 //TODO: implement official levels, my levels (username from google+)
 
@@ -42,23 +44,24 @@ public class LevelChooserActivity extends Activity {
     private EditText searchField;
     private ListView levelList;
     private String userId;
-
+    private TextView emptyTextView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.online_level_chooser);
+        setContentView(R.layout.level_chooser);
 
         typeSpinner = (Spinner) findViewById(R.id.type_spinner);
         searchButton = (Button) findViewById(R.id.search_button);
         searchField = (EditText) findViewById(R.id.search_field);
         levelList = (ListView) findViewById(R.id.level_list);
+        emptyTextView = (TextView) findViewById(android.R.id.empty);
 
         final List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("Official levels");
-        spinnerArray.add("Community levels");
-        spinnerArray.add("My levels");
+        spinnerArray.add("Community levels (online)");
+        spinnerArray.add("My levels (online)");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -75,9 +78,8 @@ public class LevelChooserActivity extends Activity {
 
                 if (typeSpinner.getSelectedItemPosition() == 0) { //official levels
 
-                    url=BASE_URL;
-                    //TODO: implement official levels
-
+                    loadOfficialLevels(searchValue);
+                    return;
 
                 } else if (typeSpinner.getSelectedItemPosition() == 1) { //community levels
                     if (searchValue.isEmpty()) {
@@ -88,7 +90,10 @@ public class LevelChooserActivity extends Activity {
 
 
                 } else if(typeSpinner.getSelectedItemPosition() == 2) { //my levels)
+
+                    //TODO: get userId from google+
                     userId = "dummyUser";
+
                     if(searchValue.isEmpty()) {
                         url=BASE_URL + "?tag=" + userId;
                     } else {
@@ -105,6 +110,103 @@ public class LevelChooserActivity extends Activity {
         });
 
 
+
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                String searchValue = searchField.getText().toString();
+                String url ="";
+
+
+
+                if(i==0) {  //official levels
+
+                    loadOfficialLevels(searchValue);
+                    return;
+
+                } else if(i==1) { //community levels (online)
+                    if (searchValue.isEmpty()) {
+                        url =BASE_URL;
+                    } else {
+                        url = BASE_URL + "?search=" + searchValue;
+                    }
+
+                } else if(i==2) { //my levels (online)
+
+                    //TODO: get userId from google+
+                    userId = "dummyUser";
+
+                    if(searchValue.isEmpty()) {
+                        url=BASE_URL + "?tag=" + userId;
+                    } else {
+                        url = BASE_URL + "?tag=" + userId + "&search=" + searchValue;
+                    }
+                }
+
+
+                LoadingTask loadingTask = new LoadingTask();
+                loadingTask.execute(url);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //nothing to do here!
+            }
+        });
+
+
+
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    actionId == EditorInfo.IME_ACTION_DONE ||
+                    event.getAction() == KeyEvent.ACTION_DOWN &&
+                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+                    searchButton.callOnClick();
+
+                }
+                return false; // pass on to other listeners.
+
+            }
+        });
+
+
+        levelList.setEmptyView(emptyTextView);
+
+
+    }
+
+
+
+    private void loadOfficialLevels(String searchValue) {
+
+        searchValue=searchValue.toLowerCase();
+
+        List<Level> levels = new ArrayList<Level>();
+        levels.add(new Level1());
+        levels.add(new Level2());
+        levels.add(new Level3());
+        levels.add(new Level4());
+        levels.add(new Movethetime());
+        levels.add(new Skihuette());
+        levels.add(new Starter());
+
+        if(!searchValue.isEmpty()) {
+
+            for (Iterator<Level> iterator = levels.iterator(); iterator.hasNext(); ) {
+                Level level = iterator.next();
+                if(!level.getLevelName().toLowerCase().contains(searchValue)){
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        levelList.setAdapter(new LevelAdapter(getApplicationContext(),levels));
 
     }
 
@@ -134,6 +236,10 @@ public class LevelChooserActivity extends Activity {
             try {
 
                 HttpClient httpClient = new DefaultHttpClient();
+
+
+                params[0] = params[0].replaceAll("\\s","");
+
 
                 HttpGet httpGet = new HttpGet(params[0]);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -197,9 +303,7 @@ public class LevelChooserActivity extends Activity {
 
                     for(int j=0; j<levelArray.length(); j++) {
 
-                        LevelTemplate l = new LevelTemplate();
-                        l.setCreatorTag(name);
-                        l.setLevelName(levelArray.getString(j));
+                        BaseOnlineLevel l = new BaseOnlineLevel(name, levelArray.getString(j));
                         l.setIsOnlineLevel(true);
                         levels.add(l);
                     }
@@ -216,8 +320,6 @@ public class LevelChooserActivity extends Activity {
             }
         }
     }
-
-
 
 
 

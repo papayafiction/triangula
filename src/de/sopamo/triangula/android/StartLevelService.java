@@ -44,7 +44,12 @@ public class StartLevelService extends IntentService{
             loadLevelTask.execute();
 
         } else {
-            //load offline level here!
+
+            Intent startLevel = new Intent(getApplicationContext(), GameActivity.class);
+            startLevel.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startLevel.putExtra("level",level);
+            startActivity(startLevel);
+
         }
 
 

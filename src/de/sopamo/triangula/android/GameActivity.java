@@ -48,7 +48,7 @@ import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.Level1;
+import de.sopamo.triangula.android.levels.official.Level1;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
 import de.sopamo.triangula.android.wifi.WifiConnection;

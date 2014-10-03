@@ -2,17 +2,18 @@ package de.sopamo.triangula.android.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.*;
 import de.sopamo.triangula.android.*;
+import de.sopamo.triangula.android.levels.BaseOfficialLevel;
 import de.sopamo.triangula.android.levels.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LevelAdapter extends BaseAdapter {
 
@@ -59,7 +60,15 @@ public class LevelAdapter extends BaseAdapter {
                     mContext.startService(startLevelIntent);
                 }
             });
-            title.setText(l.getCreatorTag()+": "+l.getLevelName());
+            if(l instanceof BaseOfficialLevel) {
+                title.setText(l.getLevelName());
+            } else {
+                title.setText(l.getCreatorTag()+": "+l.getLevelName());
+            }
+
             return vi;
     }
+
+
+
 }
