@@ -116,7 +116,7 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     }
 
     public static GoogleApiClient getGoogleApiClient() {
-        if(!connectedToPlayServices()) throw new ClientISNotSignedInException();
+        if(!connectedToPlayServices()) throw new ClientIsNotSignedInException();
         return mGoogleApiClients.get(that.activityContext);
     }
 
@@ -125,7 +125,7 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
         public void onConnectionFailed();
     }
 
-    public static class ClientISNotSignedInException extends RuntimeException  {
+    public static class ClientIsNotSignedInException extends RuntimeException  {
         @Override
         public String getMessage() {
             return "User is not logged in please check before getting Client";
