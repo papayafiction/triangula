@@ -156,6 +156,8 @@ public class GameImpl implements GameInterface {
             gs.draw();
         }
 
+        Raycaster.draw();
+
         // Draw game shapes
         for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
@@ -173,8 +175,6 @@ public class GameImpl implements GameInterface {
             Particle particle = pl.get(i);
             particle.draw();
         }
-
-        Raycaster.draw();
 	}
 
     public void reinit() {

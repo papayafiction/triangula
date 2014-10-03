@@ -59,7 +59,7 @@ public class Raycaster {
 
 
         // Draw shadow
-        glColor4f(0,0,0,.7f);
+        glColor4f(0,0,0,.3f);
         float[] v2 = {
                 0,  0,
                 0,  -15,

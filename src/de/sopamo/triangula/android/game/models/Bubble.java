@@ -18,11 +18,11 @@ public class Bubble implements Entity {
     private GameShape shape;
     private IBody body;
 
-    public Bubble(Vec2 pst, float radius) {
+    public Bubble(Vec2 pst, float radius, int color) {
         this.game = GameImpl.getInstance();
         GameShapeBubble bubbleShape;
         bubbleShape = new GameShapeBubble(new GLCircle(radius));
-        float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+        float[] colors = Util.getColorParts(color);
         bubbleShape.setColor(colors[0], colors[1], colors[2], 1);
         IBody body = bubbleShape.attachToNewBody(game.getWorld(), null, .01f);
         UserData data = new UserData();
