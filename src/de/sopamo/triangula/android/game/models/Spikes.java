@@ -25,7 +25,7 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
     private Vec2 pst;
     private boolean isRewinding;
 
-    public Spikes(int count, float size, Vec2 pst,float angle) {
+    public Spikes(int count, float size, Vec2 pst,float angle, int color) {
         GameImpl game = GameImpl.getInstance();
         float radian = (float)Math.toRadians(angle);
         this.pst = pst.add(new Vec2((float)(Math.sqrt(2)*size*Math.cos(radian-Math.PI/4)),
@@ -38,7 +38,7 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
 
         for(int i=0;i<count;i++) {
             GameShapeTriangle triangle = new GameShapeTriangle(new GLTriangle(size,radian));
-            float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+            float[] colors = Util.getColorParts(color);
             triangle.setColor(colors[0], colors[1], colors[2], 1);
             IBody triangleBody = triangle.attachToNewBody(game.getWorld(),null,0);
             triangleBody.setPosition(this.pst.add(pstVec.mul(2*i)));

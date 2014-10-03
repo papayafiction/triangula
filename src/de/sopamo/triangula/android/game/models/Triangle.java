@@ -18,11 +18,11 @@ public class Triangle implements Entity {
     private GameShape shape;
     private IBody body;
 
-    public Triangle(Vec2 pst, float size, float angle) {
+    public Triangle(Vec2 pst, float size, float angle, int color) {
         this.game = GameImpl.getInstance();
         GameShape triangleShape;
         triangleShape = new GameShapeTriangle(new GLTriangle(size,angle));
-        float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+        float[] colors = Util.getColorParts(color);
         triangleShape.setColor(colors[0], colors[1], colors[2], 1);
         IBody body = triangleShape.attachToNewBody(game.getWorld(), null, 0);
         UserData data = new UserData();

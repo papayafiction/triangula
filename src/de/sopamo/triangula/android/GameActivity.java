@@ -43,7 +43,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.Level1;
+import de.sopamo.triangula.android.levels.official.Level1;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
 import de.sopamo.triangula.android.wifi.WifiConnection;
@@ -57,10 +57,6 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 	GameGLSurfaceView mGameGlSurfaceView;
 	private static TextView status;
 	private static GameActivity instance;
-    private WifiConnection wifiConnection;
-    private WifiP2pManager wifiP2pManager;
-    private IntentFilter intentFilter;
-    private WifiP2pManager.Channel channel;
     //Music Handling
     public MediaPlayer forwardMediaPlayer;
     public MediaPlayer backwardMediaPlayer;
@@ -103,11 +99,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         
         SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        
-        intentFilter = new IntentFilter();
-        wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = wifiP2pManager.initialize(this, getMainLooper(), null);
-        wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
+
 
         //Music Handling on create
         // Files of the song in the right order and reverse
@@ -213,25 +205,11 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         super.onResume();
         //Music resuming after pause is ended
         musicPlayer.resumePlayerForward(pauseStartTime);
-
-        registerReceiver(wifiConnection, intentFilter);
-        wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-
-            public void onSuccess() {
-                //test.setText("WUHU!");
-            }
-
-            public void onFailure(int reason) {
-
-            }
-        });
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(wifiConnection);
 
         //Music pausing, saving current pos
         pauseStartTime = musicPlayer.getCurrentPosForward();

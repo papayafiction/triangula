@@ -1,13 +1,10 @@
 package de.sopamo.triangula.android.levels;
 
-import android.graphics.Color;
 import android.util.Log;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
-import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
-import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.game.models.*;
 import de.sopamo.triangula.android.game.models.Bubble;
 import de.sopamo.triangula.android.game.models.Triangle;
@@ -25,10 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BaseLevel {
+public abstract class BaseLevel implements Level{
 
-    protected static ArrayList<String> colors = new ArrayList<String>();
+    protected ArrayList<String> colors = new ArrayList<String>();
 
+    protected String creatorTag;
+    protected String levelName;
+    protected String levelUrl;
+    protected boolean isOnlineLevel;
     protected IBody ground;
     protected List<String> achievments = new ArrayList<String>();
     protected IWorld world;
@@ -37,9 +38,18 @@ public class BaseLevel {
     protected List<Entity> entities;
     protected JSONObject jsonData;
     protected ArrayList<BackgroundElement> backgroundElements = new ArrayList<BackgroundElement>();
+    protected String levelString;
+
+    public BaseLevel () {
+
+    }
+
 
     public String getLevelString() {
-        return "";
+        return levelString;
+    }
+    public void setLevelString(String jsonString) {
+        levelString=jsonString;
     }
 
     public void drawBackground(GL10 gl) {
@@ -66,6 +76,7 @@ public class BaseLevel {
         parseLevel();
 
         try {
+            makeColors(jsonData.getJSONArray("colors"));
             makeDoors(jsonData.getJSONArray("doors"));
             makeBombs(jsonData.getJSONArray("bombs"));
             makeSpikes(jsonData.getJSONArray("spikes"));
@@ -95,7 +106,7 @@ public class BaseLevel {
      *
      * @return The color
      */
-    public static int getTriangleColor() {
+    public int getTriangleColor() {
         if(colors == null) return -1;
 
         // Get the first or second color
@@ -112,7 +123,7 @@ public class BaseLevel {
      *
      * @return The color
      */
-    public static int getBubbleColor() {
+    public int getBubbleColor() {
         if(colors == null) return -1;
 
         // Get the third or fourth color
@@ -129,7 +140,7 @@ public class BaseLevel {
      *
      * @return The color
      */
-    public static int getBackgroundColor() {
+    public int getBackgroundColor() {
         if(colors == null) return -1;
 
         // Get a color int from the hex color
@@ -163,7 +174,7 @@ public class BaseLevel {
             Rectangle rect = new Rectangle(x, y, size, speed);
 
             // Set the color
-            float[] colors = Util.getColorParts(BaseLevel.getBackgroundColor());
+            float[] colors = Util.getColorParts(getBackgroundColor());
             rect.setColor(colors[0], colors[1], colors[2], 1);
 
             // Add the element
@@ -204,10 +215,6 @@ public class BaseLevel {
     public void parseLevel() {
         try {
             jsonData = new JSONObject(getLevelString());
-            JSONArray jsonColors = jsonData.getJSONArray("colors");
-            for(int i = 0;i<5;++i) {
-                colors.add(jsonColors.getString(i));
-            }
         } catch (JSONException e) {
             Log.e("json","Could not parse level String");
             System.exit(2);
@@ -227,7 +234,7 @@ public class BaseLevel {
             float angle = Float.parseFloat(triangle.getString("angle"));
             angle = (float)Math.toRadians(angle);
             y*=-1;
-            new Triangle(new Vec2(x,y),size,angle);
+            new Triangle(new Vec2(x,y),size,angle, getTriangleColor());
         }
     }
 
@@ -239,7 +246,7 @@ public class BaseLevel {
             float x = Float.parseFloat(bubble.getString("x")) * 0.02f+radius;
             float y = Float.parseFloat(bubble.getString("y")) * 0.02f+radius;
             y*=-1;
-            new Bubble(new Vec2(x,y),radius);
+            new Bubble(new Vec2(x,y),radius, getBubbleColor());
         }
     }
 
@@ -255,7 +262,7 @@ public class BaseLevel {
 
             y*=-1;
 
-            new Spikes(count,size,new Vec2(x,y),angle);
+            new Spikes(count,size,new Vec2(x,y),angle, getTriangleColor());
         }
     }
     
@@ -273,7 +280,7 @@ public class BaseLevel {
             float angle = Float.parseFloat(door.getString("angle"));
             y *= -1;
 
-            Door doorModel = new Door(new Vec2(x,y),size,angle);
+            Door doorModel = new Door(new Vec2(x,y),size,angle, getTriangleColor());
 
             x = Float.parseFloat(sw.getString("x")) * 0.02f+.05f;
             y = Float.parseFloat(sw.getString("y")) * 0.02f+0.05f;
@@ -312,6 +319,12 @@ public class BaseLevel {
         }
     }
 
+    public void makeColors(JSONArray colors) throws  JSONException {
+        for(int i = 0;i<5;++i) {
+            this.colors.add(colors.getString(i));
+        }
+    }
+
     public List<String> getAchievements() {
         return achievments;
     }
@@ -320,4 +333,41 @@ public class BaseLevel {
     public void postSurfaceCreated() {}
     public void end() {}
 
+
+    @Override
+    public String getLevelName() { return levelName; }
+
+    @Override
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+    @Override
+    public boolean isOnlineLevel() {
+        return isOnlineLevel;
+    }
+
+    public void setIsOnlineLevel(boolean isOnlineLevel) {
+        this.isOnlineLevel = isOnlineLevel;
+    }
+
+    @Override
+    public String getCreatorTag() {
+        return creatorTag;
+    }
+
+    @Override
+    public void setCreatorTag(String creatorTag) {
+        this.creatorTag = creatorTag;
+    }
+
+    @Override
+    public String getLevelUrl() {
+        return levelUrl;
+    }
+
+    @Override
+    public void setLevelUrl(String levelUrl) {
+        this.levelUrl = levelUrl;
+    }
 }
