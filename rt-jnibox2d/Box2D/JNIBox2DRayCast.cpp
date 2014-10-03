@@ -120,7 +120,7 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
         for(int j=0;j<edges.size();j++) {
             b2Vec2 edge = edges[j];
             b2Vec2 direction = sub(edge,player);
-            b2Vec2 pt = mul(div(direction,length(direction)),11);
+            direction = mul(div(direction,length(direction)),18);
             b2Vec2 point = add(player,direction);
             
             world->RayCast(&raycaster,player,point);
