@@ -163,8 +163,8 @@ public class LevelChooserActivity extends Activity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     actionId == EditorInfo.IME_ACTION_DONE ||
-                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    (null!=event&&event.getAction() == KeyEvent.ACTION_DOWN &&
+                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
 
                     searchButton.callOnClick();
 
