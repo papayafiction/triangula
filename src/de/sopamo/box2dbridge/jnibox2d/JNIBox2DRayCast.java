@@ -7,10 +7,10 @@ import java.util.List;
 
 public class JNIBox2DRayCast {
 
-    public static Vec2[] rayCast(Vec2 pst,List<IBody> bodies) {
-        int[] bod = new int[bodies.size()];
-        for(int i = 0;i<bodies.size();i++) {
-            bod[i] = ((JNIBox2DBody)bodies.get(i)).bodyID;
+    public static Vec2[] rayCast(Vec2 pst,List<IBody> noRayCastBodies) {
+        int[] bod = new int[noRayCastBodies.size()];
+        for(int i = 0;i<noRayCastBodies.size();i++) {
+            bod[i] = ((JNIBox2DBody)noRayCastBodies.get(i)).bodyID;
         }
         return nRayCast(pst.x,pst.y,bod);
     }

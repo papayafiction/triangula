@@ -21,6 +21,7 @@
 
 package de.sopamo.triangula.android.game;
 
+import android.os.AsyncTask;
 import de.sopamo.box2dbridge.Box2DFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
@@ -33,6 +34,7 @@ import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.raycasting.Line;
 import de.sopamo.triangula.android.game.raycasting.Ray;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 import de.sopamo.triangula.android.geometry.GameShape;
 import de.sopamo.triangula.android.geometry.GameShapeBubble;
 import de.sopamo.triangula.android.geometry.Shadow;
@@ -134,7 +136,6 @@ public class GameImpl implements GameInterface {
         // in case we are using JNIBox2D, this
         // is very important! otherwise we end up with memory leaks.
         // world.destroy will recursively destroy all its attached content
-        physicsTask.softCancel();
         world.destroy();
         world = null;
         rewindables = new ArrayList<Rewindable>();
@@ -148,29 +149,32 @@ public class GameImpl implements GameInterface {
 	@Override
 	public void drawFrame() {
 
-
         // Draw game shape shadows
         for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
             if(!(gs instanceof Shadow)) continue;
             gs.draw();
         }
-// Draw game shapes
+
+        // Draw game shapes
         for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
             if(gs instanceof Shadow) continue;
             gs.draw();
         }
-// Draw rays
+
+        // Draw rays
         for(int i = 0;i < rays.size();++i) {
-//Ray ray = rays.get(i);
-//ray.draw();
+            Ray ray = rays.get(i);
+            ray.draw();
         }
         // Draw particles
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
             particle.draw();
         }
+
+        Raycaster.draw();
 	}
 
     public void reinit() {
@@ -186,7 +190,6 @@ public class GameImpl implements GameInterface {
                 reinit = false;
                 destroy();
                 init(handler, level);
-                resume();
             }
         }
         /** ## DEBUG ## **/

@@ -43,7 +43,7 @@ public class BaseLevel {
     }
 
     public void drawBackground(GL10 gl) {
-        int color = Util.hex2Color(colors.get(2));
+        int color = Util.hex2Color(colors.get(4));
         float[] colors = Util.getColorParts(color);
         gl.glClearColor(colors[0], colors[1], colors[2], 1);
     }
@@ -90,34 +90,83 @@ public class BaseLevel {
 
     public void postMake() {}
 
+    /**
+     * Gets a random color for a triangle / door / spike
+     *
+     * @return The color
+     */
     public static int getTriangleColor() {
         if(colors == null) return -1;
-        int randomColor = new Random().nextInt(4);
-        if(randomColor == 2) {
-            randomColor = 1;
-        }
-        int base = Util.hex2Color(colors.get(randomColor));
-        float hsv[] = new float[3];
-        Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
-        hsv[1] += Math.random()*0.1-0.05;
-        hsv[2] += Math.random()*0.1-0.05;
-        int color = Color.HSVToColor(hsv);
 
-        return color;
+        // Get the first or second color
+        int randomColor = new Random().nextInt(1);
+        // Get a color int from the hex color
+        int base = Util.hex2Color(colors.get(randomColor));
+
+        // Return a slightly modified color
+        return Util.getSimilarColor(base);
     }
 
+    /**
+     * Gets a random color for a bubble
+     *
+     * @return The color
+     */
+    public static int getBubbleColor() {
+        if(colors == null) return -1;
+
+        // Get the third or fourth color
+        int randomColor = new Random().nextInt(1)+2;
+        // Get a color int from the hex color
+        int base = Util.hex2Color(colors.get(randomColor));
+
+        // Return a slightly modified color
+        return Util.getSimilarColor(base);
+    }
+
+    /**
+     * Gets a random color for the background elements
+     *
+     * @return The color
+     */
+    public static int getBackgroundColor() {
+        if(colors == null) return -1;
+
+        // Get a color int from the hex color
+        int base = Util.hex2Color(colors.get(4));
+
+        // Return a slightly modified color
+        return Util.getSimilarColor(base);
+    }
+
+
+    /**
+     * Creates the background shapes
+     */
     protected void makeBackground() {
-        int backgroundShapes = 100;
-        for(int i = 0;i<backgroundShapes;++i) {
-            float y = 4 + new Random().nextFloat() * 2;
-            if(i%2 == 0)  {
+        int backgroundShapes = (int)(new Random().nextFloat()*50)+70;
+        for (int i = 0; i < backgroundShapes; ++i) {
+            Random random = new Random();
+
+            // Get random values
+            float y = 4 + random.nextFloat() * 2;
+            float x = i + random.nextFloat() * 2 - 5;
+            float size = random.nextFloat() * 8;
+            float speed = random.nextFloat() * 0.02f - 0.01f;
+
+            // Every second element is placed at the bottom
+            if (i % 2 == 0) {
                 y *= -1;
             }
-            float size = new Random().nextFloat() * 8;
-            float speed = new Random().nextFloat() * 0.02f-0.01f;
-            Rectangle rect = new Rectangle(i+new Random().nextFloat()*2-5,y,size,speed);
-            float grey = new Random().nextFloat();
-            rect.setColor(grey,grey,grey,new Random().nextFloat() * 0.3f);
+
+            // Create the rectangle
+            Rectangle rect = new Rectangle(x, y, size, speed);
+
+            // Set the color
+            float[] colors = Util.getColorParts(BaseLevel.getBackgroundColor());
+            rect.setColor(colors[0], colors[1], colors[2], 1);
+
+            // Add the element
             backgroundElements.add(rect);
         }
     }
@@ -126,25 +175,28 @@ public class BaseLevel {
         float density = 0;
         GameShape gs;
 
-
+        // Top
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,1,0,1);
-        gs.attachToBody(ground, new Vec2(100, 0), density);
+        gs.attachToBody(ground, new Vec2(100, .05f), density);
         gsl.add(gs);
 
+        // Bottom
         gs = GameShape.create(new GLRectangle(200, .1f));
         gs.setColor(1,0,0,1);
-        gs.attachToBody(ground, new Vec2(100, -10), density);
+        gs.attachToBody(ground, new Vec2(100, -10.05f), density);
         gsl.add(gs);
 
+        // Right
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,0,1,1);
         gs.attachToBody(ground, new Vec2(200f, -5f), density);
         gsl.add(gs);
 
+        // Left
         gs = GameShape.create(new GLRectangle(.1f, 10f));
         gs.setColor(0,1,0,1);
-        gs.attachToBody(ground, new Vec2(0,-5), density);
+        gs.attachToBody(ground, new Vec2(-0.05f,-5), density);
         gsl.add(gs);
     }
 
@@ -182,7 +234,6 @@ public class BaseLevel {
     public void makeBubbles(JSONArray bubbles) throws JSONException {
         for(int i = 0;i < bubbles.length();++i) {
             JSONObject bubble = bubbles.getJSONObject(i);
-
 
             float radius = Float.parseFloat(bubble.getString("size")) * 0.02f / 2;
             float x = Float.parseFloat(bubble.getString("x")) * 0.02f+radius;

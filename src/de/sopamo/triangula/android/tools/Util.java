@@ -24,5 +24,20 @@ public class Util {
         return parts;
     }
 
+    /**
+     * Returns a similar color to the input color
+     * This brings some diversity in the game
+     *
+     * @param color The base color
+     * @return The simliar color
+     */
+    public static int getSimilarColor(int base) {
+        float hsv[] = new float[3];
+        Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
+        hsv[1] += Math.random()*0.1-0.05;
+        hsv[2] += Math.random()*0.1-0.05;
+        return Color.HSVToColor(hsv);
+    }
+
 
 }
