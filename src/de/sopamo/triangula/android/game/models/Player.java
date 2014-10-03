@@ -2,6 +2,7 @@ package de.sopamo.triangula.android.game.models;
 
 import com.google.android.gms.games.Games;
 import de.sopamo.box2dbridge.IBody;
+import de.sopamo.triangula.android.App;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
@@ -72,8 +73,8 @@ public class Player implements Rewindable,Entity {
 
     @Override
     public void startRewind() {
-        if(GameActivity.getGoogleApiClient().isConnected()) {
-            Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        if(App.connectedToPlayServices()) {
+            Games.Achievements.unlockImmediate(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
         }
 
         if(isSucking()) return;

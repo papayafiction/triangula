@@ -6,36 +6,28 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.plus.Plus;
-import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuccessScreenActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
+public class SuccessScreenActivity extends FragmentActivity implements App.ConnectionCallback{
 
     private SuccessScreenActivity that;
     private Handler mHandler;
-    private GoogleApiClient mGoogleApiClient;
-    private boolean mAutoStartSignInFlow = true;
-    private boolean mResolvingConnectionFailure = false;
     private List<String> achievements = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.setActivityContext(this);
         setContentView(R.layout.success_screen);
         that = this;
         Bundle bundle = getIntent().getExtras();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this).addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).
-                        addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
         Level level = null;
         mHandler = new Handler();
         if(bundle != null) {
@@ -78,19 +70,27 @@ public class SuccessScreenActivity extends FragmentActivity implements GoogleApi
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        if(MainMenu.isSignedIn()) mGoogleApiClient.connect();
+        App.connectToPlayServices(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(mGoogleApiClient.isConnected()) unlock();
+        if(App.connectedToPlayServices()) unlock();
+    }
+
+    private void unlock() {
+        if(achievements != null) {
+            for(int i=0;i<achievements.size(); i++) {
+                Games.Achievements.unlockImmediate(App.getGoogleApiClient(),achievements.get(i));
+            }
+        }
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
+    public void onConnected(GoogleApiClient client) {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -99,33 +99,8 @@ public class SuccessScreenActivity extends FragmentActivity implements GoogleApi
         },200);
     }
 
-    private void unlock() {
-        if(achievements != null) {
-            for(int i=0;i<achievements.size(); i++) {
-                Games.Achievements.unlockImmediate(mGoogleApiClient,achievements.get(i));
-            }
-        }
-    }
-
     @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        if (mResolvingConnectionFailure) {
-            return;
-        }
-        if ( mAutoStartSignInFlow) {
-            mAutoStartSignInFlow = false;
-            mResolvingConnectionFailure = true;
-            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
-                    9001, "Fehler beim einloggen")) {
-                return;
-            }
-            mResolvingConnectionFailure = false;
-        }
+    public void onConnectionFailed() {
 
     }
 }

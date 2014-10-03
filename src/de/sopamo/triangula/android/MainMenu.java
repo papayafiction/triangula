@@ -11,26 +11,19 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.plus.Plus;
-import com.google.example.games.basegameutils.BaseGameUtils;
 
-public class MainMenu extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+public class MainMenu extends FragmentActivity implements App.ConnectionCallback {
 
     private static GoogleApiClient mGoogleApiClient;
-    private boolean mAutoStartSignInFlow = true;
-    private boolean mResolvingConnectionFailure = false;
-    private boolean mSignInClicked = false;
-    private boolean mAchievements = false;
-    private static boolean mSignedIn = false;
+    private static boolean mAutoStartSignInFlow;
     private SharedPreferences.Editor mSharedPreferences;
 
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if(mAutoStartSignInFlow) App.connectToPlayServices(this);
     }
 
     @Override
@@ -40,12 +33,11 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.setActivityContext(this);
         setContentView(R.layout.mainmenu);
         SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mAutoStartSignInFlow = !sp.getBoolean("declined",false);
         mSharedPreferences = sp.edit();
-
-
 
         final MainMenu that = this;
 
@@ -58,19 +50,10 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
         achievementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!mGoogleApiClient.isConnected()) {
-                    mSignInClicked = true;
-                    mAchievements = true;
-                    mGoogleApiClient.connect();
-                    return;
-                }
-                startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),5001);
+                if(App.connectedToPlayServices()) startActivityForResult(Games.Achievements.getAchievementsIntent(App.getGoogleApiClient()),5001);
+                else App.connectToPlayServices(that,true);
             }
         });
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
 
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,59 +114,21 @@ public class MainMenu extends FragmentActivity implements GoogleApiClient.Connec
 
 
     @Override
-    public void onConnected(Bundle bundle) {
-        mSignedIn = true;
-        mSharedPreferences.putBoolean("declined",false);
-        mSharedPreferences.commit();
-        if(mAchievements) {
-            mAchievements = false;
-            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient),5001);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        mSignedIn = false;
-        mSharedPreferences.putBoolean("declined",true);
-        mSharedPreferences.commit();
-        if (mResolvingConnectionFailure) {
-            return;
-        }
-        if ( mAutoStartSignInFlow || mSignInClicked) {
-            mAutoStartSignInFlow = false;
-            mSignInClicked = false;
-            mResolvingConnectionFailure = true;
-            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
-                    9001, "Fehler beim einloggen")) {
-                return;
-            }
-            mResolvingConnectionFailure = false;
-        }
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 9001) {
-            mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
-                // Make sure the app is not already connected or attempting to connect
-                if (!mGoogleApiClient.isConnecting() &&
-                        !mGoogleApiClient.isConnected()) {
-                    mGoogleApiClient.connect();
-                }
-            }
+            App.getContext().onResult(resultCode);
         }
     }
 
-    public static boolean isSignedIn() {
-        return mSignedIn;
+    @Override
+    public void onConnected(GoogleApiClient client) {
+        mSharedPreferences.putBoolean("declined",false);
+        mSharedPreferences.commit();
     }
 
-
+    @Override
+    public void onConnectionFailed() {
+        mSharedPreferences.putBoolean("declined",true);
+        mSharedPreferences.commit();
+    }
 }
