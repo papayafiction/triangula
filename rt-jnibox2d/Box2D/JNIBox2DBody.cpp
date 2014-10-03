@@ -5,22 +5,16 @@
  *      Author: klm
  */
 
-#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody.h"
 
-#include "Box2D.h"
-#include "JNIBox2DWorld.h"
-#include "JNIContactListener.h"
+#include "JNIBox2DBody.h"
+#include "JNIBox2DRayCast.h"
 
-#include <jni.h>
-#include <math.h>
 
-#include <stdio.h>
 //#include <iostream>
 //using namespace std;
 
 #undef JNIEXPORT
 #define JNIEXPORT extern "C"
-
 
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
@@ -53,6 +47,26 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nUpdateD
 
 }
 
+void setStaticEdges(b2Body* b) {
+    UserData* data = (UserData*)b->GetUserData();
+    std::vector<b2Vec2> points;
+    b2Vec2 vec;
+    vec.x = 0.005f;
+    vec.y = 0.005f;
+    for(b2Fixture* f=b->GetFixtureList();f;f=f->GetNext()) {
+        if(f->GetType() == b2Shape::e_polygon) {
+            b2PolygonShape* ps = (b2PolygonShape*)f->GetShape();
+            for(int i=0;i<ps->GetVertexCount();i++) {
+                points.push_back(add(b->GetPosition(),add(rotate(ps->GetVertex(i),b->GetAngle()),vec)));
+                points.push_back(add(b->GetPosition(),sub(rotate(ps->GetVertex(i),b->GetAngle()),vec)));
+            }
+        }
+    }
+    if(data == 0 ) data = new UserData;
+    data->points = points;
+    b->SetUserData(data);   
+}
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nCreateBox
@@ -75,10 +89,11 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateB
 
 	b2PolygonShape ps;
         ps.SetAsBox(width,height,center,angle);
-        
         bodyList[ID]->CreateFixture(&ps,density);
+        setStaticEdges(bodyList[ID]);
+}   
 
-}
+
 
 
 /*
@@ -101,9 +116,8 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateT
         
         b2PolygonShape ps;
         ps.Set(vertices,3);
-        
         bodyList[ID]->CreateFixture(&ps,density);
-
+        setStaticEdges(bodyList[ID]);
 }
 
 /*
@@ -121,8 +135,8 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateL
     
     b2PolygonShape ps;
     ps.Set(vertices,4);
-    
     bodyList[ID]->CreateFixture(&ps,density);
+    setStaticEdges(bodyList[ID]);
 }
 
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateCircle
@@ -139,6 +153,8 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateC
 
 }
 
+
+
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody
  * Method:    nAssociateJNIObject
@@ -152,10 +168,12 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nAssocia
 
 	if(bodyList[id] == 0)
 		return;
-
+        UserData* data = new UserData;
 	jobject gref = MakeGlobalRef(env, caller);
+        data->globalRef = gref;
+        data->body = id;
 	// gref is now JNIBOx2DBody object
-        bodyList[id]->SetUserData(gref);
+        bodyList[id]->SetUserData(data);
 
 }
 
@@ -258,8 +276,8 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetPosi
 
 	b2Vec2 pos;
 	pos.Set(x, y);
-	bodyList[id]->SetTransform(pos, bodyList[id]->GetAngle());
-
+        bodyList[id]->SetTransform(pos, bodyList[id]->GetAngle());
+        setStaticEdges(bodyList[id]);
 }
 
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nSetAngularVelocity

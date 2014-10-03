@@ -21,7 +21,6 @@
 
 package de.sopamo.triangula.android.game;
 
-import android.os.AsyncTask;
 import de.sopamo.box2dbridge.Box2DFactory;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
@@ -36,7 +35,6 @@ import de.sopamo.triangula.android.game.raycasting.Line;
 import de.sopamo.triangula.android.game.raycasting.Ray;
 import de.sopamo.triangula.android.game.raycasting.Raycaster;
 import de.sopamo.triangula.android.geometry.GameShape;
-import de.sopamo.triangula.android.geometry.GameShapeBubble;
 import de.sopamo.triangula.android.geometry.Shadow;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.particles.Particle;
@@ -50,7 +48,7 @@ public class GameImpl implements GameInterface {
 
     public static final int TIME_TO_RESTART = 500;
     public static final float TIME_STEP = 1f / 60f;
-    public static final int ITERATIONS = 5;
+    public static final int ITERATIONS = 3;
 
 
     private Level level;
@@ -156,6 +154,8 @@ public class GameImpl implements GameInterface {
             gs.draw();
         }
 
+        Raycaster.draw();
+
         // Draw game shapes
         for(int i=0;i<gsl.size();i++) {
             GameShape gs = gsl.get(i);
@@ -174,7 +174,6 @@ public class GameImpl implements GameInterface {
             particle.draw();
         }
 
-        Raycaster.draw();
 	}
 
     public void reinit() {

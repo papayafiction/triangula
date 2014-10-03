@@ -148,7 +148,7 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
-        Raycaster.cast();
+         Raycaster.cast();
 
         // Free PhysicsTask
         synchronized (game.getPhysicsTask()) {

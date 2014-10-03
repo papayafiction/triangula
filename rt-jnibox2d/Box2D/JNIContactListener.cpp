@@ -24,8 +24,8 @@ void JNIContactListener::BeginContact(b2Contact* contact) {
     contact->GetWorldManifold(&worldManifold);
     b2Vec2 point = worldManifold.points[0];
             env->CallVoidMethod(worldData,callback,
-                    (jobject)body1->GetUserData(),
-                    (jobject)body2->GetUserData(),
+                    (jobject)((UserData*)body1->GetUserData())->globalRef,
+                    (jobject)((UserData*)body2->GetUserData())->globalRef,
                     (jfloat)point.x,(jfloat)point.y);
           
 }

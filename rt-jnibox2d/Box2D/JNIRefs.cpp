@@ -9,12 +9,8 @@
 
 jobject globalRef [MAX_GLOBAL_REFS];
 
-
-
-
 jobject MakeGlobalRef(JNIEnv* env, jobject obj) {
-
-	for(int i = 0 ; i < MAX_GLOBAL_REFS ; i++)
+    for(int i = 0 ; i < MAX_GLOBAL_REFS ; i++)
 	{
 		if(globalRef[i] == obj) {
 			printf("re-using global ref %d", (int)obj);
@@ -32,9 +28,10 @@ jobject MakeGlobalRef(JNIEnv* env, jobject obj) {
 	sprintf(txt, "No free spot for global ref %d found. Max refs: %d", (int)obj, MAX_GLOBAL_REFS);
 	throwExc(env, txt);
 	return 0;
-
-
 }
+
+
+
 
 void DeleteAllGlobalRefs(JNIEnv* env) {
 	for(int i = 0 ; i < MAX_GLOBAL_REFS ; i++) {
