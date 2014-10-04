@@ -32,6 +32,7 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
 
     public void onCreate() {
         super.onCreate();
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mSharedPreferences = sp.edit();
         context = this;
@@ -45,7 +46,6 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     @Override
     public void onConnected(Bundle bundle) {
         mSignedIn = true;
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mSharedPreferences.putBoolean("declined",false);
         mSharedPreferences.commit();
         callback.onConnected(mGoogleApiClients.get(activityContext));
