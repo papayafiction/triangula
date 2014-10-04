@@ -171,4 +171,8 @@ public class PGRenderer implements Renderer {
 	public void destroy() {
 		game.destroy();
 	}
+
+    public static float getRatio() {
+        return ratio;
+    }
 }

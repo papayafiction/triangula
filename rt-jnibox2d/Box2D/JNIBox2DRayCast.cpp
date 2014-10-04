@@ -96,20 +96,51 @@ public:
 JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nRayCast
   (JNIEnv* env, jobject obj, jfloat x,jfloat y, jintArray list) {
     jclass vector = env->FindClass("org/jbox2d/common/Vec2");
+    jclass pgRenderer = env->FindClass("de/sopamo/triangula/android/PGRenderer");
+    jmethodID ratio_method = env->GetStaticMethodID(pgRenderer,"getRatio","()F");
     jmethodID vector_constructor = env->GetMethodID(vector,"<init>","(FF)V");
    
+    jfloat ratio = env->CallStaticFloatMethod(pgRenderer,ratio_method);
+    
     jint size = env->GetArrayLength(list);
     jboolean* result;
     jint* bodyIds = env->GetIntArrayElements(list,result);
         
     std::vector<b2Vec2> points;
+    std::vector<b2Vec2> points2;
     player.x = x;
     player.y = y;
 
     RayCaster raycaster;
     raycaster.bodyIds = bodyIds;
     raycaster.size = size;
- 
+    
+    float viewPortX = player.x+1-ratio*5;
+    if(viewPortX < 0)
+        viewPortX = 0;
+    
+    b2Vec2 leftTop,leftBottom,rightTop,rightBottom;
+    leftTop.x = viewPortX;
+    leftTop.y = 0;
+    
+    leftBottom.x = viewPortX;
+    leftBottom.y = -10;
+    
+    rightTop.x = 10*ratio+viewPortX;
+    rightTop.y = 0;
+    
+    rightBottom.x = 10*ratio+viewPortX;
+    rightBottom.y = -10;
+    
+    points2.push_back(leftTop);
+    points2.push_back(leftBottom);
+    points2.push_back(rightTop);
+    points2.push_back(rightBottom);
+    
+    ((UserData*)bodyList[0]->GetUserData())->points = points2;
+    
+    float rayLength = 10/cos(atan(ratio));
+
     for(int i=0;i<MAX_BODIES;i++) {
         if(bodyList[i] == NULL) break;
         b2Body* b = bodyList[i];
@@ -120,9 +151,10 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
         for(int j=0;j<edges.size();j++) {
             b2Vec2 edge = edges[j];
             b2Vec2 direction = sub(edge,player);
-            direction = mul(div(direction,length(direction)),18);
+            direction = mul(div(direction,length(direction)),rayLength);
             b2Vec2 point = add(player,direction);
             
+            raycaster.closest = 1;
             world->RayCast(&raycaster,player,point);
             points.push_back(add(player,mul(direction,raycaster.closest)));
         }      
@@ -132,7 +164,7 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
     b2Vec2 direction;
     direction.x = 1;
     direction.y = 0;
-        
+    
     stdVec = direction;
     std::sort(points.begin(),points.end(),comparator);
     
@@ -143,6 +175,7 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
         env->DeleteLocalRef(javaVec);
     }
     env->DeleteLocalRef(vector);
+    env->DeleteLocalRef(pgRenderer);
     return ret;
 }
 

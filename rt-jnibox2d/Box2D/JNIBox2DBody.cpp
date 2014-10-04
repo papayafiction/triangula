@@ -90,7 +90,9 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DBody_nCreateB
 	b2PolygonShape ps;
         ps.SetAsBox(width,height,center,angle);
         bodyList[ID]->CreateFixture(&ps,density);
-        setStaticEdges(bodyList[ID]);
+        if(ID != 0) {
+            setStaticEdges(bodyList[ID]);
+        }
 }   
 
 
