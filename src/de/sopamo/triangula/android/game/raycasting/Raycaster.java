@@ -20,6 +20,8 @@ public class Raycaster {
     }
 
     public static void draw() {
+        if(points == null) return;
+
         glEnable(GL_STENCIL_TEST);
         glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
