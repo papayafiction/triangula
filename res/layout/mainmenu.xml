@@ -77,6 +77,17 @@
                     android:paddingTop="10dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="10dp"/>
+                <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mute"
+                        android:background="@drawable/rounded_button"
+                        android:id="@+id/mutebutton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="10dp"/>
             </LinearLayout>
         </LinearLayout>
 
