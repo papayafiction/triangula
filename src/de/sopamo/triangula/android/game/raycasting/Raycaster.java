@@ -21,11 +21,12 @@ public class Raycaster {
     }
 
     public static void draw() {
+        if(points == null) return;
+
         glEnable(GL_STENCIL_TEST);
         glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
         glColorMask(false, false, false, false);
-        glDepthMask(false);
         glStencilFunc(GL_ALWAYS, 1, 1);
         glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
@@ -54,7 +55,6 @@ public class Raycaster {
 
 
         glColorMask(true, true, true, true);
-        glDepthMask(true);
         glStencilFunc(GL_EQUAL, 0, 1);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 

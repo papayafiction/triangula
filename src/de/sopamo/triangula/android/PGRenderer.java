@@ -118,6 +118,7 @@ public class PGRenderer implements Renderer {
         // Enabling alpha
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
+        glDepthMask(false);
 
         glEnable(GL_LINE_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);

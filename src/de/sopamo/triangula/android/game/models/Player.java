@@ -145,7 +145,7 @@ public class Player implements Rewindable,Entity {
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.applyForce(new Vec2(3, 25),new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(4.5f, 25),new Vec2(targetX, targetY));
         }
         if(force != null) {
             body.applyForceToCenter(force);
