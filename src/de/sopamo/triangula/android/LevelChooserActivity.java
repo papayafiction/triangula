@@ -3,6 +3,7 @@ package de.sopamo.triangula.android;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+import com.google.android.gms.plus.Plus;
 import de.sopamo.triangula.android.adapters.LevelAdapter;
 import de.sopamo.triangula.android.levels.BaseOnlineLevel;
 import de.sopamo.triangula.android.levels.Level;
@@ -25,7 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 //TODO: implement official levels, my levels (username from google+)
 
@@ -117,7 +122,12 @@ public class LevelChooserActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String searchValue = searchField.getText().toString();
+                String searchValue = null;
+                try {
+                    searchValue = URLEncoder.encode(searchField.getText().toString(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 String url ="";
 
 
@@ -138,13 +148,20 @@ public class LevelChooserActivity extends Activity {
                 } else if(i==2) { //my levels (online)
 
                     if(null==userId) {
-                        //TODO: get google+ user id
+                        if(App.connectedToPlayServices()) {
+                            userId = Plus.AccountApi.getAccountName(App.getGoogleApiClient());
+                            try {
+                                userId = URLEncoder.encode(userId,"utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     if(searchValue.isEmpty()) {
-                        url = BASE_URL + "?googleid=" + userId;
+                        url = BASE_URL + "?google_email=" + userId;
                     } else {
-                        url = BASE_URL + "?googleid=" + userId + "&search=" + searchValue;
+                        url = BASE_URL + "?google_email=" + userId + "&search=" + searchValue;
                     }
                 }
 
@@ -184,7 +201,14 @@ public class LevelChooserActivity extends Activity {
 
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        if(!sp.getBoolean("declined",false)) {
+            App.connectToPlayServices();
+        }
+    }
 
     private void loadOfficialLevels(String searchValue) {
 
@@ -311,7 +335,7 @@ public class LevelChooserActivity extends Activity {
                         String levelUrl = levelArray.getString(j);
 
                         String levelName=levelUrl.replace(levelUrl.substring(0, levelUrl.indexOf("-")+1), "");
-                        levelName=levelName.replace(levelName.substring(levelName.indexOf("-"), levelName.length()), "");
+                        levelName=levelName.replace(levelName.substring(levelName.indexOf("."), levelName.length()), "");
 
                         BaseOnlineLevel l = new BaseOnlineLevel(name, levelName, levelUrl);
                         levels.add(l);
