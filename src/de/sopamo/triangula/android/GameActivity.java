@@ -63,7 +63,6 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
 
     //TextView test;
-
     public GameActivity() {
         instance = this;
     }

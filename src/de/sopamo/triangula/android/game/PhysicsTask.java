@@ -2,6 +2,7 @@ package de.sopamo.triangula.android.game;
 
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
+import de.sopamo.triangula.android.game.raycasting.Raycaster;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class PhysicsTask extends Thread {
 
             mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
 
+            Raycaster.cast();
             if(isCancelled()) {
                 break;
             }
