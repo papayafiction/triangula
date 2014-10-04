@@ -91,6 +91,10 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 }
             }
             if(((UserData)(body.getUserData())).type.equals("bomb")) {
+
+                // Only the player can interact with a bomb
+                if(!((UserData)(body2.getUserData())).type.equals("player")) return false;
+
                 forceSet = true;
                 //sound when touching bomb
                 if (mediaPlayer!=null){
@@ -130,6 +134,9 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 exit.endGame();
             }
             if(((UserData)(body.getUserData())).type.equals("sucker")) {
+                // Only the player can interact with a sucker
+                if(!((UserData)(body2.getUserData())).type.equals("player")) return false;
+
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
 
                 //sound when exiting level
