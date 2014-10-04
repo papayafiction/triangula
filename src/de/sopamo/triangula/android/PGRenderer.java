@@ -45,7 +45,7 @@ public class PGRenderer implements Renderer {
     private static float ratio;
     private static int mHalfWidth;
 	private static int mHalfHeight;
-    private float viewportX = 0;
+    private static float viewportX = 0;
     public static Image image;
     private Context context;
     private GL10 gl;
@@ -171,4 +171,12 @@ public class PGRenderer implements Renderer {
 	public void destroy() {
 		game.destroy();
 	}
+
+    public static float getRatio() {
+        return ratio;
+    }
+
+    public static float getViewportX() {
+        return viewportX*-1;
+    }
 }

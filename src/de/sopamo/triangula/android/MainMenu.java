@@ -16,11 +16,26 @@ import com.google.android.gms.games.Games;
 public class MainMenu extends FragmentActivity {
 
     private static boolean mAutoStartSignInFlow;
+    private static boolean mMuted;
 
-    @Override
+    private SharedPreferences.Editor mSpEditor;
+    private Button muteButton;
+
     protected void onStart() {
         super.onStart();
         if(mAutoStartSignInFlow) App.connectToPlayServices();
+    }
+
+    private void mute() {
+        App.muteAudio();
+        muteButton.setText("Unmute");
+        mMuted = true;
+    }
+
+    private void unmute() {
+        App.unMuteAudio();
+        muteButton.setText("Mute");
+        mMuted = false;
     }
 
     @Override
@@ -32,8 +47,10 @@ public class MainMenu extends FragmentActivity {
         super.onCreate(savedInstanceState);
         App.setActivityContext(this);
         setContentView(R.layout.mainmenu);
-        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        final SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mAutoStartSignInFlow = !sp.getBoolean("declined",false);
+        mMuted = sp.getBoolean("muted",false);
+        this.mSpEditor = sp.edit();
 
         final MainMenu that = this;
 
@@ -41,7 +58,19 @@ public class MainMenu extends FragmentActivity {
         final Button aboutButton = (Button) findViewById(R.id.aboutButton);
         final Button levelButton = (Button) findViewById(R.id.levelbutton);
         final Button achievementButton = (Button) findViewById(R.id.achievementbutton);
+        muteButton = (Button) findViewById(R.id.mutebutton);
 
+        if(mMuted) mute();
+
+        muteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mMuted) unmute();
+                else mute();
+                mSpEditor.putBoolean("muted",mMuted);
+                mSpEditor.commit();
+            }
+        });
 
         achievementButton.setOnClickListener(new View.OnClickListener() {
             @Override

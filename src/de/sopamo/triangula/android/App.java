@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,6 +19,8 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     private static App context;
     private static App that;
     private static HashMap<Context,GoogleApiClient> mGoogleApiClients = new HashMap<Context, GoogleApiClient>();
+    private static AudioManager audioManager;
+    private static int timesMuted;
 
     private Context activityContext;
     private ConnectionCallback callback;
@@ -42,6 +45,7 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     @Override
     public void onConnected(Bundle bundle) {
         mSignedIn = true;
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mSharedPreferences.putBoolean("declined",false);
         mSharedPreferences.commit();
         callback.onConnected(mGoogleApiClients.get(activityContext));
@@ -153,6 +157,21 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
 
     public static void setActivityContext(Context activityContext) {
         that.activityContext = activityContext;
+    }
+
+    public static AudioManager getAudioManager() {
+        return audioManager;
+    }
+
+    public static void muteAudio() {
+        timesMuted++;
+        audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
+    }
+
+    public static void unMuteAudio() {
+        for(int i=timesMuted;i>0;i--,timesMuted--) {
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
+        }
     }
 }
 
