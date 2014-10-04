@@ -1,6 +1,7 @@
 package de.sopamo.triangula.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -72,7 +73,10 @@ public class SuccessScreenActivity extends FragmentActivity implements App.Conne
     @Override
     protected void onStart() {
         super.onStart();
-        App.connectToPlayServices(this);
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        if(!sp.getBoolean("declined",false)) {
+            App.connectToPlayServices(this);
+        }
     }
 
     @Override

@@ -23,6 +23,7 @@
 package de.sopamo.triangula.android;
 
 
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,7 +36,6 @@ import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.android.gms.common.api.GoogleApiClient;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.levels.official.Level1;
@@ -186,15 +186,10 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     protected void onStart() {
         super.onStart();
-        App.connectToPlayServices(new App.ConnectionCallback() {
-            @Override
-            public void onConnected(GoogleApiClient client) {
-            }
-
-            @Override
-            public void onConnectionFailed() {
-            }
-        });
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        if(!sp.getBoolean("declined",false)) {
+            App.connectToPlayServices();
+        }
     }
 
     @Override

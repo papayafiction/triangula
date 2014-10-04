@@ -3,6 +3,7 @@ package de.sopamo.triangula.android;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,10 +25,12 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     private boolean mSignInFlow = false;
     private boolean mAchievements = false;
     private static boolean mSignedIn = false;
+    private SharedPreferences.Editor mSharedPreferences;
 
-    @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        mSharedPreferences = sp.edit();
         context = this;
         that = this;
     }
@@ -39,6 +42,8 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     @Override
     public void onConnected(Bundle bundle) {
         mSignedIn = true;
+        mSharedPreferences.putBoolean("declined",false);
+        mSharedPreferences.commit();
         callback.onConnected(mGoogleApiClients.get(activityContext));
         if(mAchievements) {
             mAchievements = false;
@@ -54,6 +59,8 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         mSignedIn = false;
+        mSharedPreferences.putBoolean("declined",true);
+        mSharedPreferences.commit();
         if (mResolvingConnectionFailure) {
             return;
         }
@@ -104,6 +111,18 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
             public void onConnectionFailed() {
             }
         });
+    }
+
+    public static void connectToPlayServices(boolean startAchievementsAfterwards) {
+        connectToPlayServices(new ConnectionCallback() {
+            @Override
+            public void onConnected(GoogleApiClient client) {
+            }
+
+            @Override
+            public void onConnectionFailed() {
+            }
+        },startAchievementsAfterwards);
     }
 
     public static void connectToPlayServices(ConnectionCallback callBack,boolean startAchievementsAfterwards) {

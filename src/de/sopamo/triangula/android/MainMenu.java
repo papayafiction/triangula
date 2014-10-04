@@ -11,19 +11,16 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
-public class MainMenu extends FragmentActivity implements App.ConnectionCallback {
+public class MainMenu extends FragmentActivity {
 
-    private static GoogleApiClient mGoogleApiClient;
     private static boolean mAutoStartSignInFlow;
-    private SharedPreferences.Editor mSharedPreferences;
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(mAutoStartSignInFlow) App.connectToPlayServices(this);
+        if(mAutoStartSignInFlow) App.connectToPlayServices();
     }
 
     @Override
@@ -37,7 +34,6 @@ public class MainMenu extends FragmentActivity implements App.ConnectionCallback
         setContentView(R.layout.mainmenu);
         SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mAutoStartSignInFlow = !sp.getBoolean("declined",false);
-        mSharedPreferences = sp.edit();
 
         final MainMenu that = this;
 
@@ -51,7 +47,7 @@ public class MainMenu extends FragmentActivity implements App.ConnectionCallback
             @Override
             public void onClick(View v) {
                 if(App.connectedToPlayServices()) startActivityForResult(Games.Achievements.getAchievementsIntent(App.getGoogleApiClient()),5001);
-                else App.connectToPlayServices(that,true);
+                else App.connectToPlayServices(true);
             }
         });
 
@@ -118,17 +114,5 @@ public class MainMenu extends FragmentActivity implements App.ConnectionCallback
         if (requestCode == 9001) {
             App.getContext().onResult(resultCode);
         }
-    }
-
-    @Override
-    public void onConnected(GoogleApiClient client) {
-        mSharedPreferences.putBoolean("declined",false);
-        mSharedPreferences.commit();
-    }
-
-    @Override
-    public void onConnectionFailed() {
-        mSharedPreferences.putBoolean("declined",true);
-        mSharedPreferences.commit();
     }
 }
