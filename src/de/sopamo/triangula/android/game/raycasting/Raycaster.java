@@ -1,6 +1,7 @@
 package de.sopamo.triangula.android.game.raycasting;
 
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DRayCast;
+import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.tools.BufferTool;
 import de.sopamo.triangula.android.tools.GLBufferTool;
@@ -61,16 +62,15 @@ public class Raycaster {
         // Draw shadow
         glColor4f(0,0,0,.3f);
         float[] v2 = {
-                0,  0,
-                0,  -15,
-                25, -15,
-                25, 0,
-                0,0
+                PGRenderer.getViewportX(),  0,
+                PGRenderer.getViewportX(),  -10,
+                PGRenderer.getRatio()*10+PGRenderer.getViewportX(), -10,
+                PGRenderer.getRatio()*10+PGRenderer.getViewportX(), 0,
         };
 
         GLBufferTool.setGLVertexBuffer(2, BufferTool.makeFloatBuffer(v2));
-        glDrawArrays(GL_TRIANGLE_STRIP, 0,
-               5);
+        glDrawArrays(GL_TRIANGLE_FAN, 0,
+               4);
 
 
         glDisable(GL_STENCIL_TEST);
