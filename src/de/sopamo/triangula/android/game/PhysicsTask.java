@@ -39,7 +39,7 @@ public class PhysicsTask extends Thread {
             /** Save Rewindable Actions **/
             for (int i = 0; i < mRewindableList.size(); i++) {
                 Rewindable rewindable = mRewindableList.get(i);
-                rewindable.run();
+                rewindable.updateRewindable();
             }
 
             /** DO SOME REWIND **/
@@ -66,7 +66,7 @@ public class PhysicsTask extends Thread {
             /** Update Entities **/
             for (int i = 0; i < mEntityList.size(); i++) {
                 Entity entity = mEntityList.get(i);
-                entity.update();
+                entity.updateEntity();
             }
 
 

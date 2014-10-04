@@ -45,7 +45,7 @@ public class Triangle implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         Vec2 playerPosition = GameImpl.getMainPlayer().getBody().getWorldCenter();
         Vec2 direction = this.shape.getPosition().sub(playerPosition);
         direction.normalize();

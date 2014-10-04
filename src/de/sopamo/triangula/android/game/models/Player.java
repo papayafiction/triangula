@@ -96,7 +96,7 @@ public class Player implements Rewindable,Entity {
     }
 
     @Override
-    public void run() {
+    public void updateRewindable() {
         if(rewind) rewind();
         else saveCurrentState();
     }
@@ -139,7 +139,7 @@ public class Player implements Rewindable,Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         if(inputHandler.isTouched() && !isSucking()) {
             Vec2 currPlayerPosition = body.getWorldCenter();
             float targetX = currPlayerPosition.x;

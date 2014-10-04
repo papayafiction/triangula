@@ -65,7 +65,7 @@ public class Bomb implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         if (destroy) {
             destroy = false;
             game.getGsl().remove(shape);

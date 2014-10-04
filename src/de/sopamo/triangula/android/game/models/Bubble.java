@@ -5,8 +5,9 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.geometry.*;
-import de.sopamo.triangula.android.levels.BaseLevel;
+import de.sopamo.triangula.android.geometry.GLCircle;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeBubble;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
@@ -37,7 +38,7 @@ public class Bubble implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
 
     }
 }

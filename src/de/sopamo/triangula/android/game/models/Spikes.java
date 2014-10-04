@@ -8,7 +8,6 @@ import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
-import de.sopamo.triangula.android.levels.BaseLevel;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
@@ -57,7 +56,7 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         Long dt = 1000l/60;
         for(int i=0;i<times.size();i++) {
             IBody triangle = triangles.get(i);
@@ -105,7 +104,7 @@ public class Spikes extends TriangleBaseModel implements Entity,Rewindable {
     }
 
     @Override
-    public void run() {
+    public void updateRewindable() {
 
     }
 
