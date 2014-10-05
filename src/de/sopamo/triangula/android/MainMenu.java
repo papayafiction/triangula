@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import com.google.android.gms.games.Games;
 
 public class MainMenu extends FragmentActivity {
@@ -19,7 +20,7 @@ public class MainMenu extends FragmentActivity {
     private static boolean mMuted;
 
     private SharedPreferences.Editor mSpEditor;
-    private Button muteButton;
+    private ImageButton muteButton;
 
     protected void onStart() {
         super.onStart();
@@ -28,13 +29,13 @@ public class MainMenu extends FragmentActivity {
 
     private void mute() {
         App.muteAudio();
-        muteButton.setText("Unmute");
+        muteButton.setImageResource(R.drawable.sound_off);
         mMuted = true;
     }
 
     private void unmute() {
         App.unMuteAudio();
-        muteButton.setText("Mute");
+        muteButton.setImageResource(R.drawable.sound_on);
         mMuted = false;
     }
 
@@ -58,7 +59,7 @@ public class MainMenu extends FragmentActivity {
         final Button aboutButton = (Button) findViewById(R.id.aboutButton);
         final Button levelButton = (Button) findViewById(R.id.levelbutton);
         final Button achievementButton = (Button) findViewById(R.id.achievementbutton);
-        muteButton = (Button) findViewById(R.id.mutebutton);
+        muteButton = (ImageButton) findViewById(R.id.mutebutton);
 
         if(mMuted) mute();
 
