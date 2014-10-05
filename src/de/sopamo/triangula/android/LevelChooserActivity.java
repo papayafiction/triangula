@@ -221,6 +221,7 @@ public class LevelChooserActivity extends Activity {
         levels.add(new Level4());
         levels.add(new Movethetime());
         levels.add(new Doorception());
+        levels.add(new NextLevel());
         levels.add(new Steps());
         levels.add(new Starter());
         levels.add(new Ascending());

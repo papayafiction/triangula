@@ -16,7 +16,7 @@ public class Doorception extends BaseOfficialLevel implements Level,Serializable
 
     public Doorception() {
         try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Steps"));
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.NextLevel"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
