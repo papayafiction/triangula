@@ -88,6 +88,7 @@ public class MusicPlayer implements Rewindable {
                 sysPauseStart = System.currentTimeMillis();
                 initTimePause = players.get(0).getCurrentPosition();
                 players.get(0).pause();
+
                 players.get(1).seekTo((int) (players.get(0).getDuration() - initTimePause) / 2);
                 Log.e("music","Rewinding");
                 return null;
@@ -101,13 +102,6 @@ public class MusicPlayer implements Rewindable {
                 sysPauseEnd = System.currentTimeMillis();
                 diffTime = (initTimePause-(sysPauseEnd-sysPauseStart)*2);
                 players.get(1).pause();
-
-                players.get(0).setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-                    @Override
-                    public void onSeekComplete(MediaPlayer mp) {
-                        mp.start();
-                    }
-                });
                 players.get(0).seekTo((int) diffTime);
                 Log.e("music","Stop Rewinding");
                 return null;
@@ -213,6 +207,18 @@ public class MusicPlayer implements Rewindable {
         Hooks.bind(Hooks.RESUME,new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
+                backwardMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+                    @Override
+                    public void onSeekComplete(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+                forwardMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+                    @Override
+                    public void onSeekComplete(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
                 players.get(0).seekTo(0);
                 return null;
             }
