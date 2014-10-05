@@ -95,25 +95,22 @@ public class MainMenu extends FragmentActivity {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("CLICKED", "About wurde geklickt");
                 // 1. Instantiate an AlertDialog.Builder with its constructor
                 AlertDialog.Builder builder = new AlertDialog.Builder(that);
 
                 // 2. Chain together various setter methods to set the dialog characteristics
-                builder.setMessage("triangula is made by papaya fiction.")
-                        .setTitle("About");
+                builder.setMessage("Triangula is made by Papaya Fiction. Make your own levels at: bit.ly/triangula-editor. All music by Simanfication")
+                        .setTitle("About Triangula");
 
-                builder.setNegativeButton("Thank you, guys!", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
-                builder.setPositiveButton("I love you, guys!", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse("http://papaya-fiction.com/"));
-                        startActivity(i);
+                        dialog.cancel();
                     }
                 });
 
