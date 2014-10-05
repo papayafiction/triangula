@@ -19,17 +19,15 @@ public class SettingsActivity extends Activity {
         mute = (Button) findViewById(R.id.settings_mute_button);
         raycast = (Button) findViewById(R.id.settings_raycast_button);
 
-        String qualitySetting = App.getSetting("quality");
-
         mute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(App.getSetting("muted").equals("true")) {
-                    mute.setText("Mute");
+                    mute.setText("Sound Is On");
                     App.unMuteAudio();
                     App.setSetting("muted","false");
                 } else {
-                    mute.setText("Unmute");
+                    mute.setText("Sound Is off");
                     App.muteAudio();
                     App.setSetting("muted","true");
                 }
@@ -40,11 +38,24 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if(App.getSetting("raycast").equals("true")) {
-                    raycast.setText("Enable Shadows");
+                    raycast.setText("No Shadows");
                     App.setSetting("raycast","false");
                 } else {
-                    raycast.setText("Disable Shadows");
+                    raycast.setText("Full Shadows");
                     App.setSetting("raycast","true");
+                }
+            }
+        });
+
+        quality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(App.getSetting("quality").equals("true")) {
+                    quality.setText("Low Quality");
+                    App.setSetting("quality","false");
+                } else {
+                    quality.setText("High Quality");
+                    App.setSetting("quality","true");
                 }
             }
         });
@@ -54,7 +65,8 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(App.getSetting("muted").equals("true")) mute.setText("Unmute");
-        if(App.getSetting("raycast").equals("false")) raycast.setText("Enable Shadows");
+        if(App.getSetting("muted").equals("true")) mute.setText("Sound Is Off");
+        if(App.getSetting("raycast").equals("false")) raycast.setText("Full Shadows");
+        if(App.getSetting("quality").equals("false")) quality.setText("Low Quality");
     }
 }

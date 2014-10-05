@@ -169,17 +169,6 @@ public class GameImpl implements GameInterface {
             gs.draw();
         }
 
-        // Draw exit images
-        for(int i=0;i<entities.size();i++) {
-            Entity gs = entities.get(i);
-            if(!(gs instanceof Exit)) continue;
-            Exit exit = (Exit)gs;
-            Vec2 exitPosition = exit.getExitBody().getWorldCenter();
-            Image image = new Image(0.45f,0.8f,exitPosition, R.drawable.exit);
-            image.loadGLTexture(PGRenderer.getInstance().getGl(), GameActivity.getInstance());
-            image.draw();
-        }
-
         // Draw rays
         for(int i = 0;i < rays.size();++i) {
             Ray ray = rays.get(i);
@@ -189,6 +178,13 @@ public class GameImpl implements GameInterface {
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
             particle.draw();
+        }
+
+        // Draw exit images
+        for(int i=0;i<entities.size();i++) {
+            Entity gs = entities.get(i);
+            if(!(gs instanceof Exit)) continue;
+            ((Exit) gs).draw();
         }
 
 	}

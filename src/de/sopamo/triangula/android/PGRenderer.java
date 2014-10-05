@@ -119,16 +119,18 @@ public class PGRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
         // Enabling alpha
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
         glDepthMask(false);
+        if(App.getSetting("quality").equals("true")) {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
 
-        glEnable(GL_LINE_SMOOTH);
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        glEnable(GL_MULTISAMPLE);
+            glEnable(GL_LINE_SMOOTH);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+            glEnable(GL_MULTISAMPLE);
 
-        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
-        gl.glShadeModel(GL10.GL_SMOOTH);
+            gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+            gl.glShadeModel(GL10.GL_SMOOTH);
+        }
 	}
 	
 	/**

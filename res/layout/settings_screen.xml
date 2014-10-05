@@ -12,19 +12,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView" android:layout_gravity="center_horizontal"
-                android:src="@drawable/menu_background"
+                android:src="@drawable/menu_background_no_font"
                 android:scaleType="centerCrop"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
                 android:layout_marginTop="180dp" android:gravity="center_horizontal">
-            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quality"
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="High Quality"
                     android:id="@+id/settings_quality_button" android:singleLine="false"
                     android:background="@drawable/rounded_button" android:paddingLeft="20dp" android:paddingTop="10dp"
                     android:paddingRight="20dp" android:paddingBottom="10dp" android:textColor="#ffae00"
                     android:textSize="20dp" android:textStyle="bold" android:layout_marginTop="10dp"/>
-            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Disable Shadows"
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Full Shadows"
                     android:id="@+id/settings_raycast_button" android:singleLine="false" android:background="@drawable/rounded_button"
                     android:paddingLeft="20dp" android:paddingTop="10dp" android:paddingRight="20dp"
                     android:paddingBottom="10dp" android:textColor="#ffae00" android:textSize="20dp"
@@ -32,7 +32,7 @@
             <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mute"
+                    android:text="Sound Is On"
                     android:id="@+id/settings_mute_button" android:singleLine="false" android:background="@drawable/rounded_button"
                     android:paddingLeft="20dp" android:paddingTop="10dp" android:paddingRight="20dp"
                     android:paddingBottom="10dp" android:textColor="#ffae00" android:textSize="20dp"

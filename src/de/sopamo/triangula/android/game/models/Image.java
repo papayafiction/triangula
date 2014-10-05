@@ -105,6 +105,7 @@ public class Image {
 
     /** The draw method for the square with the GL context */
     public void draw() {
+        glPushMatrix();
         glEnable(GL10.GL_TEXTURE_2D);
         glTranslatef(position.x, position.y, 0);
         glColor4f(1, 1, 1, 1);
@@ -129,5 +130,6 @@ public class Image {
         glDisableClientState(GL10.GL_VERTEX_ARRAY);
         glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         glDisable(GL10.GL_TEXTURE_2D);
+        glPopMatrix();
     }
 }
