@@ -154,8 +154,6 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
     Query query;
     
     b2AABB aabb;
-    leftBottom.x -= 5;
-    rightTop.x += 5;
     aabb.lowerBound = leftBottom;
     aabb.upperBound = rightTop;
     

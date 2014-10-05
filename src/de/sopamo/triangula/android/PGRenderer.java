@@ -39,7 +39,9 @@ public class PGRenderer implements Renderer {
 	GameImpl game;
 
     private long time ;
-	
+
+    private static boolean disableRayCast = false;
+    private final static int testTimeInterval = 0;
 	private static int mWidth = 0;
 	private static int mHeight = 0;
     private static float ratio;
@@ -133,6 +135,8 @@ public class PGRenderer implements Renderer {
 	 */
 	@Override
 	public void onDrawFrame(GL10 gl) {
+
+
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         game.getLevel().drawBackground(gl);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -162,12 +166,14 @@ public class PGRenderer implements Renderer {
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
         }
+        time= System.currentTimeMillis();
 	}
 
 
 	public void init() {
         InputHandler handler = new InputHandler();
 		game.init(handler, GameActivity.level);
+        game.startPhysicTask();
 	}
 	public void destroy() {
 		game.destroy();
