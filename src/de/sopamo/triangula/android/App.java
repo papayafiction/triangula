@@ -11,14 +11,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import de.sopamo.triangula.android.levels.Level;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class App extends Application implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
 
     private static App context;
     private static App that;
     private static HashMap<Context,GoogleApiClient> mGoogleApiClients = new HashMap<Context, GoogleApiClient>();
+    private static List<Level> levelList;
     private static AudioManager audioManager;
     private static int timesMuted;
 
@@ -172,6 +175,14 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
         for(int i=timesMuted;i>0;i--,timesMuted--) {
             audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
         }
+    }
+
+    public static void setLevelList(List<Level> levelList) {
+        App.levelList = levelList;
+    }
+
+    public static List<Level> getLevelList() {
+        return levelList;
     }
 }
 

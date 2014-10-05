@@ -7,20 +7,23 @@ import android.os.Parcelable;
  * Created by moe on 03.10.14.
  */
 public class BaseOnlineLevel extends BaseLevel implements Level,Parcelable {
+    private int nextLevel;
 
     //this is a template for onlineLevels. Just set creatorTag and levelName in the constructor, and the JSON string later
 
-    public BaseOnlineLevel(String creatorTag, String levelName, String levelUrl) {
+    public BaseOnlineLevel(String creatorTag, String levelName, String levelUrl,int nextLevel) {
         this.creatorTag=creatorTag;
         this.levelName = levelName;
         this.isOnlineLevel=true;
         this.levelUrl=levelUrl;
+        this.nextLevel = nextLevel;
     }
 
 
     private BaseOnlineLevel(Parcel in) {
         boolean[] booleanData = new boolean[1];
         in.readBooleanArray(booleanData);
+        nextLevel = in.readInt();
         creatorTag = in.readString();
         levelName = in.readString();
         levelUrl = in.readString();
@@ -34,6 +37,7 @@ public class BaseOnlineLevel extends BaseLevel implements Level,Parcelable {
         parcel.writeBooleanArray(new boolean[] {
                 isOnlineLevel
         });
+        parcel.writeInt(nextLevel);
         parcel.writeString(creatorTag);
         parcel.writeString(levelName);
         parcel.writeString(levelUrl);
@@ -55,5 +59,7 @@ public class BaseOnlineLevel extends BaseLevel implements Level,Parcelable {
         return 0;
     }
 
-
+    public int getNextLevel() {
+        return nextLevel;
+    }
 }

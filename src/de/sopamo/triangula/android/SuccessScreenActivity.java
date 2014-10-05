@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import de.sopamo.triangula.android.game.GameImpl;
+import de.sopamo.triangula.android.levels.BaseOnlineLevel;
 import de.sopamo.triangula.android.levels.Level;
 
 import java.util.ArrayList;
@@ -48,6 +49,23 @@ public class SuccessScreenActivity extends FragmentActivity implements App.Conne
             }
         });
 
+        if(level instanceof BaseOnlineLevel) {
+            final int next = ((BaseOnlineLevel) level).getNextLevel();
+            if(next <= App.getLevelList().size()-1) {
+                final Button nextLevelButton = (Button) findViewById(R.id.next_level);
+                nextLevelButton.setVisibility(View.VISIBLE);
+                nextLevelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Level Onlinelevel = App.getLevelList().get(next);
+                        Intent online = new Intent(that,StartLevelService.class);
+                        online.putExtra("level",Onlinelevel);
+                        that.startService(online);
+                    }
+                });
+                return;
+            }
+        }
         Class nextLevel = GameImpl.getNextLevel();
         if(level != null && nextLevel != null) {
             final Button nextLevelButton = (Button) findViewById(R.id.next_level);

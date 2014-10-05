@@ -162,7 +162,7 @@ public class PGRenderer implements Renderer {
 
         /** Sync World after draw and wait for physics **/
         while(!game.getPhysicsTask().isWaiting());
-        game.getWorld().sync();
+        if(game.getWorld() != null) game.getWorld().sync();
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
         }

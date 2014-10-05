@@ -5,7 +5,6 @@ import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.levels.BaseLevel;
 import de.sopamo.triangula.android.levels.BaseOfficialLevel;
 import de.sopamo.triangula.android.levels.Level;
 import de.sopamo.triangula.android.tools.Hooks;
@@ -26,11 +25,7 @@ public class Level1 extends BaseOfficialLevel implements Level, Serializable {
     }
 
     public Level1() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level2"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
@@ -55,6 +50,11 @@ public class Level1 extends BaseOfficialLevel implements Level, Serializable {
 
     @Override
     public void end() {
+        try {
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level2"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_1));
     }
 }

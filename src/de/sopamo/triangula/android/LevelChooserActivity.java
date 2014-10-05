@@ -319,9 +319,8 @@ public class LevelChooserActivity extends Activity {
             try {
 
                 JSONArray root = new JSONObject(jsonRaw).getJSONArray("players");
-
+                int next = 1;
                 for(int i=0; i<root.length(); i++) {
-
                     JSONObject playerObj = root.getJSONObject(i);
 
                     String name = playerObj.getString("name");
@@ -337,7 +336,7 @@ public class LevelChooserActivity extends Activity {
                         String levelName=levelUrl.replace(levelUrl.substring(0, levelUrl.indexOf("-")+1), "");
                         levelName=levelName.replace(levelName.substring(levelName.indexOf("."), levelName.length()), "");
 
-                        BaseOnlineLevel l = new BaseOnlineLevel(name, levelName, levelUrl);
+                        BaseOnlineLevel l = new BaseOnlineLevel(name, levelName, levelUrl,next++);
                         levels.add(l);
                     }
 
