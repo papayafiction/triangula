@@ -222,6 +222,7 @@ public class LevelChooserActivity extends Activity {
         levels.add(new Movethetime());
         levels.add(new Skihuette());
         levels.add(new Starter());
+        levels.add(new Waypoint());
 
         if(!searchValue.isEmpty()) {
 

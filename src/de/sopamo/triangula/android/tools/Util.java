@@ -29,14 +29,19 @@ public class Util {
      * This brings some diversity in the game
      *
      * @param color The base color
+     * @param maxDifference The maximum difference to the base color
      * @return The simliar color
      */
-    public static int getSimilarColor(int base) {
+    public static int getSimilarColor(int base,float maxDifference) {
         float hsv[] = new float[3];
         Color.RGBToHSV(Color.red(base),Color.green(base),Color.blue(base),hsv);
-        hsv[1] += Math.random()*0.1-0.05;
-        hsv[2] += Math.random()*0.1-0.05;
+        hsv[1] += Math.random()*maxDifference-(maxDifference*0.5f);
+        hsv[2] += Math.random()*maxDifference-(maxDifference*0.5f);
         return Color.HSVToColor(hsv);
+    }
+
+    public static int getSimilarColor(int base) {
+        return getSimilarColor(base,0.1f);
     }
 
 
