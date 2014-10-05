@@ -2,6 +2,7 @@ package de.sopamo.triangula.android.game.models;
 
 import com.google.android.gms.games.Games;
 import de.sopamo.box2dbridge.IBody;
+import de.sopamo.triangula.android.App;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
@@ -72,8 +73,8 @@ public class Player implements Rewindable,Entity {
 
     @Override
     public void startRewind() {
-        if(GameActivity.getGoogleApiClient().isConnected()) {
-            Games.Achievements.unlockImmediate(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
+        if(App.connectedToPlayServices()) {
+            Games.Achievements.unlockImmediate(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_travel_back_in_time_));
         }
 
         if(isSucking()) return;
@@ -95,7 +96,7 @@ public class Player implements Rewindable,Entity {
     }
 
     @Override
-    public void run() {
+    public void updateRewindable() {
         if(rewind) rewind();
         else saveCurrentState();
     }
@@ -138,13 +139,13 @@ public class Player implements Rewindable,Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         if(inputHandler.isTouched() && !isSucking()) {
             Vec2 currPlayerPosition = body.getWorldCenter();
             float targetX = currPlayerPosition.x;
             float targetY = currPlayerPosition.y;
 
-            body.applyForce(new Vec2(3, 25),new Vec2(targetX, targetY));
+            body.applyForce(new Vec2(4.5f, 25),new Vec2(targetX, targetY));
         }
         if(force != null) {
             body.applyForceToCenter(force);

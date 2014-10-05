@@ -20,58 +20,39 @@
  */
 
 
-
-
 package de.sopamo.triangula.android;
 
 
-import android.content.Context;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
-import com.google.android.gms.plus.Plus;
-import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.levels.Level;
-import de.sopamo.triangula.android.levels.Level1;
+import de.sopamo.triangula.android.levels.official.Level1;
 import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
 import de.sopamo.triangula.android.tools.Hooks;
-import de.sopamo.triangula.android.wifi.WifiConnection;
 import org.jbox2d.common.Vec2;
 
 import java.io.File;
 
-public class GameActivity extends FragmentActivity implements SensorEventListener,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+public class GameActivity extends FragmentActivity implements SensorEventListener {
 
-    /** Called when the activity is first created. */
-
-    private static GoogleApiClient mGoogleApiClient;
-    private boolean mAutoStartSignInFlow = true;
-    private boolean mResolvingConnectionFailure = false;
-    private boolean mSignInClicked = false;
-
-	GameGLSurfaceView mGameGlSurfaceView;
-	private static TextView status;
-	private static GameActivity instance;
-    private WifiConnection wifiConnection;
-    private WifiP2pManager wifiP2pManager;
-    private IntentFilter intentFilter;
-    private WifiP2pManager.Channel channel;
+    /**
+     * Called when the activity is first created.
+     */
+    GameGLSurfaceView mGameGlSurfaceView;
+    private static TextView status;
+    private static GameActivity instance;
     //Music Handling
     public MediaPlayer forwardMediaPlayer;
     public MediaPlayer backwardMediaPlayer;
@@ -81,47 +62,38 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     private GameImpl gameInstance;
 
 
-
     //TextView test;
-
-	public GameActivity() {
+    public GameActivity() {
         instance = this;
-	}
+    }
 
     public static Level level;
-	
-	Handler mHandler = new Handler();
-	
+
+    Handler mHandler = new Handler();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this).addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN).
-                addApi(Games.API).addScope(Games.SCOPE_GAMES).build();
+        App.setActivityContext(this);
 
         Bundle b = getIntent().getExtras();
-        if(b!= null) {
+        if (b != null) {
             level = (Level) b.get("level");
         } else {
             level = new Level1();
         }
 
         mGameGlSurfaceView = new GameGLSurfaceView(this);
-        
+
         setContentView(R.layout.main);
-        LinearLayout ll = (LinearLayout)findViewById(R.id.layout_main);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.layout_main);
         ll.addView(mGameGlSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        
-        status = (TextView)findViewById(R.id.tv_status);
-        
-        SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
+
+        status = (TextView) findViewById(R.id.tv_status);
+
+        SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        
-        intentFilter = new IntentFilter();
-        wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        channel = wifiP2pManager.initialize(this, getMainLooper(), null);
-        wifiConnection = new WifiConnection(wifiP2pManager, channel, intentFilter, this);
+
 
         //Music Handling on create
         // Files of the song in the right order and reverse
@@ -136,54 +108,56 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         musicPlayer.playMusic();
         mGameGlSurfaceView.init();
     }
-    
-    
+
+
     public static void setStatus(String text) {
-    	if(status == null)
-    		return;
-    	
-    	instance.runOnUiThread(new StatusUpdate(text));
+        if (status == null)
+            return;
+
+        instance.runOnUiThread(new StatusUpdate(text));
     }
 
     private static class StatusUpdate implements Runnable {
-    	private String text;
-    	public StatusUpdate(String text) {
-    		this.text = text;
-    	}
-		@Override
-		public void run() {
-    		status.setText(text);
-		}
+        private String text;
+
+        public StatusUpdate(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public void run() {
+            status.setText(text);
+        }
     }
-    
+
     @Override
     protected void onDestroy() {
         GameImpl.getInstance().getPhysicsTask().softCancel();
         GameImpl.getInstance().getWorld().setContactListener(null);
         super.onDestroy();
-    	mGameGlSurfaceView.destroy();
+        mGameGlSurfaceView.destroy();
         //Music handling on destroy
         musicPlayer.destroyPlayer();
 
     }
 
 
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // TODO Auto-generated method stub
 
-	public static float x, y, z;
+    }
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
+    public static float x, y, z;
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
 //		System.out.println(event.values[0]+","+ event.values[1]+","+ event.values[1]);
 //		status.setText(event.values[0]+",	\n"+ event.values[1]+",	\n"+ event.values[2]);
-		x = -event.values[0];
-		y = -event.values[1];
-		z = -event.values[2];
-	}
+        x = -event.values[0];
+        y = -event.values[1];
+        z = -event.values[2];
+    }
 
     // Get touch event positions
     public static int touch_x, touch_y;
@@ -191,17 +165,18 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     public static boolean longTouched = false;
 
     private static long lastClick = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         gameInstance = GameImpl.getInstance();
 
-        if(GameImpl.getInstance() == null) return false;
+        if (GameImpl.getInstance() == null) return false;
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            gameInstance.getInputHandler().setTouchPosition(new Vec2(event.getX(),event.getY()));
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            gameInstance.getInputHandler().setTouchPosition(new Vec2(event.getX(), event.getY()));
             gameInstance.getInputHandler().setTouched();
             Hooks.call(Hooks.TAP);
-        } else if(event.getAction() == MotionEvent.ACTION_UP) {
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             gameInstance.getInputHandler().reset();
         }
 
@@ -209,29 +184,24 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        if(!sp.getBoolean("declined",false)) {
+            App.connectToPlayServices();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         //Music resuming after pause is ended
         musicPlayer.resumePlayerForward(pauseStartTime);
-
-        registerReceiver(wifiConnection, intentFilter);
-        wifiP2pManager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-
-            public void onSuccess() {
-                //test.setText("WUHU!");
-            }
-
-            public void onFailure(int reason) {
-
-            }
-        });
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(wifiConnection);
 
         //Music pausing, saving current pos
         pauseStartTime = musicPlayer.getCurrentPosForward();
@@ -245,45 +215,5 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
     public Handler getHandler() {
         return mHandler;
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(MainMenu.isSignedIn()) mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        if (mResolvingConnectionFailure) {
-            Log.e("yolo", "onConnectionFailed(): already resolving");
-            return;
-        }
-        Log.e("yolo",""+connectionResult.toString());
-        if ( mAutoStartSignInFlow || mSignInClicked) {
-            mAutoStartSignInFlow = false;
-            mSignInClicked = false;
-            mResolvingConnectionFailure = true;
-            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult,
-                    9001, "Fehler beim einloggen")) {
-                return;
-            }
-            mResolvingConnectionFailure = false;
-        }
-
-    }
-
-    public static GoogleApiClient getGoogleApiClient() {
-        return mGoogleApiClient;
     }
 }

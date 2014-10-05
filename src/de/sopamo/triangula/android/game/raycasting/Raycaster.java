@@ -1,6 +1,8 @@
 package de.sopamo.triangula.android.game.raycasting;
 
+import android.util.Log;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DRayCast;
+import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.tools.BufferTool;
 import de.sopamo.triangula.android.tools.GLBufferTool;
@@ -17,14 +19,16 @@ public class Raycaster {
         Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
 
         points = JNIBox2DRayCast.rayCast(player,GameImpl.getInstance().getNoRayCast());
+        Log.e("Rays", "" + points.length);
     }
 
     public static void draw() {
+        if(points == null) return;
+
         glEnable(GL_STENCIL_TEST);
         glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
         glColorMask(false, false, false, false);
-        glDepthMask(false);
         glStencilFunc(GL_ALWAYS, 1, 1);
         glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
@@ -53,24 +57,22 @@ public class Raycaster {
 
 
         glColorMask(true, true, true, true);
-        glDepthMask(true);
         glStencilFunc(GL_EQUAL, 0, 1);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
 
         // Draw shadow
-        glColor4f(0,0,0,.7f);
+        glColor4f(0,0,0,.3f);
         float[] v2 = {
-                0,  0,
-                0,  -15,
-                25, -15,
-                25, 0,
-                0,0
+                PGRenderer.getViewportX(),  0,
+                PGRenderer.getViewportX(),  -10,
+                PGRenderer.getRatio()*10+PGRenderer.getViewportX(), -10,
+                PGRenderer.getRatio()*10+PGRenderer.getViewportX(), 0,
         };
 
         GLBufferTool.setGLVertexBuffer(2, BufferTool.makeFloatBuffer(v2));
-        glDrawArrays(GL_TRIANGLE_STRIP, 0,
-               5);
+        glDrawArrays(GL_TRIANGLE_FAN, 0,
+               4);
 
 
         glDisable(GL_STENCIL_TEST);

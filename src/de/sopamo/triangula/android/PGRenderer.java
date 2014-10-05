@@ -28,7 +28,6 @@ import android.opengl.GLSurfaceView.Renderer;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.InputHandler;
 import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.game.raycasting.Raycaster;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -40,13 +39,15 @@ public class PGRenderer implements Renderer {
 	GameImpl game;
 
     private long time ;
-	
+
+    private static boolean disableRayCast = false;
+    private final static int testTimeInterval = 0;
 	private static int mWidth = 0;
 	private static int mHeight = 0;
     private static float ratio;
     private static int mHalfWidth;
 	private static int mHalfHeight;
-    private float viewportX = 0;
+    private static float viewportX = 0;
     public static Image image;
     private Context context;
     private GL10 gl;
@@ -119,6 +120,7 @@ public class PGRenderer implements Renderer {
         // Enabling alpha
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
+        glDepthMask(false);
 
         glEnable(GL_LINE_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -133,6 +135,8 @@ public class PGRenderer implements Renderer {
 	 */
 	@Override
 	public void onDrawFrame(GL10 gl) {
+
+
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         game.getLevel().drawBackground(gl);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -148,8 +152,6 @@ public class PGRenderer implements Renderer {
         gl.glTranslatef(viewportX,0,-5f);
 
 		game.gameLoop();
-        Raycaster.cast();
-
         // Free PhysicsTask
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
@@ -160,18 +162,28 @@ public class PGRenderer implements Renderer {
 
         /** Sync World after draw and wait for physics **/
         while(!game.getPhysicsTask().isWaiting());
-        game.getWorld().sync();
+        if(game.getWorld() != null) game.getWorld().sync();
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
         }
+        time= System.currentTimeMillis();
 	}
 
 
 	public void init() {
         InputHandler handler = new InputHandler();
 		game.init(handler, GameActivity.level);
+        game.startPhysicTask();
 	}
 	public void destroy() {
 		game.destroy();
 	}
+
+    public static float getRatio() {
+        return ratio;
+    }
+
+    public static float getViewportX() {
+        return viewportX*-1;
+    }
 }

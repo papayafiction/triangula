@@ -62,7 +62,7 @@ public class Exit implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         if (removeSucker) {
             removeSucker = false;
             game.getWorld().destroyBody(suckerBody);

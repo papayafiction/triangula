@@ -6,8 +6,6 @@
  */
 
 
-#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DShape.h"
-
 #include "Box2D.h"
 #include "JNIBox2DWorld.h"
 

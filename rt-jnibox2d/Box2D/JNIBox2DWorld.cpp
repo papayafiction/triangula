@@ -7,12 +7,9 @@
  *
  */
 
-#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld.h"
 #include "JNIBox2DWorld.h"
 #include "JNIContactListener.h"
-#include "Box2D.h"
-#include "JNIRefs.h"
-#include <jni.h>
+#include "JNIBox2DRayCast.h"
 
 //#include <iostream>
 //using namespace std;
@@ -20,9 +17,6 @@
 // we may be missing com/kristianlm/robotankssomething here ... but JNIEXPORT is empty so this is so much more convenient!
 #undef JNIEXPORT
 #define JNIEXPORT extern "C"
-
-
-
 
 
 
@@ -56,12 +50,12 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nTestLi
 /*
  * Class:     de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld
  * Method:    n_createWorld
- * Signature: (FFFFFFZ)I
+ * Signature: (FFFFFFB)I
  */
 JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreateWorld
   (JNIEnv * env, jobject caller, jfloat x1, jfloat y1, jfloat x2, jfloat y2, jfloat gx, jfloat gy, jboolean canSleep) {
 
-
+       
 	for(int i = 0 ; i < MAX_BODIES ; i++) {
 		bodyList[i] = 0;
 	}
@@ -101,7 +95,7 @@ JNIEXPORT jint JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nCreate
 JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nStep
   (JNIEnv * env, jobject, jfloat dt, jint iterations) {
     listener->SetEnv(env);
-    world->Step(dt, iterations, iterations);
+    world->Step(dt, iterations,iterations);
 }
 
 /*
@@ -224,6 +218,7 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 			return;
 		}
 	}
+        
 
 	float x = body->GetWorldCenter().x,
 			y = body->GetWorldCenter().y,
@@ -232,10 +227,13 @@ void updateBodyData(JNIEnv * env, b2Body* body) {
 			angle = body->GetAngle(),
 			avel = body->GetAngularVelocity(),
 			inertiaInv = 1.0f / body->GetInertia();
+        
+        UserData* data = (UserData*)body->GetUserData();
+        UserData* data2 = (UserData*)bodyList[0]->GetUserData();
 
-	if(body->GetUserData() != bodyList[0]->GetUserData())
-		if(body->GetUserData() != 0)
-			env->CallVoidMethod((jobject)body->GetUserData(), callbackSetData, x, y, vx, vy, angle, avel, inertiaInv);
+	if(data != data2) {                       
+			env->CallVoidMethod((jobject)((UserData*)body->GetUserData())->globalRef, callbackSetData, x, y, vx, vy, angle, avel, inertiaInv);
+        }
 }
 
 
@@ -251,12 +249,12 @@ JNIEXPORT void JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DWorld_nUpdate
     
 	for(int i = 0 ; i < MAX_BODIES ; i++) {
 		b2Body* body = bodyList[i];
-
+                
 		// valid body pointer
 		if(body != 0) {
-
+                        
 			// check if we have userdata (should be pointer to JNIBox2DBody global ref.
-			if(body->GetUserData() != 0)
+			if(body->GetUserData() != NULL)
 				updateBodyData(env, body);
 		}
 	}

@@ -16,7 +16,17 @@ public interface Level extends Serializable {
     public void make();
     public void end();
     public String getLevelString();
+    public void setLevelString(String json);
     public List<String> getAchievements();
     public void postDraw();
     public void postSurfaceCreated();
+    public String getCreatorTag();
+    public void setCreatorTag(String creatorTag);
+    public String getLevelName();
+    public void setLevelName(String levelName);
+    public boolean isOnlineLevel();
+    public void setIsOnlineLevel(boolean isOnlineLevel);
+    public void setLevelUrl(String url);
+    public String getLevelUrl();
+
 }

@@ -1,10 +1,10 @@
 package de.sopamo.triangula.android.game;
 
 import android.media.MediaPlayer;
-import com.google.android.gms.games.Game;
 import com.google.android.gms.games.Games;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.jbox2d.JBox2DBody;
+import de.sopamo.triangula.android.App;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.mechanics.UserData;
@@ -112,15 +112,18 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 count();
 
                 //unlock achievements
-                if (counter >= 10 && GameActivity.getGoogleApiClient().isConnected()){
-                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_10));
-                }else if (counter >= 5 && GameActivity.getGoogleApiClient().isConnected()){
-                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_5));
-                }else if (counter >= 3 && GameActivity.getGoogleApiClient().isConnected()){
-                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_3));
-                }else if (counter == 1 && GameActivity.getGoogleApiClient().isConnected()){
-                    Games.Achievements.unlock(GameActivity.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.first_bomb));
+                if(App.connectedToPlayServices()) {
+                    if (counter >= 10){
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_10));
+                    }else if (counter >= 5){
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_5));
+                    }else if (counter >= 3){
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_3));
+                    }else if (counter == 1){
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.first_bomb));
+                    }
                 }
+
             }
             if(((UserData)(body.getUserData())).type.equals("exit")) {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;

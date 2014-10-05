@@ -6,10 +6,13 @@
  */
 
 #include "JNIBox2DRayCast.h"
-#include "Headers/gen/de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast.h"
+#include "JNIContactListener.h"
 #include <math.h> 
 
 #define APPNAME "Triangula"
+
+#undef JNIEXPORT
+#define JNIEXPORT extern "C"
 
 b2Vec2 rotate(b2Vec2 vec,float angle) {
     b2Vec2 newVec;
@@ -38,6 +41,13 @@ b2Vec2 mul(b2Vec2 vec, float times) {
     return vec;
 }
 
+b2Vec2 div(b2Vec2 vec, float times) {
+    vec.x = vec.x/times;
+    vec.y = vec.y/times;
+    return vec;
+}
+
+
 float scalar(b2Vec2 v1,b2Vec2 v2) {
     return v1.x*v2.x+v1.y*v2.y;
 }
@@ -54,13 +64,6 @@ float angle(b2Vec2 v1,b2Vec2 v2) {
     return angle;
 }
 
-bool in(jint* array,int size, int value) {
-    for(int i=0;i<size;i++) {
-        if(value == array[i]) return true; 
-    }
-    return false;
-}
-
 b2Vec2 stdVec;
 b2Vec2 player;
 
@@ -68,74 +71,118 @@ bool comparator(b2Vec2 v1, b2Vec2 v2) {
     return angle(sub(v1,player),stdVec)<angle(sub(v2,player),stdVec);
 }
 
-JNIEXPORT jobjectArray JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nRayCast
+class RayCaster : public b2RayCastCallback {
+public:
+    float closest;
+    jint* bodyIds;
+    int size;
+    bool in(jint* array,int size, int value) {
+        for(int i=0;i<size;i++) {
+            if(value == array[i]) return true; 
+        }
+        return false;
+    }
+    float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
+        if(fixture->GetType() != b2Shape::e_polygon) return -1;
+        UserData* data = (UserData*)fixture->GetBody()->GetUserData();
+        if(data != 0) {
+            if(this->in(bodyIds,size,data->body)) return -1;
+        }
+        closest = fraction;
+        return fraction;
+    }
+};
+
+class Query : public b2QueryCallback {
+public:
+    std::vector<b2Body*> bodies;
+    bool ReportFixture(b2Fixture* fixture){
+        if(((UserData*)fixture->GetBody()->GetUserData())->body == 0) return true;
+        bodies.push_back(fixture->GetBody());
+        return true;
+    };
+};
+
+JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nRayCast
   (JNIEnv* env, jobject obj, jfloat x,jfloat y, jintArray list) {
     jclass vector = env->FindClass("org/jbox2d/common/Vec2");
+    jclass pgRenderer = env->FindClass("de/sopamo/triangula/android/PGRenderer");
+    jmethodID ratio_method = env->GetStaticMethodID(pgRenderer,"getRatio","()F");
     jmethodID vector_constructor = env->GetMethodID(vector,"<init>","(FF)V");
+   
+    jfloat ratio = env->CallStaticFloatMethod(pgRenderer,ratio_method);
     
     jint size = env->GetArrayLength(list);
     jboolean* result;
     jint* bodyIds = env->GetIntArrayElements(list,result);
         
     std::vector<b2Vec2> points;
+    std::vector<b2Vec2> points2;
     player.x = x;
     player.y = y;
-    
-    
 
-    for(int i=0;i< MAX_BODIES;i++) {
-        if(bodyList[i] == NULL) break;
-        b2Body* body = bodyList[i];
-        b2Vec2 pos = body->GetPosition();
-        for(b2Fixture* f = body->GetFixtureList();f;f=f->GetNext()) {
-            b2Shape::Type type = f->GetType();
-            if(type == b2Shape::e_circle) {
-                b2CircleShape* circleShape = (b2CircleShape*)f->GetShape();
-                continue;
-            } else if(type == b2Shape::e_polygon) {
-                b2PolygonShape* polygonShape = (b2PolygonShape*)f->GetShape();
-                int vertexes = polygonShape->GetVertexCount();
-                for(int j=0;j<vertexes;j++) {    
-                    b2Vec2* edges = new b2Vec2[2];
-                    b2Vec2 innerEdge = add(pos,mul(rotate(polygonShape->GetVertex(j),body->GetAngle()),0.98f));
-                    b2Vec2 outerEdge = add(pos,mul(rotate(polygonShape->GetVertex(j),body->GetAngle()),1.02f));
-                    
-                    edges[0] = innerEdge;
-                    edges[1] = outerEdge;
-                    for(int i=0;i<2;i++) {
-                        b2RayCastInput input;
-                        input.maxFraction = 10;
-                        input.p1 = player;
-                        input.p2 = edges[i];
-               
-                        float closestFraction = input.maxFraction;
-                        for(int k = 0; k< MAX_BODIES; k++) {
-                            if(bodyList[k] == NULL) break;
-                            if(in(bodyIds,size,k)) continue;
-                            b2Body* b = bodyList[k];
-                            for(b2Fixture* f2 = b->GetFixtureList();f2;f2=f2->GetNext()) {
-                                if(f2->GetType() != b2Shape::e_polygon) continue;
-                                b2RayCastOutput output;
-                                if(!f2->RayCast(&output,input,0))
-                                    continue;
-                                if(output.fraction < closestFraction) {
-                                    closestFraction = output.fraction;
-                                }
-                            }
-                        }             
-                        b2Vec2 point = add(player,mul(sub(edges[i],player),closestFraction));
-                        points.push_back(point);     
-                    }                    
-                }                
-            }                      
-        }
+    RayCaster raycaster;
+    raycaster.bodyIds = bodyIds;
+    raycaster.size = size;
+    
+    float viewPortX = player.x+1-ratio*5;
+    if(viewPortX < 0)
+        viewPortX = 0;
+    
+    b2Vec2 leftTop,leftBottom,rightTop,rightBottom;
+    leftTop.x = viewPortX;
+    leftTop.y = 0;
+    
+    leftBottom.x = viewPortX;
+    leftBottom.y = -10;
+    
+    rightTop.x = 10*ratio+viewPortX;
+    rightTop.y = 0;
+    
+    rightBottom.x = 10*ratio+viewPortX;
+    rightBottom.y = -10;
+    
+    points2.push_back(leftTop);
+    points2.push_back(leftBottom);
+    points2.push_back(rightTop);
+    points2.push_back(rightBottom);
+    
+    ((UserData*)bodyList[0]->GetUserData())->points = points2;
+    
+    float rayLength = 10/cos(atan(ratio));
+
+    Query query;
+    
+    b2AABB aabb;
+    aabb.lowerBound = leftBottom;
+    aabb.upperBound = rightTop;
+    
+    world->QueryAABB(&query,aabb);
+    query.bodies.push_back(bodyList[0]);
+    
+    for(int i=0;i<query.bodies.size();i++) {
+        b2Body* b = query.bodies[i];
+        if(b->GetUserData() == 0) continue;
+        UserData* data = (UserData*)b->GetUserData();
+        if((data->points).size() == 0) continue;
+        std::vector<b2Vec2> edges = data->points;
+        for(int j=0;j<edges.size();j++) {
+            b2Vec2 edge = edges[j];
+            b2Vec2 direction = sub(edge,player);
+            direction = mul(div(direction,length(direction)),rayLength);
+            b2Vec2 point = add(player,direction);
+            
+            raycaster.closest = 1;
+            world->RayCast(&raycaster,player,point);
+            points.push_back(add(player,mul(direction,raycaster.closest)));
+        }      
     }
     env->ReleaseIntArrayElements(list,bodyIds,0);
    
     b2Vec2 direction;
     direction.x = 1;
     direction.y = 0;
-        
+    
     stdVec = direction;
     std::sort(points.begin(),points.end(),comparator);
     
@@ -146,6 +193,7 @@ JNIEXPORT jobjectArray JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCa
         env->DeleteLocalRef(javaVec);
     }
     env->DeleteLocalRef(vector);
+    env->DeleteLocalRef(pgRenderer);
     return ret;
 }
 

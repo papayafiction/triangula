@@ -10,6 +10,7 @@
 
 #include "Box2D.h"
 #include <jni.h>
+#include <android/log.h>
 #include "JNIBox2DWorld.h"
 #include "JNIRefs.h"
 

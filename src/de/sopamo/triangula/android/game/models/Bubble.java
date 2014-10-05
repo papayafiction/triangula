@@ -5,8 +5,9 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
-import de.sopamo.triangula.android.geometry.*;
-import de.sopamo.triangula.android.levels.BaseLevel;
+import de.sopamo.triangula.android.geometry.GLCircle;
+import de.sopamo.triangula.android.geometry.GameShape;
+import de.sopamo.triangula.android.geometry.GameShapeBubble;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
@@ -18,11 +19,11 @@ public class Bubble implements Entity {
     private GameShape shape;
     private IBody body;
 
-    public Bubble(Vec2 pst, float radius) {
+    public Bubble(Vec2 pst, float radius, int color) {
         this.game = GameImpl.getInstance();
         GameShapeBubble bubbleShape;
         bubbleShape = new GameShapeBubble(new GLCircle(radius));
-        float[] colors = Util.getColorParts(BaseLevel.getTriangleColor());
+        float[] colors = Util.getColorParts(color);
         bubbleShape.setColor(colors[0], colors[1], colors[2], 1);
         IBody body = bubbleShape.attachToNewBody(game.getWorld(), null, .01f);
         UserData data = new UserData();
@@ -37,7 +38,7 @@ public class Bubble implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
 
     }
 }
