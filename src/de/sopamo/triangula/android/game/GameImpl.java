@@ -28,8 +28,11 @@ import de.sopamo.box2dbridge.jbox2d.JBox2DWorld;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.PGRenderer;
+import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
+import de.sopamo.triangula.android.game.models.Exit;
+import de.sopamo.triangula.android.game.models.Image;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.raycasting.Line;
 import de.sopamo.triangula.android.game.raycasting.Ray;
@@ -175,6 +178,13 @@ public class GameImpl implements GameInterface {
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
             particle.draw();
+        }
+
+        // Draw exit images
+        for(int i=0;i<entities.size();i++) {
+            Entity gs = entities.get(i);
+            if(!(gs instanceof Exit)) continue;
+            ((Exit) gs).draw();
         }
 
 	}

@@ -3,6 +3,8 @@ package de.sopamo.triangula.android.game.models;
 import android.content.Intent;
 import de.sopamo.box2dbridge.IBody;
 import de.sopamo.triangula.android.GameActivity;
+import de.sopamo.triangula.android.PGRenderer;
+import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.SuccessScreenActivity;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Entity;
@@ -25,6 +27,7 @@ public class Exit implements Entity {
     private boolean endGame;
     private int frames;
     private GameImpl game;
+    private Image image;
 
     public Exit(Vec2 pst) {
         game = GameImpl.getInstance();
@@ -85,5 +88,14 @@ public class Exit implements Entity {
 
     public IBody getExitBody() {
         return exitBody;
+    }
+
+    public void draw() {
+        if(image == null) {
+            Vec2 exitPosition = this.getExitBody().getWorldCenter();
+            image = new Image(0.45f, 0.8f, exitPosition, R.drawable.exit);
+            image.loadGLTexture(PGRenderer.getInstance().getGl(), GameActivity.getInstance());
+        }
+        image.draw();
     }
 }

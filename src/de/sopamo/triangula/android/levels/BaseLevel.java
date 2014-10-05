@@ -109,7 +109,7 @@ public abstract class BaseLevel {
         if(colors == null) return -1;
 
         // Get the first or second color
-        int randomColor = new Random().nextInt(1);
+        int randomColor = new Random().nextInt(2);
         // Get a color int from the hex color
         int base = Util.hex2Color(colors.get(randomColor));
 
@@ -126,7 +126,7 @@ public abstract class BaseLevel {
         if(colors == null) return -1;
 
         // Get the third or fourth color
-        int randomColor = new Random().nextInt(1)+2;
+        int randomColor = new Random().nextInt(2)+2;
         // Get a color int from the hex color
         int base = Util.hex2Color(colors.get(randomColor));
 
