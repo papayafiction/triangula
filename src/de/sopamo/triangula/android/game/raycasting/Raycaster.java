@@ -1,6 +1,5 @@
 package de.sopamo.triangula.android.game.raycasting;
 
-import android.util.Log;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DRayCast;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.GameImpl;
@@ -19,7 +18,6 @@ public class Raycaster {
         Vec2 player = GameImpl.getMainPlayer().getBody().getWorldCenter();
 
         points = JNIBox2DRayCast.rayCast(player,GameImpl.getInstance().getNoRayCast());
-        Log.e("Rays", "" + points.length);
     }
 
     public static void draw() {
