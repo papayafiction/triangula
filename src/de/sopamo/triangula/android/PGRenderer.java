@@ -120,7 +120,7 @@ public class PGRenderer implements Renderer {
 
         // Enabling alpha
         glDepthMask(false);
-        if(App.getSetting("quality").equals("true")) {
+        if(!(App.getSetting("lowquality").equals("true"))) {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_BLEND);
 
