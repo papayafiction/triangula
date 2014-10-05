@@ -19,7 +19,6 @@ public class MainMenu extends FragmentActivity {
     private static boolean mAutoStartSignInFlow;
     private static boolean mMuted;
 
-    private SharedPreferences.Editor mSpEditor;
     private ImageButton muteButton;
 
     protected void onStart() {
@@ -44,14 +43,20 @@ public class MainMenu extends FragmentActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMuted = App.getSetting("muted").equals("true");
+        if(mMuted) mute();
+        else unmute();
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.setActivityContext(this);
         setContentView(R.layout.mainmenu);
         final SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mAutoStartSignInFlow = !sp.getBoolean("declined",false);
-        mMuted = sp.getBoolean("muted",false);
-        this.mSpEditor = sp.edit();
 
         final MainMenu that = this;
 
@@ -60,16 +65,22 @@ public class MainMenu extends FragmentActivity {
         final Button levelButton = (Button) findViewById(R.id.levelbutton);
         final Button achievementButton = (Button) findViewById(R.id.achievementbutton);
         muteButton = (ImageButton) findViewById(R.id.mutebutton);
+        final ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsbutton);
 
-        if(mMuted) mute();
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(that,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         muteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mMuted) unmute();
                 else mute();
-                mSpEditor.putBoolean("muted",mMuted);
-                mSpEditor.commit();
+                App.setSetting("muted", mMuted ? "true" : "false");
             }
         });
 

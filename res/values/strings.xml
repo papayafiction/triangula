@@ -11,9 +11,17 @@
     <string name="achievement_level_waypoint">CgkIu4jz894HEAIQEw</string>
     <string name="achievement_ascend_to_the_top">CgkIu4jz894HEAIQHQ</string>
     <string name="level_title">Level title</string>
-    <string name="first_bomb">CgkIu4jz894HEAIQEg</string>
-    <string name="bombs_3">CgkIu4jz894HEAIQDw</string>
-    <string name="bombs_5">CgkIu4jz894HEAIQEA</string>
-    <string name="bombs_10">CgkIu4jz894HEAIQEQ</string>
-
+    <string name="achievement_first_bomb">CgkIu4jz894HEAIQEg</string>
+    <string name="achievement_bombs_3">CgkIu4jz894HEAIQDw</string>
+    <string name="achievement_bombs_5">CgkIu4jz894HEAIQEA</string>
+    <string name="achievement_bombs_10">CgkIu4jz894HEAIQEQ</string>
+    <string name="achievement_explode_100_bombs">CgkIu4jz894HEAIQFA</string>
+    <string name="achievement_explode_1000_bombs">CgkIu4jz894HEAIQFQ</string>
+    <string name="achievement_explode_5000_bombs">CgkIu4jz894HEAIQFg</string>
+    <string name="achievement_looper">CgkIu4jz894HEAIQFw</string>
+    <string name="achievement_chief_john_anderton">CgkIu4jz894HEAIQGA</string>
+    <string name="achievement_captain_leo_davidson">CgkIu4jz894HEAIQGQ</string>
+    <string name="achievement_doctor_who">CgkIu4jz894HEAIQGg</string>
+    <string name="achievement_the_terminator">CgkIu4jz894HEAIQGw</string>
+    <string name="achievement_marty_mcfly">CgkIu4jz894HEAIQHA</string>
 </resources>

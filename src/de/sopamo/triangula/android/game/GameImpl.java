@@ -101,6 +101,7 @@ public class GameImpl implements GameInterface {
     public void init(InputHandler handler, Level level) {
         this.level = level;
         this.handler = handler;
+        PGRenderer.setHorribleFramerate(0);
         respawnTime = 0;
         // density of dynamic bodies
         float density = 1;
@@ -157,7 +158,9 @@ public class GameImpl implements GameInterface {
             gs.draw();
         }
 
-        Raycaster.draw();
+        if(!PGRenderer.isDisableRayCast()) {
+            Raycaster.draw();
+        }
 
         // Draw game shapes
         for(int i=0;i<gsl.size();i++) {
@@ -213,6 +216,7 @@ public class GameImpl implements GameInterface {
         if (elap > 1000) {
             // update info every second
             fps = frames / ((float) elap / 1000f);
+            if(fps < 40) PGRenderer.setHorribleFramerate(PGRenderer.getHorribleFramerate()+1000);
             nanoTime = System.currentTimeMillis();
             frames = 0;
 
