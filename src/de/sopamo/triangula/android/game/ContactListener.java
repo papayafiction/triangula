@@ -13,6 +13,7 @@ import de.sopamo.triangula.android.game.models.Exit;
 import de.sopamo.triangula.android.game.models.Player;
 import de.sopamo.triangula.android.game.models.Switch;
 import de.sopamo.triangula.android.particles.ParticleSpawner;
+import de.sopamo.triangula.android.tools.Hooks;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.ContactPoint;
@@ -21,9 +22,6 @@ import org.jbox2d.dynamics.contacts.ContactResult;
 public class ContactListener implements org.jbox2d.dynamics.ContactListener {
 
     private boolean forceSet;
-    private MediaPlayer mediaPlayer;
-    private MediaPlayer explosionMediaPlayer1;
-    private MediaPlayer switchMediaPlayer;
     private int counter;
 
     @Override
@@ -42,7 +40,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
     private boolean check(IBody body,IBody body2,Vec2 position) {
         if(body != null && body.getUserData() instanceof UserData) {
             Player player = GameImpl.getMainPlayer();
-            if(((UserData)(body.getUserData())).type.equals("player")) {
+            if(((UserData)(body.getUserData())).type.equals("player") && !((UserData)(body.getUserData())).type.equals("sucker")) {
 
                 // Get a realistic direction force for the emitted particles
                 Vec2 direction = player.getBody().getLinearVelocity().negate().mul(0.01f);
@@ -55,12 +53,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                     ParticleSpawner.spawn(10, position.x, position.y, direction,collisionUserData.color);
 
                     //sound when bouncing
-                    if (mediaPlayer!=null){
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
-                    mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.bounce);;
-                    mediaPlayer.start();
+                    Hooks.call(Hooks.BOUNCE);
                 }
                 Vec2 force = player.getBody().getWorldCenter().sub(position);
                 force.mulLocal(50);
@@ -80,12 +73,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 sw.trigger();
                 if (!sw.isAlreadyActivated()) {
                     //sound when switching if not already switched
-                    if (switchMediaPlayer != null) {
-                        switchMediaPlayer.release();
-                        switchMediaPlayer = null;
-                    }
-                    switchMediaPlayer = MediaPlayer.create(GameActivity.getInstance(), R.raw.switches);
-                    switchMediaPlayer.start();
+                    Hooks.call(Hooks.SWITCH);
 
                     sw.setAlreadyActivated(true);
                 }
@@ -93,12 +81,7 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
             if(((UserData)(body.getUserData())).type.equals("bomb") && ((UserData)(body2.getUserData())).type.equals("player")) {
                 forceSet = true;
                 //sound when touching bomb
-                if (mediaPlayer!=null){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                }
-                explosionMediaPlayer1 = MediaPlayer.create(GameActivity.getInstance(),R.raw.bomb);
-                explosionMediaPlayer1.start();
+                Hooks.call(Hooks.EXPLODE);
 
 
 
@@ -136,15 +119,13 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
                 Exit exit = (Exit) ((UserData) body.getUserData()).obj;
 
                 //sound when exiting level
-                if (mediaPlayer!=null){
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                }
-                mediaPlayer = MediaPlayer.create(GameActivity.getInstance(),R.raw.exit);
-                mediaPlayer.start();
+               Hooks.call(Hooks.EXIT);
 
                 exit.removeSucker();
-                player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.4f)));
+                //only suck in player, if above exit
+                if (GameImpl.getMainPlayer().getBody().getWorldCenter().y > body.getWorldCenter().y){
+                    player.suck(exit.getExitBody().getWorldCenter().add(new Vec2(0,.4f)));
+                }
             }
         }
         return false;

@@ -13,6 +13,7 @@ import de.sopamo.triangula.android.geometry.GLCircle;
 import de.sopamo.triangula.android.geometry.GLRectangle;
 import de.sopamo.triangula.android.geometry.GameShapeCircle;
 import de.sopamo.triangula.android.geometry.GameShapeRectangle;
+import de.sopamo.triangula.android.tools.Hooks;
 import org.jbox2d.common.Vec2;
 
 import java.io.Serializable;

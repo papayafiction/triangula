@@ -16,7 +16,6 @@ public class Switch  {
     private boolean alreadyActivated = false;
 
     public boolean isAlreadyActivated() {
-        Log.e("baam","isAlreadyActivated");
         return alreadyActivated;
     }
 

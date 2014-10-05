@@ -8,6 +8,20 @@ import java.util.concurrent.Callable;
 public class Hooks {
     public static final int PLAYER_JUMP = 0;
     public static final int TAP = 1;
+    public static final int REWINDING = 2;
+    public static final int STOP_REWINDING = 3;
+    public static final int EXIT = 4;
+    public static final int EXPLODE = 5;
+    public static final int SWITCH = 6;
+    public static final int BOUNCE = 7;
+    public static final int MUTE = 8;
+    public static final int UNMUTE = 9;
+    public static final int STOP_ALL = 10;
+    public static final int DESTROY_ALL = 11;
+    public static final int RESUME = 12;
+    public static final int MENU_START = 13;
+    public static final int MENU_STOP = 14;
+
 
     private static HashMap<Integer, ArrayList<Callable<Integer>>> hooks = new HashMap<Integer, ArrayList<Callable<Integer>>>();
 

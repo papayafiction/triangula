@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import de.sopamo.triangula.android.tools.Hooks;
 
 public class SettingsActivity extends Activity {
     private Button quality;
@@ -23,12 +24,12 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if(App.getSetting("muted").equals("true")) {
+                    Hooks.call(Hooks.UNMUTE);
                     mute.setText("Sound Is On");
-                    App.unMuteAudio();
                     App.setSetting("muted","false");
                 } else {
+                    Hooks.call(Hooks.MUTE);
                     mute.setText("Sound Is off");
-                    App.muteAudio();
                     App.setSetting("muted","true");
                 }
             }

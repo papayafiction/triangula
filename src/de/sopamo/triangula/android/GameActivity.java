@@ -98,19 +98,9 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
-        //Music Handling on create
-        // Files of the song in the right order and reverse
-        File fileF = new File("raw/ingame.mp3");
-        File fileB = new File("raw/ingame_reverse_double_pitch.mp3");
-
-        //Instantiate players and start playing music forward
-        forwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame);
-        backwardMediaPlayer = MediaPlayer.create(this, R.raw.ingame_reverse_double_pitch);
-
-        musicPlayer = new MusicPlayer(fileF, fileB, forwardMediaPlayer, backwardMediaPlayer, 156);
-        musicPlayer.playMusic();
+       
         mGameGlSurfaceView.init();
+
     }
 
 
@@ -140,10 +130,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         GameImpl.getInstance().getPhysicsTask().softCancel();
         GameImpl.getInstance().getWorld().setContactListener(null);
         super.onDestroy();
-        mGameGlSurfaceView.destroy();
-        //Music handling on destroy
-        musicPlayer.destroyPlayer();
-
+    	mGameGlSurfaceView.destroy();
     }
 
 
@@ -200,18 +187,13 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     protected void onResume() {
         super.onResume();
-        //Music resuming after pause is ended
-        musicPlayer.resumePlayerForward(pauseStartTime);
+        Hooks.call(Hooks.RESUME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        //Music pausing, saving current pos
-        pauseStartTime = musicPlayer.getCurrentPosForward();
-        musicPlayer.pausePlayerForward();
-
+        Hooks.call(Hooks.STOP_ALL);
     }
 
     public static GameActivity getInstance() {
