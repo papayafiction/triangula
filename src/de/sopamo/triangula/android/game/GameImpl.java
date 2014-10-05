@@ -181,7 +181,8 @@ public class GameImpl implements GameInterface {
         // Draw particles
         for(int i = 0;i < pl.size();++i) {
             Particle particle = pl.get(i);
-            particle.draw();
+            if(particle != null)
+                particle.draw();
         }
 
         // Draw exit images
