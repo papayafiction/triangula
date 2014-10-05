@@ -18,7 +18,7 @@ public class Starter extends BaseOfficialLevel implements Level,Serializable {
 
     public Starter() {
         try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Waypoint"));
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Ascending"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

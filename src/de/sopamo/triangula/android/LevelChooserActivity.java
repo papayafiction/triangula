@@ -220,8 +220,10 @@ public class LevelChooserActivity extends Activity {
         levels.add(new Level3());
         levels.add(new Level4());
         levels.add(new Movethetime());
-        levels.add(new Skihuette());
+        levels.add(new Doorception());
+        levels.add(new Steps());
         levels.add(new Starter());
+        levels.add(new Ascending());
         levels.add(new Waypoint());
 
         if(!searchValue.isEmpty()) {

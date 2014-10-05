@@ -215,15 +215,6 @@ public class GameImpl implements GameInterface {
         this.pl.add(particle);
     }
 
-    public ArrayList<Line> getWalls() {
-        ArrayList<Line> walls = new ArrayList<Line>();
-        for(int i=0;i<gsl.size();i++) {
-            GameShape gs = gsl.get(i);
-            walls.addAll(gs.getWalls());
-        }
-        return walls;
-    }
-
     public void addRay(Ray ray) {
         this.rays.add(ray);
     }
