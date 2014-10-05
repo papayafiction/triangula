@@ -25,7 +25,11 @@ public class Level1 extends BaseOfficialLevel implements Level, Serializable {
     }
 
     public Level1() {
-
+        try {
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level2"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,11 +54,6 @@ public class Level1 extends BaseOfficialLevel implements Level, Serializable {
 
     @Override
     public void end() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level2"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_1));
     }
 }

@@ -8,19 +8,50 @@
     <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
         <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView" android:layout_gravity="center_horizontal"
                 android:src="@drawable/menu_background"
                 android:scaleType="centerCrop"/>
-
-        <LinearLayout
-            android:orientation="vertical"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/sound_on"
+            android:background="@drawable/rounded_button"
+            android:id="@+id/settingsbutton"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"/>
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sound_on"
+                    android:background="@drawable/rounded_button"
+                    android:id="@+id/mutebutton"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_alignParentEnd="true"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="60dp">
+            android:layout_marginTop="80dp"
+            android:gravity="center">
 
             <Button
                     android:layout_width="wrap_content"
@@ -77,19 +108,9 @@
                     android:paddingTop="10dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="10dp"/>
-                <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mute"
-                        android:background="@drawable/rounded_button"
-                        android:id="@+id/mutebutton" android:layout_gravity="center" android:textColor="#ffae00" android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="10dp"
-                        android:paddingRight="20dp"
-                        android:paddingBottom="10dp"/>
             </LinearLayout>
         </LinearLayout>
 
+    </RelativeLayout>
     </FrameLayout>
 </LinearLayout>

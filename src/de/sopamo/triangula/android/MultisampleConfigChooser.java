@@ -37,10 +37,7 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
         }
         int numConfigs = mValue[0];
 
-        Log.e("multisample","normal");
-
         if (numConfigs <= 0) {
-            Log.e("multisample","nonormal");
             // No normal multisampling config was found. Try to create a
             // converage multisampling configuration, for the nVidia Tegra2.
             // See the EGL_NV_coverage_sample documentation.
@@ -67,7 +64,6 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
             numConfigs = mValue[0];
 
             if (numConfigs <= 0) {
-                Log.e("multisample","wo");
                 // Give up, try without multisampling.
                 configSpec = new int[]{
                         EGL10.EGL_RED_SIZE, 5,
@@ -115,7 +111,6 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
             Log.w(kTag, "Did not find sane config, using first");
         }
         EGLConfig config = configs.length > 0 ? configs[index] : null;
-        Log.e("foo","bar");
         Log.e("foo",config.toString());
         if (config == null) {
             throw new IllegalArgumentException("No config chosen");

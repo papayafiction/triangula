@@ -32,6 +32,7 @@ public class Player implements Rewindable,Entity {
     private boolean sucking;
     private boolean rewind = false;
     private boolean killed = false;
+    private long rewindStart;
     private State currentState;
     private InputHandler inputHandler;
     private Stack<State> states = new Stack<State>();
@@ -78,12 +79,22 @@ public class Player implements Rewindable,Entity {
         }
 
         if(isSucking()) return;
+        rewindStart = System.currentTimeMillis();
         rewind = true;
         game.getWorld().setGravity(new Vec2(0,0));
     }
 
     @Override
     public void stopRewind() {
+        int time = (int)(System.currentTimeMillis()-rewindStart)/1000;
+        if(App.connectedToPlayServices() && time > 0) {
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_captain_leo_davidson),time);
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_chief_john_anderton),time);
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_doctor_who),time);
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_marty_mcfly),time);
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_looper),time);
+            Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_the_terminator),time);
+        }
         rewind = false;
         game.getWorld().setGravity(new Vec2(0,-9.8f));
         if(currentState == null) {

@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -90,10 +91,13 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         ll.addView(mGameGlSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
         status = (TextView) findViewById(R.id.tv_status);
+        // Disable hiding for debug
+        if(true) {
+            status.setVisibility(View.GONE);
+        }
 
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
 
         //Music Handling on create
         // Files of the song in the right order and reverse
@@ -126,7 +130,8 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
         @Override
         public void run() {
-            status.setText(text);
+            // Enable for debug
+            //status.setText(text);
         }
     }
 

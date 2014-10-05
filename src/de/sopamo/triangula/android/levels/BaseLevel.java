@@ -146,7 +146,7 @@ public abstract class BaseLevel {
         int base = Util.hex2Color(colors.get(4));
 
         // Return a slightly modified color
-        return Util.getSimilarColor(base);
+        return Util.getSimilarColor(base,0.05f);
     }
 
 

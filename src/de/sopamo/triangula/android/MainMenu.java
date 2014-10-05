@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import com.google.android.gms.games.Games;
 
 public class MainMenu extends FragmentActivity {
@@ -18,8 +19,7 @@ public class MainMenu extends FragmentActivity {
     private static boolean mAutoStartSignInFlow;
     private static boolean mMuted;
 
-    private SharedPreferences.Editor mSpEditor;
-    private Button muteButton;
+    private ImageButton muteButton;
 
     protected void onStart() {
         super.onStart();
@@ -28,13 +28,13 @@ public class MainMenu extends FragmentActivity {
 
     private void mute() {
         App.muteAudio();
-        muteButton.setText("Unmute");
+        muteButton.setImageResource(R.drawable.sound_off);
         mMuted = true;
     }
 
     private void unmute() {
         App.unMuteAudio();
-        muteButton.setText("Mute");
+        muteButton.setImageResource(R.drawable.sound_on);
         mMuted = false;
     }
 
@@ -43,14 +43,20 @@ public class MainMenu extends FragmentActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMuted = App.getSetting("muted").equals("true");
+        if(mMuted) mute();
+        else unmute();
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.setActivityContext(this);
         setContentView(R.layout.mainmenu);
         final SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
         mAutoStartSignInFlow = !sp.getBoolean("declined",false);
-        mMuted = sp.getBoolean("muted",false);
-        this.mSpEditor = sp.edit();
 
         final MainMenu that = this;
 
@@ -58,17 +64,23 @@ public class MainMenu extends FragmentActivity {
         final Button aboutButton = (Button) findViewById(R.id.aboutButton);
         final Button levelButton = (Button) findViewById(R.id.levelbutton);
         final Button achievementButton = (Button) findViewById(R.id.achievementbutton);
-        muteButton = (Button) findViewById(R.id.mutebutton);
+        muteButton = (ImageButton) findViewById(R.id.mutebutton);
+        final ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsbutton);
 
-        if(mMuted) mute();
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(that,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         muteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mMuted) unmute();
                 else mute();
-                mSpEditor.putBoolean("muted",mMuted);
-                mSpEditor.commit();
+                App.setSetting("muted", mMuted ? "true" : "false");
             }
         });
 

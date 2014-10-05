@@ -113,14 +113,17 @@ public class ContactListener implements org.jbox2d.dynamics.ContactListener {
 
                 //unlock achievements
                 if(App.connectedToPlayServices()) {
+                    Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_explode_100_bombs),1);
+                    Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_explode_1000_bombs),1);
+                    Games.Achievements.increment(App.getGoogleApiClient(),App.getContext().getString(R.string.achievement_explode_5000_bombs),1);
                     if (counter >= 10){
-                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_10));
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_bombs_10));
                     }else if (counter >= 5){
-                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_5));
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_bombs_5));
                     }else if (counter >= 3){
-                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.bombs_3));
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_bombs_3));
                     }else if (counter == 1){
-                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.first_bomb));
+                        Games.Achievements.unlock(App.getGoogleApiClient(),GameActivity.getInstance().getString(R.string.achievement_first_bomb));
                     }
                 }
 

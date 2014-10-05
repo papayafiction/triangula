@@ -38,10 +38,11 @@ public class PGRenderer implements Renderer {
 
 	GameImpl game;
 
-    private long time ;
+    private long startTime = System.currentTimeMillis() ;
 
-    private static boolean disableRayCast = false;
-    private final static int testTimeInterval = 0;
+    private static boolean disableRayCast = App.getSetting("raycast").equals("false");
+    private long horribleFramerate = 0;
+    private final static int testTimeInterval = 5000;
 	private static int mWidth = 0;
 	private static int mHeight = 0;
     private static float ratio;
@@ -114,7 +115,7 @@ public class PGRenderer implements Renderer {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-		gl.glFrustumf(0,2*ratio, -2, 0, 1f, 10f);
+		gl.glFrustumf(0, 2 * ratio, -2, 0, 1f, 10f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
         // Enabling alpha
@@ -135,7 +136,9 @@ public class PGRenderer implements Renderer {
 	 */
 	@Override
 	public void onDrawFrame(GL10 gl) {
-
+        if (horribleFramerate > testTimeInterval) {
+            disableRayCast = true;
+        }
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         game.getLevel().drawBackground(gl);
@@ -166,11 +169,11 @@ public class PGRenderer implements Renderer {
         synchronized (game.getPhysicsTask()) {
             game.getPhysicsTask().notify();
         }
-        time= System.currentTimeMillis();
 	}
 
 
 	public void init() {
+        disableRayCast = App.getSetting("raycast").equals("false");
         InputHandler handler = new InputHandler();
 		game.init(handler, GameActivity.level);
         game.startPhysicTask();
@@ -185,5 +188,17 @@ public class PGRenderer implements Renderer {
 
     public static float getViewportX() {
         return viewportX*-1;
+    }
+
+    public static boolean isDisableRayCast() {
+        return disableRayCast;
+    }
+
+    public static void setHorribleFramerate(long horribleFramerate) {
+        instance.horribleFramerate = horribleFramerate;
+    }
+
+    public static long getHorribleFramerate() {
+        return instance.horribleFramerate;
     }
 }
