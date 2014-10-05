@@ -12,6 +12,8 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import de.sopamo.triangula.android.levels.Level;
+import de.sopamo.triangula.android.musicProcessing.MusicPlayer;
+import de.sopamo.triangula.android.tools.Hooks;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,12 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     private static boolean mSignedIn = false;
     private SharedPreferences.Editor mSharedPreferences;
 
+
+    private static MusicPlayer musicPlayer;
+    public static MusicPlayer getMusicPlayer() {
+        return musicPlayer;
+    }
+
     public void onCreate() {
         super.onCreate();
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -42,6 +50,8 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
         mSharedPreferences = sp.edit();
         context = this;
         that = this;
+        musicPlayer = new MusicPlayer();
+        musicPlayer.init();
     }
 
 
@@ -166,27 +176,18 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
         that.activityContext = activityContext;
     }
 
-    public static AudioManager getAudioManager() {
-        return audioManager;
-    }
-
-    public static void muteAudio() {
-        timesMuted++;
-        audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
-    }
-
-    public static void unMuteAudio() {
-        for(int i=timesMuted;i>0;i--,timesMuted--) {
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
-        }
-    }
-
     public static void setLevelList(List<Level> levelList) {
         App.levelList = levelList;
     }
 
     public static List<Level> getLevelList() {
         return levelList;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Hooks.call(Hooks.DESTROY_ALL);
     }
 
     public static String getSetting(String key) {

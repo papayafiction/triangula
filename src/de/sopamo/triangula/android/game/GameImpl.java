@@ -26,6 +26,7 @@ import de.sopamo.box2dbridge.IBody;
 import de.sopamo.box2dbridge.IWorld;
 import de.sopamo.box2dbridge.jbox2d.JBox2DWorld;
 import de.sopamo.box2dbridge.jnibox2d.JNIBox2DWorld;
+import de.sopamo.triangula.android.App;
 import de.sopamo.triangula.android.GameActivity;
 import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
@@ -127,6 +128,9 @@ public class GameImpl implements GameInterface {
 
         // Initalize and make level
         makeLevel();
+
+        //add musicplayer to rewindables
+        rewindables.add(App.getMusicPlayer());
     }
 
     private void makeLevel() {

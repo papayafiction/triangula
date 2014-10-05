@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import com.google.android.gms.games.Games;
+import de.sopamo.triangula.android.tools.Hooks;
 
 public class MainMenu extends FragmentActivity {
 
@@ -27,25 +28,27 @@ public class MainMenu extends FragmentActivity {
     }
 
     private void mute() {
-        App.muteAudio();
+        Hooks.call(Hooks.MUTE);
         muteButton.setImageResource(R.drawable.sound_off);
         mMuted = true;
     }
 
     private void unmute() {
-        App.unMuteAudio();
+        Hooks.call(Hooks.UNMUTE);
         muteButton.setImageResource(R.drawable.sound_on);
         mMuted = false;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+        Hooks.call(Hooks.MENU_STOP);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Hooks.call(Hooks.MENU_START);
         mMuted = App.getSetting("muted").equals("true");
         if(mMuted) mute();
         else unmute();
