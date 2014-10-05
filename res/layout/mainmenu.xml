@@ -22,7 +22,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sound_on"
+            android:src="@drawable/settings"
             android:background="@drawable/rounded_button"
             android:id="@+id/settingsbutton"
             android:paddingLeft="10dp"

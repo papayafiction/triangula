@@ -66,7 +66,7 @@ public class SettingsActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if(App.getSetting("muted").equals("true")) mute.setText("Sound Is Off");
-        if(App.getSetting("raycast").equals("false")) raycast.setText("Full Shadows");
+        if(App.getSetting("raycast").equals("false")) raycast.setText("No Shadows");
         if(App.getSetting("quality").equals("false")) quality.setText("Low Quality");
     }
 }
