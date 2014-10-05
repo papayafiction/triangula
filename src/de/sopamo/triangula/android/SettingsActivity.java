@@ -23,13 +23,14 @@ public class SettingsActivity extends Activity {
         mute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(App.getSetting("muted").equals("true")) {
-                    Hooks.call(Hooks.UNMUTE);
+                String muted = App.getSetting("muted");
+                if(muted.equals("true")) {
                     mute.setText("Sound Is On");
+                    Hooks.call(Hooks.UNMUTE);
                     App.setSetting("muted","false");
                 } else {
-                    Hooks.call(Hooks.MUTE);
                     mute.setText("Sound Is off");
+                    Hooks.call(Hooks.MUTE);
                     App.setSetting("muted","true");
                 }
             }
@@ -38,7 +39,8 @@ public class SettingsActivity extends Activity {
         raycast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(App.getSetting("raycast").equals("true")) {
+                String raycasting = App.getSetting("raycast");
+                if(raycasting.equals("true") || raycasting.equals("")) {
                     raycast.setText("No Shadows");
                     App.setSetting("raycast","false");
                 } else {
@@ -51,12 +53,13 @@ public class SettingsActivity extends Activity {
         quality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(App.getSetting("quality").equals("true")) {
+                String lowquality = App.getSetting("lowquality");
+                if(lowquality.equals("false") || lowquality.equals("")) {
                     quality.setText("Low Quality");
-                    App.setSetting("quality","false");
+                    App.setSetting("lowquality","true");
                 } else {
                     quality.setText("High Quality");
-                    App.setSetting("quality","true");
+                    App.setSetting("lowquality","false");
                 }
             }
         });
@@ -68,6 +71,6 @@ public class SettingsActivity extends Activity {
         super.onResume();
         if(App.getSetting("muted").equals("true")) mute.setText("Sound Is Off");
         if(App.getSetting("raycast").equals("false")) raycast.setText("No Shadows");
-        if(App.getSetting("quality").equals("false")) quality.setText("Low Quality");
+        if(App.getSetting("lowquality").equals("true")) quality.setText("Low Quality");
     }
 }

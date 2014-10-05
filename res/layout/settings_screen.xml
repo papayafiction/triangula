@@ -17,8 +17,8 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
-                android:layout_marginTop="180dp" android:gravity="center_horizontal">
+                android:layout_height="wrap_content" android:layout_gravity="center"
+                android:gravity="center_horizontal">
             <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="High Quality"
                     android:id="@+id/settings_quality_button" android:singleLine="false"
                     android:background="@drawable/rounded_button" android:paddingLeft="20dp" android:paddingTop="10dp"
