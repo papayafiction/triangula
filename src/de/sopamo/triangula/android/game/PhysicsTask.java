@@ -1,6 +1,7 @@
 package de.sopamo.triangula.android.game;
 
 import android.util.Log;
+import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.raycasting.Raycaster;
@@ -56,11 +57,13 @@ public class PhysicsTask extends Thread {
                 }
             }
             long time1 = System.currentTimeMillis();
-            Raycaster.cast();
+            if(!PGRenderer.isDisableRayCast()) {
+                Raycaster.cast();
+            }
             Log.e("RayCast1",System.currentTimeMillis()-time1+"");
             long time2= System.currentTimeMillis();
             mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
-            Log.e("Physics",System.currentTimeMillis()-time2+"");
+            Log.e("Physics", System.currentTimeMillis() - time2 + "");
 
 
             if(isCancelled()) {

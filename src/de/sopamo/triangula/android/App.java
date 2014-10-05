@@ -21,6 +21,7 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
     private static App context;
     private static App that;
     private static HashMap<Context,GoogleApiClient> mGoogleApiClients = new HashMap<Context, GoogleApiClient>();
+    private static SharedPreferences settings;
     private static List<Level> levelList;
     private static AudioManager audioManager;
     private static int timesMuted;
@@ -37,10 +38,13 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
         super.onCreate();
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         SharedPreferences sp =  getSharedPreferences("play_services",MODE_PRIVATE);
+        settings = getSharedPreferences("settings",MODE_PRIVATE);
         mSharedPreferences = sp.edit();
         context = this;
         that = this;
     }
+
+
 
     public static App getContext() {
         return context;
@@ -183,6 +187,14 @@ public class App extends Application implements GoogleApiClient.OnConnectionFail
 
     public static List<Level> getLevelList() {
         return levelList;
+    }
+
+    public static String getSetting(String key) {
+        return settings.getString(key,"");
+    }
+
+    public static void setSetting(String key,String value) {
+        settings.edit().putString(key,value).commit();
     }
 }
 
