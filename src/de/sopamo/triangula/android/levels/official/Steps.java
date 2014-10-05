@@ -17,15 +17,15 @@ public class Steps extends BaseOfficialLevel implements Level, Serializable {
     }
 
     public Steps() {
+    }
+
+    @Override
+    public void end() {
         try {
             GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Starter"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void end() {
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_waypoint));
     }
 }

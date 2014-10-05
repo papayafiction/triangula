@@ -17,15 +17,15 @@ public class Waypoint extends BaseOfficialLevel implements Level, Serializable {
     }
 
     public Waypoint() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level1"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void end() {
+        try {
+            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Foxtail"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_waypoint));
     }
 }

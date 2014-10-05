@@ -17,15 +17,15 @@ public class Ascending extends BaseOfficialLevel implements Level, Serializable 
     }
 
     public Ascending() {
+    }
+
+    @Override
+    public void end() {
         try {
             GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Waypoint"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void end() {
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_ascend_to_the_top));
     }
 }

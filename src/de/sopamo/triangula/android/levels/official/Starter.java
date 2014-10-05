@@ -17,14 +17,17 @@ public class Starter extends BaseOfficialLevel implements Level,Serializable {
 
 
     public Starter() {
+    }
+    public String getLevelString() {
+        return levelString;
+    }
+
+    @Override
+    public void end() {
         try {
             GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Ascending"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-    public String getLevelString() {
-        return levelString;
-    }
-
 }

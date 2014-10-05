@@ -23,11 +23,6 @@ public class Level2 extends BaseOfficialLevel implements Level,Serializable {
     }
 
     public Level2() {
-        try {
-            GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Level3"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

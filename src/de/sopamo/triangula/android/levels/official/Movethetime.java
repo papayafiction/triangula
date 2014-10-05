@@ -26,11 +26,14 @@ public class Movethetime extends BaseOfficialLevel implements Level,Serializable
     }
 
     public Movethetime() {
+    }
+
+    @Override
+    public void end() {
         try {
             GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Doorception"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-
 }

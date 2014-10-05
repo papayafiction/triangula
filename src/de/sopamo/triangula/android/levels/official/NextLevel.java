@@ -17,6 +17,11 @@ public class NextLevel extends BaseOfficialLevel implements Level, Serializable 
     }
 
     public NextLevel() {
+
+    }
+
+    @Override
+    public void end() {
         try {
             GameImpl.setNextLevel(Class.forName("de.sopamo.triangula.android.levels.official.Steps"));
         } catch (ClassNotFoundException e) {
