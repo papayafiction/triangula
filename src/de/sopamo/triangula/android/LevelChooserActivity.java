@@ -225,6 +225,8 @@ public class LevelChooserActivity extends Activity {
         levels.add(new Starter());
         levels.add(new Ascending());
         levels.add(new Waypoint());
+        levels.add(new Sixpack());
+        levels.add(new Foxtail());
 
         if(!searchValue.isEmpty()) {
 
