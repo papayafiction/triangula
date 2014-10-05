@@ -5,7 +5,6 @@ import de.sopamo.triangula.android.PGRenderer;
 import de.sopamo.triangula.android.R;
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.models.Image;
-import de.sopamo.triangula.android.levels.BaseLevel;
 import de.sopamo.triangula.android.levels.BaseOfficialLevel;
 import de.sopamo.triangula.android.levels.Level;
 import org.jbox2d.common.Vec2;
@@ -23,7 +22,7 @@ public class Level4 extends BaseOfficialLevel implements Level,Serializable {
     }
 
     public Level4() {
-            GameImpl.setNextLevel(null);
+
     }
 
     @Override
@@ -41,6 +40,7 @@ public class Level4 extends BaseOfficialLevel implements Level,Serializable {
 
     @Override
     public void end() {
+        GameImpl.setNextLevel(null);
         image = null;
         achievments.add(GameActivity.getInstance().getString(R.string.achievement_level_4));
     }

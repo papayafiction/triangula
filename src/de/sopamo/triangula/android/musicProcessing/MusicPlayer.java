@@ -1,12 +1,10 @@
 package de.sopamo.triangula.android.musicProcessing;
 
 import android.media.MediaPlayer;
-import android.util.Log;
-
-import java.io.File;
-
 import de.sopamo.triangula.android.game.GameImpl;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
+
+import java.io.File;
 
 
 public class MusicPlayer implements Rewindable {
@@ -104,7 +102,7 @@ public class MusicPlayer implements Rewindable {
         initTime = getCurrentPosForward();
         initSysTime = System.currentTimeMillis();
 
-        resumePlayerBackward((mediaPlayerForward.getDuration()-initTime)/2);
+        resumePlayerBackward((mediaPlayerForward.getDuration() - initTime) / 2);
     }
 
     @Override
@@ -118,9 +116,10 @@ public class MusicPlayer implements Rewindable {
     }
 
     @Override
-    public void run() {
+    public void updateRewindable() {
 
     }
+
 
     @Override
     public boolean isRewinding() {

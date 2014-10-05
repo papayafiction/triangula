@@ -93,6 +93,16 @@ public:
     }
 };
 
+class Query : public b2QueryCallback {
+public:
+    std::vector<b2Body*> bodies;
+    bool ReportFixture(b2Fixture* fixture){
+        if(((UserData*)fixture->GetBody()->GetUserData())->body == 0) return true;
+        bodies.push_back(fixture->GetBody());
+        return true;
+    };
+};
+
 JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nRayCast
   (JNIEnv* env, jobject obj, jfloat x,jfloat y, jintArray list) {
     jclass vector = env->FindClass("org/jbox2d/common/Vec2");
@@ -141,9 +151,17 @@ JNIEXPORT jobject JNICALL Java_de_sopamo_box2dbridge_jnibox2d_JNIBox2DRayCast_nR
     
     float rayLength = 10/cos(atan(ratio));
 
-    for(int i=0;i<MAX_BODIES;i++) {
-        if(bodyList[i] == NULL) break;
-        b2Body* b = bodyList[i];
+    Query query;
+    
+    b2AABB aabb;
+    aabb.lowerBound = leftBottom;
+    aabb.upperBound = rightTop;
+    
+    world->QueryAABB(&query,aabb);
+    query.bodies.push_back(bodyList[0]);
+    
+    for(int i=0;i<query.bodies.size();i++) {
+        b2Body* b = query.bodies[i];
         if(b->GetUserData() == 0) continue;
         UserData* data = (UserData*)b->GetUserData();
         if((data->points).size() == 0) continue;

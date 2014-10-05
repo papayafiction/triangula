@@ -7,7 +7,6 @@ import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.UserData;
 import de.sopamo.triangula.android.geometry.GLTriangle;
 import de.sopamo.triangula.android.geometry.GameShapeTriangle;
-import de.sopamo.triangula.android.levels.BaseLevel;
 import de.sopamo.triangula.android.tools.Util;
 import org.jbox2d.common.Vec2;
 
@@ -53,7 +52,7 @@ public class Door extends TriangleBaseModel implements Entity {
     }
 
     @Override
-    public void update() {
+    public void updateEntity() {
         if(opened) return;
         if(!opening) return;
         if(time >= TIME_TO_OPEN) {

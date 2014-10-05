@@ -1,5 +1,6 @@
 package de.sopamo.triangula.android.game;
 
+import android.util.Log;
 import de.sopamo.triangula.android.game.mechanics.Entity;
 import de.sopamo.triangula.android.game.mechanics.Rewindable;
 import de.sopamo.triangula.android.game.raycasting.Raycaster;
@@ -39,7 +40,7 @@ public class PhysicsTask extends Thread {
             /** Save Rewindable Actions **/
             for (int i = 0; i < mRewindableList.size(); i++) {
                 Rewindable rewindable = mRewindableList.get(i);
-                rewindable.run();
+                rewindable.updateRewindable();
             }
 
             /** DO SOME REWIND **/
@@ -54,19 +55,24 @@ public class PhysicsTask extends Thread {
                     if (rewindable.isRewinding()) rewindable.stopRewind();
                 }
             }
-
-            mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
-
+            long time1 = System.currentTimeMillis();
             Raycaster.cast();
+            Log.e("RayCast1",System.currentTimeMillis()-time1+"");
+            long time2= System.currentTimeMillis();
+            mGame.getWorld().step(GameImpl.TIME_STEP, GameImpl.ITERATIONS);
+            Log.e("Physics",System.currentTimeMillis()-time2+"");
+
+
             if(isCancelled()) {
                 break;
             }
             startWait();
 
             /** Update Entities **/
+
             for (int i = 0; i < mEntityList.size(); i++) {
                 Entity entity = mEntityList.get(i);
-                entity.update();
+                entity.updateEntity();
             }
 
 
@@ -78,6 +84,7 @@ public class PhysicsTask extends Thread {
 
         }
         mUpdating = false;
+        mWait = true;
         Thread.currentThread().interrupt();
     }
 

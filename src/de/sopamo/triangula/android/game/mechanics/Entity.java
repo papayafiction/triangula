@@ -1,5 +1,5 @@
 package de.sopamo.triangula.android.game.mechanics;
 
 public interface Entity {
-    public void update();
+    public void updateEntity();
 }
