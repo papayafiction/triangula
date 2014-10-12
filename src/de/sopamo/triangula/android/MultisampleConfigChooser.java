@@ -26,18 +26,17 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
                 EGL10.EGL_DEPTH_SIZE, 16,
                 EGL10.EGL_STENCIL_SIZE, 8,
                 // Requires that setEGLContextClientVersion(2) is called on the view.
-                EGL10.EGL_RENDERABLE_TYPE, 4 /* EGL_OPENGL_ES2_BIT */,
                 EGL10.EGL_SAMPLE_BUFFERS, 1 /* true */,
-                EGL10.EGL_SAMPLES, 4,
+                EGL10.EGL_SAMPLES, 2,
                 EGL10.EGL_NONE
         };
-
         if (!egl.eglChooseConfig(display, configSpec, null, 0, mValue)) {
             throw new IllegalArgumentException("eglChooseConfig failed");
         }
         int numConfigs = mValue[0];
 
         if (numConfigs <= 0) {
+            Log.e("config","2");
             // No normal multisampling config was found. Try to create a
             // converage multisampling configuration, for the nVidia Tegra2.
             // See the EGL_NV_coverage_sample documentation.
@@ -111,7 +110,6 @@ public class MultisampleConfigChooser implements GLSurfaceView.EGLConfigChooser 
             Log.w(kTag, "Did not find sane config, using first");
         }
         EGLConfig config = configs.length > 0 ? configs[index] : null;
-        Log.e("foo",config.toString());
         if (config == null) {
             throw new IllegalArgumentException("No config chosen");
         }
